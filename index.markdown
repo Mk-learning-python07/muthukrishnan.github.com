@@ -11,7 +11,7 @@ permalink: /
 Welcome to a space where innovation intersects with expertise. With a solid foundation in chemical engineering, data analysis, and process optimization, I am driven to solve complex challenges in industries such as Direct Air Capture (DAC) and beyond. Here, you’ll discover how my skills and experience can empower your business by driving impactful solutions, enhancing operational efficiency, and achieving your goals. Let’s join forces and create a more sustainable future.
 
 # Professional Background
-Here is a brief overview of my professional background. For a more detailed look, click [here](/professional-experience/).
+Here is a brief overview of my professional background. For a more detailed look, click [here]({{ site.baseurl }}/professional-experience/).
 
 <div class="timeline-container">
   <div class="timeline-box">
