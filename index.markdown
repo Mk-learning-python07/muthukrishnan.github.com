@@ -95,6 +95,10 @@ This section highlights my skills in advanced data analysis, process optimizatio
   <div class="skills-column">
     <h4>Data Analysis</h4>
     <div class="icon-item">
+      <img src="Files/python.png" alt="Python" class="custom-icon" title="Python">
+      <p>Python</p>
+    </div>
+    <div class="icon-item">
       <img src="Files/seeq.png" alt="SEEQ" class="custom-icon" title="SEEQ">
       <p>SEEQ</p>
     </div>
