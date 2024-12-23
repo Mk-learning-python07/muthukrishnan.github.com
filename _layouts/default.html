@@ -45,112 +45,112 @@
 
 
 <body>
-  <!-- Header Section with Flexbox -->
-  <header class="page-header" role="banner" style="background-color: #157878; padding: 10px 0;">
-    <div class="container" style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
-      <!-- Left Section (Photo, Name, Designation) -->
-      <div class="left-section" style="display: flex; align-items: center;">
-        <img src="{{ 'Files/MK_ID_Photo.jpg' | relative_url }}" alt="Muthukrishnan Anand" class="profile-photo" style="width: 60px; height: 60px; border-radius: 50%; margin-right: 10px;">
-        <div class="name-designation" style="color: white;">
-          <strong>Muthukrishnan Anand</strong><br>
-          <span>Graduate Researcher</span>
+    <!-- Header Section with Flexbox -->
+    <header class="page-header" role="banner" style="background-color: #157878; padding: 10px 0;">
+      <div class="container" style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
+        <!-- Left Section (Photo, Name, Designation) -->
+        <div class="left-section" style="display: flex; align-items: center;">
+          <img src="{{ 'Files/MK_ID_Photo.jpg' | relative_url }}" alt="Muthukrishnan Anand" class="profile-photo" style="width: 60px; height: 60px; border-radius: 50%; margin-right: 10px;">
+          <div class="name-designation" style="color: white;">
+            <strong>Muthukrishnan Anand</strong><br>
+            <span>Graduate Researcher</span>
+          </div>
         </div>
+  
+        <!-- Right Section (Navigation Links) -->
+        <nav class="right-nav" aria-label="Primary navigation" style="display: flex; align-items: center;">
+          <ul style="list-style: none; padding: 0; margin: 0; display: flex;">
+            <li style="margin-right: 15px;"><a href="{{ '/' | relative_url }}" style="color: white; text-decoration: none; padding: 5px 10px;">Home</a></li>
+            <li style="margin-right: 15px;"><a href="{{ '/about-me/' | relative_url }}" style="color: white; text-decoration: none; padding: 5px 10px;">About Me</a></li>
+            <li style="margin-right: 15px;"><a href="{{ '/professional-experience/' | relative_url }}" style="color: white; text-decoration: none; padding: 5px 10px;">Professional Journey</a></li>
+            <li style="margin-right: 15px;"><a href="{{ '/research/' | relative_url }}" style="color: white; text-decoration: none; padding: 5px 10px;">Research</a></li>
+            <li style="margin-right: 15px;"><a href="{{ '/contact/' | relative_url }}" style="color: white; text-decoration: none; padding: 5px 10px;">Contact</a></li>
+          </ul>
+        </nav>
       </div>
-
-      <!-- Right Section (Navigation Links) -->
-      <nav class="right-nav" aria-label="Primary navigation" style="display: flex; align-items: center;">
-        <ul style="list-style: none; padding: 0; margin: 0; display: flex;">
-          <li style="margin-right: 15px;"><a href="{{ '/' | relative_url }}" style="color: white; text-decoration: none; padding: 5px 10px;">Home</a></li>
-          <li style="margin-right: 15px;"><a href="{{ '/about-me/' | relative_url }}" style="color: white; text-decoration: none; padding: 5px 10px;">About Me</a></li>
-          <li style="margin-right: 15px;"><a href="{{ '/professional-experience/' | relative_url }}" style="color: white; text-decoration: none; padding: 5px 10px;">Professional Journey</a></li>
-          <li style="margin-right: 15px;"><a href="{{ '/research/' | relative_url }}" style="color: white; text-decoration: none; padding: 5px 10px;">Research</a></li>
-          <li style="margin-right: 15px;"><a href="{{ '/contact/' | relative_url }}" style="color: white; text-decoration: none; padding: 5px 10px;">Contact</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-
-  <!-- Main Content Area (White Box) -->
-  <main id="content" class="main-content" role="main" style="background-color: white; padding: 20px;">
-    <div class="container">
-      {{ content }}
-    </div>
-  </main>
-
-  <!-- Footer Section -->
-  <footer class="site-footer" style="background-color: #f8f8f8; padding: 20px 0; display: flex; justify-content: space-between; align-items: center;">
-    <!-- Social Links Section -->
-    <div class="social-links" style="display: flex; gap: 15px;">
-      {% if site.linkedin %}
-        <span class="social-link">
-          <a href="{{ site.linkedin }}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-            <i class="fab fa-linkedin"></i> LinkedIn
-          </a>
-        </span>
-      {% endif %}
+    </header>
   
-      {% if site.email %}
-        <span class="social-link">
-          <a href="mailto:{{ site.email }}" aria-label="Email">
-            <i class="fas fa-envelope"></i> Email
-          </a>
-        </span>
-      {% endif %}
+    <!-- Main Content Area (White Box) -->
+    <main id="content" class="main-content" role="main" style="background-color: white; padding: 20px;">
+      <div class="container">
+        {{ content }}
+      </div>
+    </main>
   
-      {% if site.github %}
-        <span class="social-link">
-          <a href="{{ site.github }}" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-            <i class="fab fa-github"></i> GitHub
-          </a>
-        </span>
-      {% endif %}
-    </div>
+    <!-- Footer Section -->
+    <footer class="site-footer" style="background-color: #f8f8f8; padding: 20px 0; display: flex; justify-content: space-between; align-items: center;">
+      <!-- Social Links Section -->
+      <div class="social-links" style="display: flex; gap: 15px;">
+        {% if site.linkedin %}
+          <span class="social-link">
+            <a href="{{ site.linkedin }}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+              <i class="fab fa-linkedin"></i> LinkedIn
+            </a>
+          </span>
+        {% endif %}
+    
+        {% if site.email %}
+          <span class="social-link">
+            <a href="mailto:{{ site.email }}" aria-label="Email">
+              <i class="fas fa-envelope"></i> Email
+            </a>
+          </span>
+        {% endif %}
+    
+        {% if site.github %}
+          <span class="social-link">
+            <a href="{{ site.github }}" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+              <i class="fab fa-github"></i> GitHub
+            </a>
+          </span>
+        {% endif %}
+      </div>
+    
+      <!-- Copyright Section -->
+      <div class="copyright" style="flex-shrink: 0;">
+        <p>© {{ site.time | date: '%Y' }} {{ site.title }}. All rights reserved.</p>
+      </div>
+    </footer>
   
-    <!-- Copyright Section -->
-    <div class="copyright" style="flex-shrink: 0;">
-      <p>© {{ site.time | date: '%Y' }} {{ site.title }}. All rights reserved.</p>
-    </div>
-  </footer>
-
-  <!-- Add JavaScript just before the closing </body> tag -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const header = document.querySelector('.page-header');
-      const mainContent = document.querySelector('.main-content');
-      
-      // Ensure the header exists
-      console.log(header);
-
-      // Listen for scroll events
-      window.addEventListener('scroll', function() {
-        if (window.scrollY > 50) {  // Trigger the change when scrolled 50px
-          header.classList.add('scrolled');
-          header.classList.add('sticky-header');  // Make the header sticky
-        } else {
-          header.classList.remove('scrolled');
-          header.classList.remove('sticky-header');  // Remove sticky effect
-        }
+    <!-- Add JavaScript just before the closing </body> tag -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const header = document.querySelector('.page-header');
+        const mainContent = document.querySelector('.main-content');
+        const links = document.querySelectorAll('.page-header .right-nav a');
+        
+        // Ensure the header exists
+        console.log(header);
+  
+        // Listen for scroll events
+        window.addEventListener('scroll', function() {
+          if (window.scrollY > 50) {  // Trigger the change when scrolled 50px
+            header.classList.add('scrolled');
+            header.classList.add('sticky-header');  // Make the header sticky
+          } else {
+            header.classList.remove('scrolled');
+            header.classList.remove('sticky-header');  // Remove sticky effect
+          }
+        });
+  
+        // Link clicked event to toggle the 'clicked' class
+        links.forEach(link => {
+          link.addEventListener('click', function(event) {
+            // Remove the 'clicked' class from all links
+            links.forEach(link => link.classList.remove('clicked'));
+            
+            // Add 'clicked' class to the clicked link
+            this.classList.add('clicked');
+          });
+        });
       });
-    });
-  document.addEventListener('DOMContentLoaded', function() {
-  const links = document.querySelectorAll('.page-header .right-nav a');
-
-  links.forEach(link => {
-    link.addEventListener('click', function(event) {
-      // Remove the 'clicked' class from all links
-      links.forEach(link => link.classList.remove('clicked'));
-      
-      // Add 'clicked' class to the clicked link
-      this.classList.add('clicked');
-    });
-  });
-});
-
-  </script>
-</body>
+    </script>
+  </body>
+  
 
 
 <style>
+/* Global Styles */
 /* Global Styles */
 body, html {
   margin: 0;
@@ -237,6 +237,13 @@ body, html {
 .page-header .right-nav a:active {
   color: #ffffff;
   background-color: #126969; /* Darken the background when clicked */
+  border-radius: 4px;
+}
+
+/* Clicked Link Styles (Persist after click) */
+.page-header .right-nav a.clicked {
+  color: #ffffff;
+  background-color: #126969; /* Dark background for clicked link */
   border-radius: 4px;
 }
 
