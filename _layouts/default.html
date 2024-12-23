@@ -46,11 +46,11 @@
 
 <body>
   <!-- Header Section with Flexbox -->
-  <header class="page-header" role="banner" style="background-color: #157878; padding: 10px 0; transition: background-color 0.3s ease;">
+  <header class="page-header" role="banner" style="background-color: #157878; padding: 10px 0;">
     <div class="container" style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
       <!-- Left Section (Photo, Name, Designation) -->
       <div class="left-section" style="display: flex; align-items: center;">
-        <img src="{{ site.baseurl }}/assets/MK_ID_Photo.jpg" alt="Muthukrishnan Anand" class="profile-photo" style="width: 60px; height: 60px; border-radius: 50%; margin-right: 10px;">
+        <img src="{{ site.baseurl }}/Files/MK_ID_Photo.jpg" alt="Muthukrishnan Anand" class="profile-photo" style="width: 60px; height: 60px; border-radius: 50%; margin-right: 10px;">
         <div class="name-designation" style="color: white;">
           <strong>Muthukrishnan Anand</strong><br>
           <span>Graduate Researcher</span>
@@ -71,14 +71,14 @@
   </header>
 
   <!-- Main Content Area (White Box) -->
-  <main id="content" class="main-content" role="main" style="background-color: white; padding: 20px;">
+  <main id="content" class="main-content" role="main" style="background-color: white; padding: 20px; flex-grow: 1;">
     <div class="container">
       {{ content }}
     </div>
   </main>
 
   <!-- Footer Section -->
-  <footer class="site-footer" style="background-color: #f8f8f8; padding: 20px 0; display: flex; justify-content: space-between; align-items: center; position: relative;">
+  <footer class="site-footer" style="background-color: #f8f8f8; padding: 20px 0; display: flex; justify-content: space-between; align-items: center;">
     <!-- Social Links Section -->
     <div class="social-links" style="display: flex; gap: 15px;">
       {% if site.linkedin %}
@@ -112,7 +112,6 @@
     </div>
   </footer>
 
-  <!-- Add JavaScript just before the closing </body> tag -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const header = document.querySelector('.page-header');
@@ -131,6 +130,7 @@
   </script>
 </body>
 
+
   
   
 
@@ -144,6 +144,8 @@ body, html {
   box-sizing: border-box;
   line-height: 1.6;
   height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .container {
@@ -215,6 +217,7 @@ footer {
   justify-content: space-between;
   align-items: center;
   position: relative;
+  width: 100%;
 }
 
 footer a {
@@ -240,11 +243,13 @@ footer .social-link a:hover {
 /* Ensure Footer Stays at the Bottom of the Page */
 html, body {
   height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .main-content {
-  min-height: calc(100vh - 100px); /* Ensures footer stays below content */
-  padding-bottom: 100px;
+  flex-grow: 1; /* This will make sure the content area grows to fill available space */
+  padding-bottom: 100px; /* Ensure there is space for footer */
 }
 
 /* Responsive Design for Smaller Screens */
@@ -284,6 +289,7 @@ html, body {
     font-size: 18px;
   }
 }
+
 
 </style>
 
