@@ -22,15 +22,15 @@ I’ve always had a passion for continuous learning and solving complex problems
   <div class="skills-column">
     <h4>LANGUAGES</h4>
     <div class="icon-item">
-      <img src="/Files/en-icon.png" alt="English" class="custom-icon" title="English">
+      <img src="Files/en-icon.png" alt="English" class="custom-icon" title="English">
       <p>English</p>
     </div>
     <div class="icon-item">
-      <img src="/Files/ta-icon.png" alt="Tamil" class="custom-icon" title="Tamil">
+      <img src="Files/ta-icon.png" alt="Tamil" class="custom-icon" title="Tamil">
       <p>Tamil</p>
     </div>
     <div class="icon-item">
-      <img src="/Files/hi-icon.png" alt="Hindi" class="custom-icon" title="Hindi">
+      <img src="Files/hi-icon.png" alt="Hindi" class="custom-icon" title="Hindi">
       <p>Hindi</p>
     </div>
   </div>
@@ -38,24 +38,24 @@ I’ve always had a passion for continuous learning and solving complex problems
   <div class="interest-column">
     <h4>INTERESTS</h4>
     <div class="icon-item">
-      <img src="/Files/travel-icon.png" alt="Travel" class="custom-icon" title="Travel">
+      <img src="Files/travel-icon.png" alt="Travel" class="custom-icon" title="Travel">
       <p>Travel</p>
     </div>
     <div class="icon-item">
-      <img src="/Files/crime-icon.png" alt="Crime Thrillers" class="custom-icon" title="Crime Thrillers">
+      <img src="Files/crime-icon.png" alt="Crime Thrillers" class="custom-icon" title="Crime Thrillers">
       <p>Crime Thrillers</p>
     </div>
     <div class="icon-item">
-      <img src="/Files/motorcycle-icon.png" alt="Motorcycles" class="custom-icon" title="Motorcycles">
+      <img src="Files/motorcycle-icon.png" alt="Motorcycles" class="custom-icon" title="Motorcycles">
       <p>Motorcycles</p>
     </div>
     <!-- Music and Movies with image icons -->
     <div class="icon-item">
-      <img src="/Files/music.png" alt="Music" class="custom-icon" title="Music">
+      <img src="Files/music.png" alt="Music" class="custom-icon" title="Music">
       <p>Music</p>
     </div>
     <div class="icon-item">
-      <img src="/Files/movies.png" alt="Movies" class="custom-icon" title="Movies">
+      <img src="Files/movies.png" alt="Movies" class="custom-icon" title="Movies">
       <p>Movies</p>
     </div>
   </div>
