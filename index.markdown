@@ -75,19 +75,19 @@ This section highlights my skills in advanced data analysis, process optimizatio
   <div class="skills-column">
     <h4>Programming</h4>
     <div class="icon-item">
-      <img src="/Files/python.png" alt="Python" class="custom-icon" title="Python">
+      <img src="Files/python.png" alt="Python" class="custom-icon" title="Python">
       <p>Python</p>
     </div>
     <div class="icon-item">
-      <img src="/Files/matlab.png" alt="MATLAB" class="custom-icon" title="MATLAB">
+      <img src="Files/matlab.png" alt="MATLAB" class="custom-icon" title="MATLAB">
       <p>MATLAB</p>
     </div>
     <div class="icon-item">
-      <img src="/Files/html.png" alt="HTML" class="custom-icon" title="HTML">
+      <img src="Files/html.png" alt="HTML" class="custom-icon" title="HTML">
       <p>HTML</p>
     </div>
     <div class="icon-item">
-      <img src="/Files/cplusplus.png" alt="C++" class="custom-icon" title="C++">
+      <img src="Files/cplusplus.png" alt="C++" class="custom-icon" title="C++">
       <p>C++</p>
     </div>
   </div>
@@ -95,15 +95,15 @@ This section highlights my skills in advanced data analysis, process optimizatio
   <div class="skills-column">
     <h4>Data Analysis</h4>
     <div class="icon-item">
-      <img src="/Files/seeq.png" alt="SEEQ" class="custom-icon" title="SEEQ">
+      <img src="Files/seeq.png" alt="SEEQ" class="custom-icon" title="SEEQ">
       <p>SEEQ</p>
     </div>
     <div class="icon-item">
-      <img src="/Files/jmp.png" alt="JMP" class="custom-icon" title="JMP">
+      <img src="Files/jmp.png" alt="JMP" class="custom-icon" title="JMP">
       <p>JMP</p>
     </div>
     <div class="icon-item">
-      <img src="/Files/avevapi.svg" alt="Aveva PI" class="custom-icon" title="Aveva PI">
+      <img src="Files/avevapi.svg" alt="Aveva PI" class="custom-icon" title="Aveva PI">
       <p>Aveva PI</p>
     </div>
   </div>
@@ -111,15 +111,15 @@ This section highlights my skills in advanced data analysis, process optimizatio
   <div class="skills-column">
     <h4>Simulation Tools</h4>
     <div class="icon-item">
-      <img src="/Files/aspen-hysys.png" alt="Aspen HYSYS" class="custom-icon" title="Aspen HYSYS">
+      <img src="Files/aspen-hysys.png" alt="Aspen HYSYS" class="custom-icon" title="Aspen HYSYS">
       <p>Aspen HYSYS</p>
     </div>
     <div class="icon-item">
-      <img src="/Files/htri.png" alt="HTRI" class="custom-icon" title="HTRI">
+      <img src="Files/htri.png" alt="HTRI" class="custom-icon" title="HTRI">
       <p>HTRI</p>
     </div>
     <div class="icon-item">
-      <img src="/Files/promax.png" alt="Promax" class="custom-icon" title="Promax">
+      <img src="Files/promax.png" alt="Promax" class="custom-icon" title="Promax">
       <p>Promax</p>
     </div>
   </div>
