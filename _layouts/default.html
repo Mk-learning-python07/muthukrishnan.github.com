@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+
+  <head>
+    <meta charset="UTF-8">
+    {% seo %}
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="preload" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" as="style" type="text/css" crossorigin>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Font Awesome inclusion-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+
+    <!-- Customized - WebIcon to my LOGO -->
+   <link rel="icon" href="{{ '/Files/Logo.jpeg' | relative_url }}" type="image/jpeg">
+
+    <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
+    {% include head-custom.html %}
+       <!-- Dynamic Title -->
+       <title>{% if page.title %}{{ page.title }} - {% endif %}{{ site.title }}</title>
+
+       {% include head-custom.html %}
+  </head>
+
+  <body>
+    <a id="skip-to-content" href="#content">Skip to the content.</a>
+    <!-- Header Section with Flexbox -->
+    <header class="page-header" role="banner" style="background-color: #157878; padding: 10px 0;">
+      <div class="container" style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
+        
+        <!-- Left Section (Photo, Name, Designation) -->
+        <div class="left-section" style="display: flex; align-items: left;">
+          <img src="{{ 'Files/MK_ID_Photo.jpg' | relative_url }}" alt="Muthukrishnan Anand" class="profile-photo" style="width: 60px; height: 60px; border-radius: 50%; margin-right: 10px;">
+          <div class="name-designation" style="color: white;">
+            <strong>Muthukrishnan Anand</strong><br>
+            <span>Graduate Researcher</span>
+          </div>
+        </div>
+
+            <!-- Right Section (Navigation Links) -->
+            <nav class="right-nav" style="display: flex; align-items: right;">
+              <ul style="list-style: none; padding: 0; margin: 0; display: flex;">
+                <li style="margin-right: 15px;"><a href="{{ '/' | relative_url }}" style="color: white; text-decoration: none; padding: 5px 10px;">Home</a></li>
+                <li style="margin-right: 15px;"><a href="{{ '/about/' | relative_url }}" style="color: white; text-decoration: none; padding: 5px 10px;">About</a></li>
+                <!-- Additional Links -->
+                
+                <li style="margin-right: 15px;"><a href="{{ '/professional-experience/' | relative_url }}" style="color: white; text-decoration: none; padding: 5px 10px;">Professional Journey</a></li>
+                <li style="margin-right: 15px;"><a href="{{ '/research/' | relative_url }}" style="color: white; text-decoration: none; padding: 5px 10px;">Research</a></li>
+                <li style="margin-right: 15px;"><a href="{{ '/contact/' | relative_url }}" style="color: white; text-decoration: none; padding: 5px 10px;">Contact</a></li>
+                <!-- <li style="margin-right: 15px;"><a href="{{ '/services/' | relative_url }}" style="color: white; text-decoration: none; padding: 5px 10px;">Services</a></li>
+                <li style="margin-right: 15px;"><a href="{{ '/testimonials/' | relative_url }}" style="color: white; text-decoration: none; padding: 5px 10px;">Testimonials</a></li>
+                <li><a href="{{ '/contact/' | relative_url }}" style="color: white; text-decoration: none; padding: 5px 10px;">Contact</a></li>-->
+              </ul>
+            </nav>
+          </div>
+        </header>  
+
+    <!-- Main Content Area (White Box) -->
+    <main id="content" class="main-content" role="main" style="background-color: white; padding: 20px;">
+      <div class="container">
+        {{ content }}
+      </div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="site-footer" style="background-color: #f8f8f8; padding: 20px 0; display: flex; justify-content: space-between; align-items: center;">
+      <!-- Social Links Section -->
+      <div class="social-links" style="display: flex; gap: 15px;">
+        {% if site.linkedin %}
+          <span class="social-link">
+            <a href="{{ site.linkedin }}" target="_blank" rel="noopener noreferrer">
+              <i class="fab fa-linkedin"></i> LinkedIn
+            </a>
+          </span>
+        {% endif %}
+    
+        {% if site.email %}
+          <span class="social-link">
+            <a href="mailto:{{ site.email }}">
+              <i class="fas fa-envelope"></i> Email
+            </a>
+          </span>
+        {% endif %}
+    
+        {% if site.github %}
+          <span class="social-link">
+            <a href="{{ site.github }}" target="_blank" rel="noopener noreferrer">
+              <i class="fab fa-github"></i> GitHub
+            </a>
+          </span>
+        {% endif %}
+      </div>
+    
+      <!-- Copyright Section -->
+      <div class="copyright" style="flex-shrink: 0;">
+        <p>© {{ site.time | date: '%Y' }} {{ site.title }}. All rights reserved.</p>
+      </div>
+    </footer>
+    
+  <!-- Add JavaScript just before the closing </body> tag -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const header = document.querySelector('.page-header');
+        const mainContent = document.querySelector('.main-content');
+        
+        // Ensure the header exists
+        console.log(header);
+
+        // Listen for scroll events
+        window.addEventListener('scroll', function() {
+          console.log('scroll event triggered'); // Check if this logs on scroll
+          if (window.scrollY > 50) {  // Trigger the change when scrolled 50px
+            header.classList.add('scrolled');
+            header.classList.add('sticky-header');  // Make the header sticky
+          } else {
+            header.classList.remove('scrolled');
+            header.classList.remove('sticky-header');  // Remove sticky effect
+          }
+        });
+      });
+    </script>
+
+<style>
+  /* Sticky Header Styles */
+  .sticky-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Optional shadow effect */
+    transition: background-color 0.3s ease; /* Smooth transition when background changes */
+  }
+
+  .scrolled {
+    background-color: #126969; /* Change the background when scrolled */
+  }
+
+  /* Footer-Specific Styles */
+  footer {
+    background-color: #f8f8f8; /* Light gray background */
+    padding: 20px 0; /* Consistent padding */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1); /* Light shadow to distinguish footer */
+    z-index: 10; /* Higher z-index to ensure it's above other content */
+    position: relative; /* Position footer normally at the bottom of content */
+  }
+
+  /* Footer Links: Prevent hover effects from affecting the footer links */
+  footer a {
+    color: #34495e; /* Default link color */
+    text-decoration: none;
+    transition: color 0.3s ease; /* Smooth transition for hover */
+  }
+
+  footer a:hover {
+    color: #34495e; /* Ensure no color change on hover for links */
+    text-decoration: none; /* Prevent underline on hover */
+  }
+
+  /* Focus effect for footer links (accessibility improvement) */
+  footer a:focus {
+    outline: 3px solid #2980b9; /* Blue outline for focus state */
+  }
+
+  /* Footer Social Links: Keep them unaffected by hover effects */
+  footer .social-link a {
+    color: #2980b9;
+    transition: color 0.3s ease; /* Add transition to social links */
+  }
+
+  footer .social-link a:hover {
+    color: #3498db; /* Ensure social links color doesn't change on hover */
+    text-decoration: none; /* Prevent text-decoration on hover */
+  }
+
+  footer .social-link a:focus {
+    outline: 3px solid #2980b9; /* Blue outline for focus state */
+  }
+
+  /* Ensuring Footer Stays at the Bottom of the Page */
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+
+  .content-wrapper {
+    min-height: calc(100vh - 100px); /* Adjust content area height to ensure footer is pushed to the bottom */
+    padding-bottom: 100px; /* Space for footer */
+  }
+
+  footer {
+    position: relative; /* Normal flow position, at the bottom of the content */
+    width: 100%;
+    box-shadow: none; /* Remove shadow if not needed */
+  }
+</style>
+
+
+</body>
+</html>
+
