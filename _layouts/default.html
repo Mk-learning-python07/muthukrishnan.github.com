@@ -45,12 +45,13 @@
 
 
 <body>
+  <body>
     <!-- Header Section with Flexbox -->
     <header class="page-header" role="banner" style="background-color: #157878; padding: 10px 0;">
       <div class="container" style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
         <!-- Left Section (Photo, Name, Designation) -->
         <div class="left-section" style="display: flex; align-items: center;">
-          <img src="{{ 'Files/MK_ID_Photo.jpg' | relative_url }}" alt="Muthukrishnan Anand" class="profile-photo" style="width: 60px; height: 60px; border-radius: 50%; margin-right: 10px;">
+          <img src="{{ site.baseurl }}/assets/MK_ID_Photo.jpg" alt="Muthukrishnan Anand" class="profile-photo" style="width: 60px; height: 60px; border-radius: 50%; margin-right: 10px;">
           <div class="name-designation" style="color: white;">
             <strong>Muthukrishnan Anand</strong><br>
             <span>Graduate Researcher</span>
@@ -60,11 +61,11 @@
         <!-- Right Section (Navigation Links) -->
         <nav class="right-nav" aria-label="Primary navigation" style="display: flex; align-items: center;">
           <ul style="list-style: none; padding: 0; margin: 0; display: flex;">
-            <li style="margin-right: 15px;"><a href="{{ '/' | relative_url }}" style="color: white; text-decoration: none; padding: 5px 10px;">Home</a></li>
-            <li style="margin-right: 15px;"><a href="{{ '/about-me/' | relative_url }}" style="color: white; text-decoration: none; padding: 5px 10px;">About Me</a></li>
-            <li style="margin-right: 15px;"><a href="{{ '/professional-experience/' | relative_url }}" style="color: white; text-decoration: none; padding: 5px 10px;">Professional Journey</a></li>
-            <li style="margin-right: 15px;"><a href="{{ '/research/' | relative_url }}" style="color: white; text-decoration: none; padding: 5px 10px;">Research</a></li>
-            <li style="margin-right: 15px;"><a href="{{ '/contact/' | relative_url }}" style="color: white; text-decoration: none; padding: 5px 10px;">Contact</a></li>
+            <li style="margin-right: 15px;"><a href="{{ site.baseurl }}/" style="color: white; text-decoration: none; padding: 5px 10px;">Home</a></li>
+            <li style="margin-right: 15px;"><a href="{{ site.baseurl }}/about-me/" style="color: white; text-decoration: none; padding: 5px 10px;">About Me</a></li>
+            <li style="margin-right: 15px;"><a href="{{ site.baseurl }}/professional-experience/" style="color: white; text-decoration: none; padding: 5px 10px;">Professional Journey</a></li>
+            <li style="margin-right: 15px;"><a href="{{ site.baseurl }}/research/" style="color: white; text-decoration: none; padding: 5px 10px;">Research</a></li>
+            <li style="margin-right: 15px;"><a href="{{ site.baseurl }}/contact/" style="color: white; text-decoration: none; padding: 5px 10px;">Contact</a></li>
           </ul>
         </nav>
       </div>
@@ -146,6 +147,7 @@
       });
     </script>
   </body>
+  
   
 
 
