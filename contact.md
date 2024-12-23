@@ -11,6 +11,8 @@ Are you ready to tackle complex challenges, optimize your processes, and drive i
 
 I’m always open to discussing new projects, ideas, or potential collaborations. Feel free to reach out—let’s start a conversation today!
 
+---
+
 ## **Get in Touch**
 
 I would love to hear from you! Whether you're interested in collaboration, have a question, or simply want to connect, feel free to reach out using any of the following methods:

@@ -16,6 +16,8 @@ I’ve always had a passion for continuous learning and solving complex problems
 
 ![Collage Image]({{ site.baseurl }}/Files/Collage.png)
 
+---
+
 # **Softskills and Interests**
 
 <!-- Softskills and Interests Section -->
