@@ -16,8 +16,9 @@ I’ve always had a passion for continuous learning and solving complex problems
 
 ![Collage Image]({{ site.baseurl }}/Files/Collage.png)
 
-# Softskills and Interests
+# **Softskills and Interests**
 
+<!-- Softskills and Interests Section -->
 <div class="skills-container">
   <div class="skills-column">
     <h4>LANGUAGES</h4>
@@ -36,7 +37,7 @@ I’ve always had a passion for continuous learning and solving complex problems
   </div>
 
   <div class="interest-column">
-    <h4>INTERESTS</h4>
+    <h4>PERSONAL INTERESTS</h4>
     <div class="icon-item">
       <img src="{{ site.baseurl }}/Files/travel-icon.png" alt="Travel" class="custom-icon" title="Travel">
       <p>Travel</p>
@@ -61,10 +62,7 @@ I’ve always had a passion for continuous learning and solving complex problems
   </div>
 </div>
 
-
-
-
-
+<!-- CSS for Styling -->
 <style>
 /* General layout for the Skills and Interests Sections */
 .skills-container {
@@ -97,6 +95,7 @@ I’ve always had a passion for continuous learning and solving complex problems
   align-items: center;
   flex-direction: column; /* Stack icon and text vertically */
   min-height: 120px; /* Ensures consistent height for icon items */
+  cursor: pointer;
 }
 
 /* Icon Text Styling */
@@ -108,12 +107,12 @@ I’ve always had a passion for continuous learning and solving complex problems
 }
 
 /* Unified Hover Effects for Icons */
-.icon-item:hover .custom-icon {
+.icon-item:hover .custom-icon, .icon-item:focus .custom-icon {
   transform: scale(1.1);
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1); /* Add a subtle shadow on hover */
 }
 
-.icon-item:hover p {
+.icon-item:hover p, .icon-item:focus p {
   color: #2980b9;  /* Change text color to blue on hover */
 }
 
@@ -122,6 +121,7 @@ I’ve always had a passion for continuous learning and solving complex problems
   width: 60px;
   height: 60px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  object-fit: contain; /* Ensure images maintain aspect ratio */
 }
 
 /* Heading Styling */
@@ -149,9 +149,19 @@ I’ve always had a passion for continuous learning and solving complex problems
     width: 50px;
     height: 50px;
   }
+
+  .skills-column h4, .interest-column h4 {
+    font-size: 1.2rem;  /* Adjust font size for mobile */
+  }
 }
 
 /* Accessibility: Ensure hover and focus effects are clear */
+.icon-item:focus, .icon-item:hover {
+  outline: none;  /* Remove default outline */
+  border: 2px solid #2980b9;  /* Add a blue border on hover/focus for better accessibility */
+  padding: 2px;
+}
+
 .icon-item:focus .custom-icon, .icon-item:hover .custom-icon {
   transform: scale(1.1);
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
@@ -160,16 +170,4 @@ I’ve always had a passion for continuous learning and solving complex problems
 .icon-item:focus p, .icon-item:hover p {
   color: #2980b9;  /* Change text color on hover and focus */
 }
-
-/* Add focus state for keyboard users */
-.icon-item:focus, .icon-item:hover {
-  outline: none;  /* Remove default outline */
-  border: 2px solid #2980b9;  /* Add a blue border on hover/focus for better accessibility */
-  padding: 2px;
-}
-
 </style>
-
-
-
- 	 

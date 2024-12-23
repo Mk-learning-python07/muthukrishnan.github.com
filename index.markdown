@@ -6,11 +6,11 @@ layout: default
 title: Home Page
 permalink: /
 ---
-# Welcome to My Digital Space
+# Welcome to My Digital Space!
 
 Welcome to a space where innovation intersects with expertise. With a solid foundation in chemical engineering, data analysis, and process optimization, I am driven to solve complex challenges in industries such as Direct Air Capture (DAC) and beyond. Here, you’ll discover how my skills and experience can empower your business by driving impactful solutions, enhancing operational efficiency, and achieving your goals. Let’s join forces and create a more sustainable future.
 
-# Professional Background
+# **Professional Background**
 Here is a brief overview of my professional background. For a more detailed look, click [here]({{ site.baseurl }}/professional-experience/).
 
 <div class="timeline-container">
@@ -68,7 +68,7 @@ Here is a brief overview of my professional background. For a more detailed look
   </div>
 </div>
 
-# Skills
+# **Skills**
 This section highlights my skills in advanced data analysis, process optimization, and technical expertise in chemical engineering, which I have gained through previous industry experience and have consistently applied in driving performance improvements and problem-solving. 
 
 <div class="skills-container">
@@ -384,6 +384,7 @@ a:hover {
 
 </style>
 -->
+<!-- Timeline and Skills Sections -->
 <style>
 /* Global Styles */
 body {
@@ -598,6 +599,10 @@ h4 {
   .custom-icon {
     width: 50px;
     height: 50px;
+  }
+
+  .skills-column h4 {
+    font-size: 1.2rem;  /* Adjust font size for mobile */
   }
 }
 

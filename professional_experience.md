@@ -17,7 +17,7 @@ permalink: /professional-experience/
 - Any notable projects or collaborations.
 -->
 
-# Professional Journey
+# **Professional Journey**
 This section provides a chronological overview of my professional journey from 2019 to 2024.
 
 During this period, I have gained valuable experience across various roles, each contributing to the development of my skills and expertise. My career progression reflects a consistent focus on technical excellence, problem-solving on multiple facets, and driving performance improvements.

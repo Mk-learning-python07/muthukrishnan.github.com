@@ -6,7 +6,7 @@ permalink: /research/
 
 # Exploring Direct Air Capture as a means of Carbon Dioxide Removal (CDR) Technology for decarbonization
 
-## Research Objective
+## **Research Objective**
 
 The objective of this research is to investigate and optimize **Pressure Swing Adsorption (PSA)** cycles for **Direct Air Capture (DAC)** applications, with a primary focus on process simulation, sorbent characterization, and the design of experimental setups. This research aims to improve CO₂ removal efficiency using **Metal Organic Frameworks (MOFs)** as sorbent materials, which are advantageous for DAC applications due to their potential for high adsorption capacities.
 
