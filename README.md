@@ -1,7 +1,7 @@
 # 🖥️ Muthukrishnan Anand's Personal Website
 ![Logo](https://github.com/user-attachments/assets/b2dd8451-6de4-4d57-bea6-b778a94353e6)
 
-Welcome to my personal website! 🚀 This site serves as an online portfolio showcasing my **professional journey**, **research** work, and how to **contact** me. It's built using **Jekyll**, designed with the **Cayman theme**, and leverages **ChatGPT** for content generation and technical support.<br>
+Welcome to my personal website! 🚀 This site serves as an online portfolio showcasing my **professional journey**, **research** work, and how to **contact** me. It's built using **Jekyll**, designed with the **Cayman theme**, and leverages **ChatGPT** for content curation and technical support.<br>
 
 
 ## 📑 Table of Contents
@@ -35,7 +35,7 @@ Want to reach out? You can connect with me via the **Contact** section. I’ve i
 - **Cayman Theme**: 🎨 I’ve used the **Cayman theme** for a clean and minimalist design that’s perfect for personal websites and portfolios.
 - **HTML/CSS**: 🔌 For the core structure and styling of the website.
 - **JavaScript**: 💻 To add interactive elements such as the sticky header and link highlights.
-- **ChatGPT**: 🤖 ChatGPT helped me generate content and provided technical support to ensure a seamless development process.
+- **ChatGPT**: 🤖 ChatGPT helped me curate content and provided technical support to ensure a seamless development process.
 - **GitHub Pages**: 🌐 Hosted via **GitHub Pages**, making the website easily accessible and publicly available.
 - **FontAwesome**: 🎨 Used for social media icons in the footer section.
 - **Google Analytics**: 📊 **Google Analytics** is used to track website traffic and user interactions, providing insights into how the site is being used to improve the user experience.
