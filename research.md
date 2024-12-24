@@ -4,7 +4,7 @@ title: "Research"
 permalink: /research/
 ---
 
-# Exploring Direct Air Capture as a means of Carbon Dioxide Removal (CDR) Technology for decarbonization
+# Exploring Direct Air Capture as a means of Carbon Dioxide Removal (CDR) Technology for GHG emission reduction
 
 ## **Research Objective**
 
