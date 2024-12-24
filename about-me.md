@@ -160,13 +160,14 @@ I’ve always had a passion for continuous learning and solving complex problems
 /* Accessibility: Ensure hover and focus effects are clear */
 .icon-item:focus, .icon-item:hover {
   outline: none;  /* Remove default outline */
-  border: 2px solid #2980b9;  /* Add a blue border on hover/focus for better accessibility */
+  
   padding: 2px;
 }
 
 .icon-item:focus .custom-icon, .icon-item:hover .custom-icon {
   transform: scale(1.1);
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+  border: 2px solid #2980b9;  /* Add a blue border on hover/focus for better accessibility */
 }
 
 .icon-item:focus p, .icon-item:hover p {

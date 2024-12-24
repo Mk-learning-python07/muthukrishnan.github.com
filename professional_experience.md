@@ -63,7 +63,7 @@ Click <b>[here](/Files/Resume_December2024.pdf)</b> to view my one-page professi
   <div class="timeline-item" id="item-3">
     <div class="timeline-marker" data-target="#item-3">2019</div>
     <div class="timeline-content">
-      <h3>Upstream Process(Facilities) Surveillance Engineer</h3>
+      <h3>Upstream Process Surveillance Engineer</h3>
       <p><strong>ExxonMobil Services and Technology Private Limited (EMSTPL)</strong></p>
        <p><strong>Duration:</strong> Jun 2019 - Nov 2022</p>
         <p><strong>Location:</strong> Bengaluru, India</p>
@@ -82,7 +82,7 @@ Click <b>[here](/Files/Resume_December2024.pdf)</b> to view my one-page professi
   <div class="timeline-item" id="item-4">
     <div class="timeline-marker" data-target="#item-4">2019</div>
     <div class="timeline-content">
-      <h3>Upstream Process(Facilities) Surveillance Engineer – Papua New Guinea (Hides Gas Conditioning Plant)</h3>
+      <h3>Upstream Process Surveillance Engineer – Papua New Guinea (Hides Gas Conditioning Plant)</h3>
       <p><strong>ExxonMobil Services and Technology Private Limited (EMSTPL)</strong></p>
      <p><strong>Duration:</strong> Jun 2019 - Jun 2020</p>
       <p><strong>Type of Process:</strong> Gas Condensate and Gas Dehydration/Compression <br></p>
@@ -96,7 +96,7 @@ Click <b>[here](/Files/Resume_December2024.pdf)</b> to view my one-page professi
   <div class="timeline-item" id="item-5">
     <div class="timeline-marker" data-target="#item-5">2020</div>
     <div class="timeline-content">
-      <h3> Upstream Process(Facilities) Surveillance Engineer –  Nigeria (East Asia Projects (EAP) and Bonny River Terminal (BRT))  </h3>
+      <h3> Upstream Process Surveillance Engineer –  Nigeria (East Asia Projects (EAP) and Bonny River Terminal (BRT))  </h3>
       <p><strong>ExxonMobil Services and Technology Private Limited (EMSTPL)</strong></p>
      <p><strong>Duration:</strong> Jun 2020 - Oct 2021</p>
       <p><strong>Type of Process:</strong> NGL Extraction and Fractionation <br></p>
@@ -114,7 +114,7 @@ Click <b>[here](/Files/Resume_December2024.pdf)</b> to view my one-page professi
   <div class="timeline-item" id="item-6">
     <div class="timeline-marker" data-target="#item-6">2021</div>
     <div class="timeline-content">
-      <h3> Upstream Process(Facilities) Surveillance Engineer –  Canada East (Hebron and Hibernia)  </h3>
+      <h3> Upstream Process Surveillance Engineer –  Canada East (Hebron and Hibernia)  </h3>
       <p><strong>ExxonMobil Services and Technology Private Limited (EMSTPL)</strong></p>
      <p><strong>Duration:</strong> Oct 2021 - Nov 2022</p>
       <p><strong>Type of Process:</strong> Crude Separation and Export <br></p>
@@ -153,65 +153,6 @@ Click <b>[here](/Files/Resume_December2024.pdf)</b> to view my one-page professi
 
 <!-- CSS Section -->
 <style>
-
-/* Global Styles */
-body {
-  font-family: 'Helvetica', sans-serif;
-  background-color: #f4f7fa;
-  color: #333;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box; /* Ensures consistent box-sizing across all elements */
-}
-
-/* Header Styles inside Timeline Container */
-.timeline-container h1 {
-  text-align: center;
-  font-size: 2.5em; /* Large size for main headings */
-  color: #333333; /* Dark grey for prominence */
-  padding-top: 40px; /* Space above */
-  margin-bottom: 10px; /* Space below */
-  font-weight: bold;
-}
-
-.timeline-container h2 {
-  text-align: left;
-  font-size: 2em; /* Slightly smaller than h1 */
-  color: #333333; /* Same dark grey color as h1 */
-  margin: 30px 0 15px; /* Adjusted spacing for hierarchy */
-}
-
-.timeline-container h3 {
-  text-align: left;
-  font-size: 1.75em;
-  color: #333333;
-  margin: 20px 0 10px;
-  font-weight: bold;
-}
-
-/* Header style for h4 (Tags:) */
-.timeline-container h4 {
-  font-size: 1.25rem;
-  color: #28a745; /* Green for emphasis */
-  margin: 15px 0 5px; /* Adjust margin to keep space between the text and next element */
-}
-
-.timeline-container h5 {
-  text-align: left;
-  font-size: 1.1rem;
-  color: #333333;
-  margin: 10px 0 5px;
-}
-
-.timeline-container h6 {
-  text-align: left;
-  font-size: 1rem;
-  color: #333333;
-  margin: 8px 0 3px;
-  font-weight: normal;
-}
-
-
 /* Timeline container */
 .timeline-container {
   display: flex;
@@ -224,18 +165,6 @@ body {
   margin-left: 20px; /* Move everything 20px to the left */
 }
 
-/* Vertical timeline line */
-.timeline-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 2px;
-  background-color: #ccc; /* Subtle neutral color */
-  z-index: -1;
-}
-
 /* Timeline item */
 .timeline-item {
   display: flex;
@@ -245,17 +174,21 @@ body {
   opacity: 0.6;
   transform: translateY(20px);
   transition: all 0.4s ease-in-out;
+  z-index: 1; /* Ensure it's above other items during hover */
 }
 
 /* When a timeline item is active (clicked) */
 .timeline-item.active {
   opacity: 1;
   transform: translateY(0);
+  z-index: 2; /* Keep it above other items when active */
 }
 
 .timeline-item:hover {
   cursor: pointer;
-  transform: scale(1.02); /* Subtle zoom on hover */
+  transform: scale(1.05); /* Subtle zoom on hover */
+  opacity: 1; /* Ensure it becomes fully visible on hover */
+  z-index: 2; /* Ensure the hovered item is on top */
 }
 
 /* Timeline marker (circle) */
@@ -336,12 +269,48 @@ body {
   border-color: #2980b9;
 }
 
+/* Timeline item content for coloring */
+.timeline-item:nth-child(odd) .timeline-content {
+  background-color: #f1f1f1;
+}
+
+.timeline-item:nth-child(even) .timeline-content {
+  background-color: #fafafa;
+}
+
+/* Styling for h3 */
+h3 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 15px;
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease-in-out;
+}
+
+h3:hover {
+  color: #007acc; /* Change color on hover */
+}
+
+/* Focus and accessibility adjustments */
+.timeline-item:focus, .timeline-item:hover {
+  outline: none;  /* Remove default outline */
+  border: 2px solid #2980b9;  /* Add a blue border on hover/focus for better accessibility */
+}
+
+.timeline-item:focus .timeline-marker, .timeline-item:hover .timeline-marker {
+  background-color: #2980b9;
+  border-color: #2980b9;
+}
+
+.timeline-item:focus .timeline-content, .timeline-item:hover .timeline-content {
+  background-color: #eaf6ff;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .timeline-container::before {
-    left: 20px;
-  }
-
   .timeline-item {
     flex-direction: column;
     align-items: flex-start;
@@ -361,141 +330,8 @@ body {
     margin-bottom: 10px;
   }
 }
-
-/* Focus and accessibility adjustments */
-.timeline-item:focus, .timeline-item:hover {
-  outline: none;  /* Remove default outline */
-  border: 2px solid #2980b9;  /* Add a blue border on hover/focus for better accessibility */
-}
-
-.timeline-item:focus .timeline-marker, .timeline-item:hover .timeline-marker {
-  background-color: #2980b9;
-  border-color: #2980b9;
-}
-
-.timeline-item:focus .timeline-content, .timeline-item:hover .timeline-content {
-  background-color: #eaf6ff;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-}
-
-/* Skills Section */
-.skills-container {
-  display: flex;
-  justify-content: space-between;
-  margin: 40px 0;
-  flex-wrap: wrap;
-  gap: 30px; /* Added gap between columns */
-}
-
-.skills-column {
-  width: 23%;
-  text-align: center;
-  margin-bottom: 20px;
-  box-sizing: border-box; /* Ensures consistent width calculation */
-}
-
-.icon-item {
-  margin: 20px 0;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.icon-item p {
-  font-size: 1rem;
-  color: #7f8c8d;
-  transition: color 0.3s ease;
-  margin-top: 10px; /* Added space between icon and text */
-  font-weight: normal; /* Ensures a lighter weight for text */
-}
-
-/* Unified Hover Effects for Icons */
-.icon-item:hover .custom-icon {
-  transform: scale(1.1);
-  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
-}
-
-/* Hover Effects for Text */
-.icon-item:hover p {
-  color: #2980b9;
-}
-
-/* Custom PNG Icons */
-.custom-icon {
-  width: 60px;
-  height: 60px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  margin-bottom: 10px; /* Space between icon and text */
-}
-
-/* Hover Effects for Custom PNG Icons */
-.icon-item:hover .custom-icon {
-  transform: scale(1.1);
-  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
-}
-
-/* Heading Styling */
-.skills-column h4 {
-  font-size: 1.5rem;
-  margin-bottom: 20px;
-  color: #7f8c8d;
-  font-weight: 600;
-  text-transform: uppercase; /* Uppercase for section titles for a professional look */
-}
-
-/* Responsive Design: Stack columns on smaller screens */
-@media (max-width: 768px) {
-  .skills-column {
-    width: 100%;
-    margin-bottom: 20px;
-  }
-
-  .custom-icon {
-    width: 50px;
-    height: 50px;
-  }
-
-  /* Center column titles and reduce margins on smaller screens */
-  .skills-column h4 {
-    text-align: center;
-    margin-bottom: 15px;
-  }
-}
-
-/* Accessibility: Ensure hover and focus effects are clear */
-.icon-item:focus .custom-icon, .icon-item:hover .custom-icon {
-  transform: scale(1.1);
-  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
-}
-
-.icon-item:focus p, .icon-item:hover p {
-  color: #2980b9;
-}
-
-/* Add focus state for keyboard users */
-.icon-item:focus, .icon-item:hover {
-  outline: none;
-  border: 2px solid #2980b9;
-  padding: 2px;
-}
-
-/* Global Link Styling (for links inside sections) */
-a {
-  color: #2980b9;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-a:hover {
-  color: #34495e; /* Subtle change for links */
-}
-
-/* Accessibility improvements for focus */
-:focus {
-  outline: 3px solid #2980b9; /* Blue outline on focus for accessibility */
-}
-
 </style>
 
-<!-- JS Section -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   // Scroll-based activation of timeline items
@@ -544,5 +380,4 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 });
-
 </script>
