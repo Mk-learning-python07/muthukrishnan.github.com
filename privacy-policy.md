@@ -37,4 +37,4 @@ You have control over your privacy. Here are a few options:
 This site uses Google Analytics for traffic analysis. For more details, refer to [Google’s Privacy Policy](https://policies.google.com/privacy) and [Google Analytics Terms](https://marketingplatform.google.com/about/analytics/terms/us/).
 
 #### **Contact me**
-If you have any questions about our privacy practices, please contact me at [Email Me](mailto:{{ site.email }})
+If you have any questions about our privacy practices, please [email Me](mailto:{{ site.email }})
