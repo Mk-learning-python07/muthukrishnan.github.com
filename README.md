@@ -1,5 +1,7 @@
 # 🖥️ Muthukrishnan Anand's Personal Website
-<center>![Logo](https://github.com/user-attachments/assets/9945d978-bd0e-44e9-8629-98be3503f5d1)</center>
+<div style="text-align: center;">
+  <img src="{{ site.baseurl }}/files/logo.jpeg" alt="Logo">
+</div>
 Welcome to my personal website! 🚀 This site serves as an online portfolio showcasing my **professional journey**, **research** work, and how to **contact** me. It's built using **Jekyll**, designed with the **Cayman theme**, and leverages **ChatGPT** for content generation and technical support.<br>
 
 
