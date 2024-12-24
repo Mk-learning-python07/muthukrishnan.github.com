@@ -165,7 +165,7 @@ Here is a brief overview of my professional experience and education. For a more
 .professional-experience h2,
 .education h2,
 .skills h2 {
-  font-size: 1.75em; /* Large font for section title */
+  font-size: 1.75rem; /* Large font for section title */
   margin-bottom: 20px;
   font-weight: bold;
   transition: none; /* No hover effect for section titles */
@@ -174,7 +174,7 @@ Here is a brief overview of my professional experience and education. For a more
 /* Sub-item Headings under Skills */
 .skills-container h4 {
   color: var(--grey-color); /* Grey color for sub-item headings */
-  font-size: 1.25em;
+  font-size: 1.25rem;
   font-weight: bold; /* Capitalize sub-item headings */
   text-transform: uppercase;
   margin-bottom: 10px;
@@ -191,7 +191,7 @@ Here is a brief overview of my professional experience and education. For a more
 .education h3 {
   color: var(--base-color-black); /* Default green for sub-item headings */
   margin-bottom: 10px;
-  font-size: 1.5em;
+  font-size: 1.5rem;
   font-weight: bold; /* Added bold for consistency */
   transition: color 0.3s ease;
 }
