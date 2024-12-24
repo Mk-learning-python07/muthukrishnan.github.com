@@ -6,7 +6,7 @@ permalink: /privacy-policy/
 ### **Privacy Policy**
 
 #### **Introduction**
-I value your privacy and am committed to being transparent about the data I collect and how it is used. This page outlines what information I gather when you use my website and how it helps me improve your experience.
+I value your privacy and am committed to being transparent about the data I collect and how it is used. This page outlines what information I gather when you use my website and how it helps me improve your experience.This website is my first attempt at hosting websites and using Google Analytics, so feedback on improvements and adoption of better practices is welcome. You can reach out via [Contact Me]]({{ site.baseurl }}/contact/).
 
 #### **What Data I Collect**
 I use Google Analytics to track basic website interactions to understand how visitors engage with our content. The data collected includes:
