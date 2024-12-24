@@ -113,49 +113,51 @@
   </footer>
 
  <!-- Pop-up for enabling Desktop Mode -->
- <div id="desktop-mode-popup" style="display: none;">
+<div id="desktop-mode-popup" style="display: none;">
   <div class="popup-overlay" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); z-index: 9999; display: flex; justify-content: center; align-items: center;">
     <div class="popup-content" style="background: white; padding: 20px; border-radius: 8px; text-align: center; max-width: 400px;">
       <h2 style="color: #157878;">Enable Desktop Mode</h2>
       <p style="color: #333;">To view the site in the best way, please enable desktop mode in your browser. Here’s how:</p>
       <ul style="list-style: none; padding: 0; color: #333;">
-        <li><strong>Chrome:</strong> Tap the three dots in the top-right corner, select "Request Desktop Site."</li>
-        <li><strong>Safari:</strong> Tap the "aA" icon in the address bar, then select "Request Desktop Site."</li>
-        <li><strong>Firefox:</strong> Tap the three horizontal lines in the bottom-right corner, select "Request Desktop Site."</li>
-        <li><strong>Edge:</strong> Tap the three dots in the bottom-center, then choose "Request Desktop Site."</li>
-        <li><strong>DuckDuckGo:</strong> Tap the three dots in the bottom-center, select "Request Desktop Site."</li>
+        <li><strong>Chrome:</strong> Tap the three dots in the top-right corner, then check the "Request Desktop Site" checkbox.</li>
+        <li><strong>Safari:</strong> Tap the "aA" icon in the address bar, then select "Request Desktop Website."</li>
+        <li><strong>Firefox:</strong> Tap the three dots in the top-right corner, then enable "Request Desktop Site."</li>
+        <li><strong>Edge:</strong> Tap the <span style="font-size: 20px;">&#9776;</span> hamburger icon (three horizontal lines) in the bottom-center, then select "Request Desktop Site."</li>
+        <li><strong>DuckDuckGo:</strong> Tap the three dots in the bottom-center, then select "Request Desktop Site."</li>
       </ul>
       <button id="close-popup" style="background-color: #157878; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">Got It!</button>
     </div>
   </div>
 </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const header = document.querySelector('.page-header');
-      
-      // Smooth scroll effect
-      window.addEventListener('scroll', function() {
-        if (window.scrollY > 50) {  // Trigger the change when scrolled 50px
-          header.classList.add('scrolled');
-          header.classList.add('sticky-header');
-        } else {
-          header.classList.remove('scrolled');
-          header.classList.remove('sticky-header');
-        }
-      });
-    });
-    // Display the pop-up if it's a mobile device
-    if (window.innerWidth <= 768) {
-      document.getElementById('desktop-mode-popup').style.display = 'flex';
-    }
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const header = document.querySelector('.page-header');
 
-    // Close the pop-up when the button is clicked
-    document.getElementById('close-popup').addEventListener('click', function() {
-      document.getElementById('desktop-mode-popup').style.display = 'none';
+    // Smooth scroll effect
+    window.addEventListener('scroll', function() {
+      if (window.scrollY > 50) {  // Trigger the change when scrolled 50px
+        header.classList.add('scrolled');
+        header.classList.add('sticky-header');
+      } else {
+        header.classList.remove('scrolled');
+        header.classList.remove('sticky-header');
+      }
     });
-  </script>
-  </script>
+
+    // Display the pop-up if it's a mobile device and user hasn't dismissed it
+    if (window.innerWidth <= 768 && !localStorage.getItem('desktopModePopupDismissed')) {
+      document.getElementById('desktop-mode-popup').style.display = 'flex';
+
+      // Close the pop-up when the button is clicked
+      document.getElementById('close-popup').addEventListener('click', function() {
+        document.getElementById('desktop-mode-popup').style.display = 'none';
+        // Store that the user has dismissed the popup in localStorage
+        localStorage.setItem('desktopModePopupDismissed', 'true');
+      });
+    }
+  });
+</script>
 </body>
 
 
