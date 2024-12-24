@@ -78,9 +78,9 @@
   </main>
 
   <!-- Footer Section -->
-  <footer class="site-footer" style="background-color: #f8f8f8; padding: 20px 0; display: flex; justify-content: space-between; align-items: center;">
+  <footer class="site-footer" style="background-color: #f8f8f8; padding: 30px 0; display: flex; flex-direction: column; align-items: center; text-align: center; border-top: 1px solid #ddd;">
     <!-- Social Links Section -->
-    <div class="social-links" style="display: flex; gap: 15px;">
+    <div class="social-links" style="display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;">
       {% if site.linkedin %}
         <span class="social-link">
           <a href="{{ site.linkedin }}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
@@ -105,12 +105,16 @@
         </span>
       {% endif %}
     </div>
-
-    <p> We use Google Analytics to track website visits. By using this site, you agree to our <a href="{{ site.baseurl }}/privacy-policy">privacy policy</a>.</p>    
+  
+    <!-- Google Analytics & Privacy Notice -->
+    <p style="font-size: 14px; color: #666;">
+      We use Google Analytics to track website visits. By using this site, you agree to our 
+      <a href="{{ site.baseurl }}/privacy-policy" style="color: #126969; text-decoration: none;">privacy policy</a>.
+    </p>
   
     <!-- Copyright Section -->
-    <div class="copyright" style="flex-shrink: 0;">
-      <p>© {{ site.time | date: '%Y' }} {{ site.title }}. All rights reserved.</p>  
+    <div class="copyright" style="margin-top: 20px; font-size: 14px; color: #888;">
+      <p>© {{ site.time | date: '%Y' }} {{ site.title }}. All rights reserved.</p>
     </div>
   </footer>
 
@@ -171,176 +175,213 @@
 
 <style>
 /* Global Styles */
-    body, html {
-      margin: 0;
-      padding: 0;
-      font-family: 'Helvetica', sans-serif;
-      box-sizing: border-box;
-      line-height: 1.6;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden; /* Prevent horizontal scroll */
-    }
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Helvetica', sans-serif;
+  box-sizing: border-box;
+  line-height: 1.6;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
 
-    /* Apply gradient to the outer container (not the body or html directly) */
-    .gradient-background {
-      position: fixed; /* Keep gradient fixed on scroll */
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(135deg, #f0f8ff, #e0e7ff); /* Light blue gradient */
-      z-index: -1; /* Ensure it stays behind the content */
-    }
+/* Apply gradient to the outer container (not the body or html directly) */
+.gradient-background {
+  position: fixed; /* Keep gradient fixed on scroll */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #f0f8ff, #e0e7ff); /* Light blue gradient */
+  z-index: -1; /* Ensure it stays behind the content */
+}
 
-    .container {
-      margin: 0 auto;
-      padding: 0 20px;
-      max-width: 1200px;
-    }
+.container {
+  margin: 0 auto;
+  padding: 0 20px;
+  max-width: 1200px;
+}
 
-    /* Sticky Header Styles */
-    .sticky-header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      width: 100%;
-      z-index: 1000;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    }
+/* Sticky Header Styles */
+.sticky-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
 
-    .scrolled {
-      background-color: #126969;
-    }
+.scrolled {
+  background-color: #126969;
+}
 
-    /* Header Section Styles */
-    .page-header {
-      background-color: #157878;
-      padding: 10px 0;
-      transition: background-color 0.3s ease;
-    }
+/* Header Section Styles */
+.page-header {
+  background-color: #157878;
+  padding: 10px 0;
+  transition: background-color 0.3s ease;
+}
 
-    .page-header .left-section {
-      display: flex;
-      align-items: center;
-    }
+.page-header .left-section {
+  display: flex;
+  align-items: center;
+}
 
-    .page-header .left-section img {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      margin-right: 10px;
-    }
+.page-header .left-section img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
 
-    .page-header .right-nav ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: flex;
-    }
+.page-header .right-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
 
-    .page-header .right-nav a {
-      color: white;
-      text-decoration: none;
-      padding: 10px 20px;
-      transition: background-color 0.3s ease;
-      border-radius: 4px;
-    }
+.page-header .right-nav a {
+  color: white;
+  text-decoration: none;
+  padding: 10px 20px;
+  transition: background-color 0.3s ease;
+  border-radius: 4px;
+}
 
-    /* Hover Effect for Links */
-    .page-header .right-nav a:hover {
-      background-color: #126969;
-    }
+/* Hover Effect for Links */
+.page-header .right-nav a:hover {
+  background-color: #126969;
+}
 
-    /* Footer Section */
-    footer {
-      background-color: #f8f8f8;
-      padding: 20px 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: relative;
-      width: 100%;
-    }
+/* Footer Section */
+footer {
+  background-color: #f8f8f8;
+  padding: 10px 0; /* Reduced padding to make the footer less tall */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  width: 100%;
+}
 
-    footer a {
-      color: #34495e;
-      text-decoration: none;
-      transition: color 0.3s ease;
-    }
+footer a {
+  color: #34495e;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
 
-    /* Footer Hover and Focus */
-    footer a:hover {
-      color: #2980b9;
-    }
+/* Footer Hover and Focus */
+footer a:hover {
+  color: #2980b9;
+}
 
-    footer .social-link a {
-      color: #2980b9;
-      transition: color 0.3s ease;
-    }
+footer .social-link a {
+  color: #2980b9;
+  transition: color 0.3s ease;
+}
 
-    footer .social-link a:hover {
-      color: #3498db;
-    }
+footer .social-link a:hover {
+  color: #3498db;
+}
 
-    /* Ensure Footer Stays at the Bottom of the Page */
-    html, body {
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-    }
+/* Ensure Footer Stays at the Bottom of the Page */
+html, body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
 
-    .main-content {
-      flex-grow: 1; /* This will make sure the content area grows to fill available space */
-      padding-bottom: 100px; /* Ensure there is space for footer */
-      background-color: white; /* Content area will be white */
-      border-radius: 8px; /* Rounded corners for the content box */
-      padding: 20px;
-      margin: 20px auto; /* Center content and add margin */
-      max-width: 1200px; /* Maximum width for the content */
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Optional: Add shadow to make it stand out */
-    }
+.main-content {
+  flex-grow: 1; /* This will make sure the content area grows to fill available space */
+  padding-bottom: 100px; /* Ensure there is space for footer */
+  background-color: white; /* Content area will be white */
+  border-radius: 8px; /* Rounded corners for the content box */
+  padding: 20px;
+  margin: 20px auto; /* Center content and add margin */
+  max-width: 1200px; /* Maximum width for the content */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Optional: Add shadow to make it stand out */
+}
 
-    /* Responsive Design for Smaller Screens */
-    @media (max-width: 768px) {
-      .page-header .container {
-        flex-direction: column;
-        align-items: center;
-      }
+/* Responsive Design for Smaller Screens */
+@media (max-width: 768px) {
+  .page-header .container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
 
-      .page-header .left-section {
-        margin-bottom: 10px;
-      }
+  .page-header .left-section {
+    margin-bottom: 10px;
+  }
 
-      .page-header .right-nav ul {
-        flex-direction: column;
-        align-items: center;
-      }
+  .page-header .right-nav ul {
+    flex-direction: column;
+    align-items: center;
+  }
 
-      footer {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-      }
+  footer {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px 10px;
+  }
 
-      footer .social-links {
-        margin-bottom: 10px;
-      }
+  footer .social-links {
+    margin-bottom: 10px;
+  }
 
-      .page-header .right-nav a {
-        padding: 8px 16px;
-        font-size: 14px;
-      }
-    }
+  .page-header .right-nav a {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
 
-    @media (min-width: 1200px) {
-      .page-header .right-nav a {
-        font-size: 18px;
-      }
-    }
+  footer .social-link a {
+    font-size: 14px;
+  }
+}
+
+/* Responsive for very small screens */
+@media (max-width: 480px) {
+  .page-header .right-nav a {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  footer .social-link a {
+    font-size: 12px;
+  }
+
+  .main-content {
+    padding: 15px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .page-header .right-nav a {
+    font-size: 18px;
+  }
+}
+
+/* Footer on Small Screens */
+@media (max-width: 768px) {
+  footer {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 10px 0; /* Further reduce padding on small screens */
+  }
+
+  footer .social-links {
+    margin-bottom: 10px;
+  }
+}
+
   </style>
 
 </html>
