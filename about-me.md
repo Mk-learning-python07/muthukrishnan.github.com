@@ -14,7 +14,8 @@ Currently, I am pursuing my **Master’s degree in Chemical and Materials Engine
 
 I’ve always had a passion for continuous learning and solving complex problems, especially when it comes to technology and sustainability. Outside of work, I’m deeply into music, cricket, and enjoy indulging in sci-fi and crime thrillers, whether in movies or novels—they’re my go-to for staying creative and energized. Traveling and exploring new places also bring me joy, allowing me to immerse myself in different cultures. Fluent in three languages, I appreciate the ability to connect with people from diverse backgrounds. Above all, I believe in the importance of acting now for a sustainable future, and I’m committed to being part of solutions that truly make a difference.
 
-![Collage Image]({{ site.baseurl }}/Files/Collage.png)
+<img src="{{ site.baseurl }}/Files/Collage.png" alt="Collage Image" loading="lazy">
+
 
 ---
 
@@ -25,15 +26,15 @@ I’ve always had a passion for continuous learning and solving complex problems
   <div class="skills-column">
     <h4>LANGUAGES</h4>
     <div class="icon-item">
-      <img src="{{ site.baseurl }}/Files/en-icon.png" alt="English" class="custom-icon" title="English">
+      <img src="{{ site.baseurl }}/Files/en-icon.png" alt="English" class="custom-icon" title="English" loading="lazy">
       <p>English</p>
     </div>
     <div class="icon-item">
-      <img src="{{ site.baseurl }}/Files/ta-icon.png" alt="Tamil" class="custom-icon" title="Tamil">
+      <img src="{{ site.baseurl }}/Files/ta-icon.png" alt="Tamil" class="custom-icon" title="Tamil" loading="lazy">
       <p>Tamil</p>
     </div>
     <div class="icon-item">
-      <img src="{{ site.baseurl }}/Files/hi-icon.png" alt="Hindi" class="custom-icon" title="Hindi">
+      <img src="{{ site.baseurl }}/Files/hi-icon.png" alt="Hindi" class="custom-icon" title="Hindi" loading="lazy">
       <p>Hindi</p>
     </div>
   </div>
@@ -41,24 +42,24 @@ I’ve always had a passion for continuous learning and solving complex problems
   <div class="interest-column">
     <h4>PERSONAL INTERESTS</h4>
     <div class="icon-item">
-      <img src="{{ site.baseurl }}/Files/travel-icon.png" alt="Travel" class="custom-icon" title="Travel">
+      <img src="{{ site.baseurl }}/Files/travel-icon.png" alt="Travel" class="custom-icon" title="Travel" loading="lazy">
       <p>Travel</p>
     </div>
     <div class="icon-item">
-      <img src="{{ site.baseurl }}/Files/crime-icon.png" alt="Crime Thrillers" class="custom-icon" title="Crime Thrillers">
+      <img src="{{ site.baseurl }}/Files/crime-icon.png" alt="Crime Thrillers" class="custom-icon" title="Crime Thrillers" loading="lazy">
       <p>Crime Thrillers</p>
     </div>
     <div class="icon-item">
-      <img src="{{ site.baseurl }}/Files/motorcycle-icon.png" alt="Motorcycles" class="custom-icon" title="Motorcycles">
+      <img src="{{ site.baseurl }}/Files/motorcycle-icon.png" alt="Motorcycles" class="custom-icon" title="Motorcycles" loading="lazy">
       <p>Motorcycles</p>
     </div>
     <!-- Music and Movies with image icons -->
     <div class="icon-item">
-      <img src="{{ site.baseurl }}/Files/music.png" alt="Music" class="custom-icon" title="Music">
+      <img src="{{ site.baseurl }}/Files/music.png" alt="Music" class="custom-icon" title="Music" loading="lazy">
       <p>Music</p>
     </div>
     <div class="icon-item">
-      <img src="{{ site.baseurl }}/Files/movies.png" alt="Movies" class="custom-icon" title="Movies">
+      <img src="{{ site.baseurl }}/Files/movies.png" alt="Movies" class="custom-icon" title="Movies" loading="lazy">
       <p>Movies</p>
     </div>
   </div>

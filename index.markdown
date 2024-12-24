@@ -23,7 +23,7 @@ Here is a brief overview of my professional experience and education. For a more
       <div class="timeline-box">
         <div class="timeline-item">
           <div class="timeline-circle">
-            <img src="Files/hebron-logo.png" alt="Hebron Logo" class="timeline-logo">
+            <img src="Files/hebron-logo.png" alt="Hebron Logo" class="timeline-logo" loading="lazy">
           </div>
           <div class="timeline-content">
             <h3>ExxonMobil Canada East</h3>
@@ -37,7 +37,7 @@ Here is a brief overview of my professional experience and education. For a more
         <!-- ExxonMobil Services and Technology Pvt. Ltd -->
         <div class="timeline-item">
           <div class="timeline-circle">
-            <img src="Files/EM-logo.png" alt="EM Logo" class="timeline-logo">
+            <img src="Files/EM-logo.png" alt="EM Logo" class="timeline-logo" loading="lazy">
           </div>
           <div class="timeline-content">
             <h3>ExxonMobil Services and Technology Pvt. Ltd</h3>
@@ -60,7 +60,7 @@ Here is a brief overview of my professional experience and education. For a more
       <div class="timeline-box">
         <div class="timeline-item">
           <div class="timeline-circle">
-            <img src="Files/uofa-logo.png" alt="UofA Logo" class="timeline-logo">
+            <img src="Files/uofa-logo.png" alt="UofA Logo" class="timeline-logo" loading="lazy">
           </div>
           <div class="timeline-content">
             <h3>University of Alberta</h3>
@@ -73,7 +73,7 @@ Here is a brief overview of my professional experience and education. For a more
         <!-- National Institute of Technology, Tiruchirappalli (NITT) -->
         <div class="timeline-item">
           <div class="timeline-circle">
-            <img src="Files/nitt-logo.png" alt="NITT Logo" class="timeline-logo">
+            <img src="Files/nitt-logo.png" alt="NITT Logo" class="timeline-logo" loading="lazy">
           </div>
           <div class="timeline-content">
             <h3>National Institute of Technology, Tiruchirappalli (NITT)</h3>
@@ -96,19 +96,19 @@ Here is a brief overview of my professional experience and education. For a more
       <div class="skills-column">
         <h4>Programming</h4>
         <div class="icon-item">
-          <img src="Files/python.png" alt="Python" class="custom-icon" title="Python">
+          <img src="Files/python.png" alt="Python" class="custom-icon" title="Python" loading="lazy">
           <p>Python</p>
         </div>
         <div class="icon-item">
-          <img src="Files/matlab.png" alt="MATLAB" class="custom-icon" title="MATLAB">
+          <img src="Files/matlab.png" alt="MATLAB" class="custom-icon" title="MATLAB" loading="lazy">
           <p>MATLAB</p>
         </div>
         <div class="icon-item">
-          <img src="Files/html.png" alt="HTML" class="custom-icon" title="HTML">
+          <img src="Files/html.png" alt="HTML" class="custom-icon" title="HTML" loading="lazy">
           <p>HTML</p>
         </div>
         <div class="icon-item">
-          <img src="Files/cplusplus.png" alt="C++" class="custom-icon" title="C++">
+          <img src="Files/cplusplus.png" alt="C++" class="custom-icon" title="C++" loading="lazy">
           <p>C++</p>
         </div>
       </div>
@@ -116,19 +116,19 @@ Here is a brief overview of my professional experience and education. For a more
       <div class="skills-column">
         <h4>Data Analysis</h4>
         <div class="icon-item">
-          <img src="Files/python.png" alt="Python" class="custom-icon" title="Python">
+          <img src="Files/python.png" alt="Python" class="custom-icon" title="Python" loading="lazy">
           <p>Python</p>
         </div>
         <div class="icon-item">
-          <img src="Files/seeq.png" alt="SEEQ" class="custom-icon" title="SEEQ">
+          <img src="Files/seeq.png" alt="SEEQ" class="custom-icon" title="SEEQ" loading="lazy">
           <p>SEEQ</p>
         </div>
         <div class="icon-item">
-          <img src="Files/jmp.png" alt="JMP" class="custom-icon" title="JMP">
+          <img src="Files/jmp.png" alt="JMP" class="custom-icon" title="JMP" loading="lazy">
           <p>JMP</p>
         </div>
         <div class="icon-item">
-          <img src="Files/avevapi.svg" alt="Aveva PI" class="custom-icon" title="Aveva PI">
+          <img src="Files/avevapi.svg" alt="Aveva PI" class="custom-icon" title="Aveva PI" loading="lazy">
           <p>Aveva PI</p>
         </div>
       </div>
@@ -136,15 +136,15 @@ Here is a brief overview of my professional experience and education. For a more
       <div class="skills-column">
         <h4>Simulation Tools</h4>
         <div class="icon-item">
-          <img src="Files/aspen-hysys.png" alt="Aspen HYSYS" class="custom-icon" title="Aspen HYSYS">
+          <img src="Files/aspen-hysys.png" alt="Aspen HYSYS" class="custom-icon" title="Aspen HYSYS" loading="lazy">
           <p>Aspen HYSYS</p>
         </div>
         <div class="icon-item">
-          <img src="Files/htri.png" alt="HTRI" class="custom-icon" title="HTRI">
+          <img src="Files/htri.png" alt="HTRI" class="custom-icon" title="HTRI" loading="lazy">
           <p>HTRI</p>
         </div>
         <div class="icon-item">
-          <img src="Files/promax.png" alt="Promax" class="custom-icon" title="Promax">
+          <img src="Files/promax.png" alt="Promax" class="custom-icon" title="Promax" loading="lazy">
           <p>Promax</p>
         </div>
       </div>

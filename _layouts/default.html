@@ -50,7 +50,7 @@
     <div class="container" style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
       <!-- Left Section (Photo, Name, Designation) -->
       <div class="left-section" style="display: flex; align-items: center;">
-        <img src="{{ site.baseurl }}/Files/MK_ID_Photo.jpg" alt="Muthukrishnan Anand" class="profile-photo" style="width: 60px; height: 60px; border-radius: 50%; margin-right: 10px;">
+        <img src="{{ site.baseurl }}/Files/MK_ID_Photo.jpg" alt="Muthukrishnan Anand" class="profile-photo" style="width: 60px; height: 60px; border-radius: 50%; margin-right: 10px;" loading="lazy">
         <div class="name-designation" style="color: white;">
           <strong>Muthukrishnan Anand</strong><br>
           <span>Graduate Researcher</span>
@@ -112,6 +112,24 @@
     </div>
   </footer>
 
+ <!-- Pop-up for enabling Desktop Mode -->
+ <div id="desktop-mode-popup" style="display: none;">
+  <div class="popup-overlay" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); z-index: 9999; display: flex; justify-content: center; align-items: center;">
+    <div class="popup-content" style="background: white; padding: 20px; border-radius: 8px; text-align: center; max-width: 400px;">
+      <h2 style="color: #157878;">Enable Desktop Mode</h2>
+      <p style="color: #333;">To view the site in the best way, please enable desktop mode in your browser. Here’s how:</p>
+      <ul style="list-style: none; padding: 0; color: #333;">
+        <li><strong>Chrome:</strong> Tap the three dots in the top-right corner, select "Request Desktop Site."</li>
+        <li><strong>Safari:</strong> Tap the "aA" icon in the address bar, then select "Request Desktop Site."</li>
+        <li><strong>Firefox:</strong> Tap the three horizontal lines in the bottom-right corner, select "Request Desktop Site."</li>
+        <li><strong>Edge:</strong> Tap the three dots in the bottom-center, then choose "Request Desktop Site."</li>
+        <li><strong>DuckDuckGo:</strong> Tap the three dots in the bottom-center, select "Request Desktop Site."</li>
+      </ul>
+      <button id="close-popup" style="background-color: #157878; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">Got It!</button>
+    </div>
+  </div>
+</div>
+
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const header = document.querySelector('.page-header');
@@ -127,6 +145,16 @@
         }
       });
     });
+    // Display the pop-up if it's a mobile device
+    if (window.innerWidth <= 768) {
+      document.getElementById('desktop-mode-popup').style.display = 'flex';
+    }
+
+    // Close the pop-up when the button is clicked
+    document.getElementById('close-popup').addEventListener('click', function() {
+      document.getElementById('desktop-mode-popup').style.display = 'none';
+    });
+  </script>
   </script>
 </body>
 
@@ -310,5 +338,4 @@
 
 </html>
 
-</html>
 
