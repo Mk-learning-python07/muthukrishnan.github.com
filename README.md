@@ -37,6 +37,8 @@ Want to reach out? You can connect with me via the **Contact** section. I’ve i
 - **ChatGPT**: 🤖 ChatGPT helped me generate content and provided technical support to ensure a seamless development process.
 - **GitHub Pages**: 🌐 Hosted via **GitHub Pages**, making the website easily accessible and publicly available.
 - **FontAwesome**: 🎨 Used for social media icons in the footer section.
+- **Google Analytics**: 📊 **Google Analytics** is used to track website traffic and user interactions, providing insights into how the site is being used to improve the user experience.
+
 
 ## 🚀 Getting Started
 
