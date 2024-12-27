@@ -77,46 +77,41 @@
     </div>
   </main>
 
-  <!-- Footer Section -->
-  <footer class="site-footer" style="background-color: #f8f8f8; padding: 30px 0; display: flex; flex-direction: column; align-items: center; text-align: center; border-top: 1px solid #ddd;">
-    <!-- Social Links Section -->
-    <div class="social-links" style="display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;">
-      {% if site.linkedin %}
-        <span class="social-link">
-          <a href="{{ site.linkedin }}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-            <i class="fab fa-linkedin"></i> LinkedIn
-          </a>
-        </span>
-      {% endif %}
-  
-      {% if site.email %}
-        <span class="social-link">
-          <a href="mailto:{{ site.email }}" aria-label="Email">
-            <i class="fas fa-envelope"></i> Email
-          </a>
-        </span>
-      {% endif %}
-  
-      {% if site.github %}
-        <span class="social-link">
-          <a href="{{ site.github }}" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-            <i class="fab fa-github"></i> GitHub
-          </a>
-        </span>
-      {% endif %}
-    </div>
-  
-    <!-- Google Analytics & Privacy Notice -->
-    <p style="font-size: 14px; color: #666;">
-      We use Google Analytics to track website visits. By using this site, you agree to our 
-      <a href="{{ site.baseurl }}/privacy-policy" style="color: #126969; text-decoration: none;">privacy policy</a>.
-    </p>
-  
-    <!-- Copyright Section -->
-    <div class="copyright" style="margin-top: 20px; font-size: 14px; color: #888;">
-      <p>© {{ site.time | date: '%Y' }} {{ site.title }}. All rights reserved.</p>
-    </div>
-  </footer>
+<!-- Footer Section -->
+<footer class="site-footer" style="background-color: #f8f8f8; padding: 20px; display: flex; flex-direction: column; align-items: center; text-align: center; border-top: 1px solid #ddd;">
+  <!-- Social Links Section -->
+  <div class="social-links" style="display: flex; gap: 25px; justify-content: center; margin-bottom: 15px;">
+    {% if site.linkedin %}
+      <a href="{{ site.linkedin }}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="social-icon">
+        <i class="fab fa-linkedin"></i>
+      </a>
+    {% endif %}
+
+    {% if site.email %}
+      <a href="mailto:{{ site.email }}" aria-label="Email" class="social-icon">
+        <i class="fas fa-envelope"></i>
+      </a>
+    {% endif %}
+
+    {% if site.github %}
+      <a href="{{ site.github }}" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="social-icon">
+        <i class="fab fa-github"></i>
+      </a>
+    {% endif %}
+  </div>
+
+  <!-- Privacy Notice -->
+  <p style="font-size: 14px; color: #666; margin-bottom: 10px;">
+    By using this site, you agree to our 
+    <a href="{{ site.baseurl }}/privacy-policy" style="color: #126969; text-decoration: none;">privacy policy</a>.
+  </p>
+
+  <!-- Copyright Section -->
+  <div class="copyright" style="font-size: 14px; color: #888;">
+    <p>© {{ site.time | date: '%Y' }} {{ site.title }}. All rights reserved.</p>
+  </div>
+</footer>
+
 
  <!-- Pop-up for enabling Desktop Mode -->
 <div id="desktop-mode-popup" style="display: none;">
@@ -262,32 +257,54 @@ body, html {
 /* Footer Section */
 footer {
   background-color: #f8f8f8;
-  padding: 10px 0; /* Reduced padding to make the footer less tall */
+  padding: 20px 0;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-  position: relative;
-  width: 100%;
+  text-align: center;
+  border-top: 1px solid #ddd;
 }
 
-footer a {
-  color: #34495e;
+footer .social-links {
+  display: flex;
+  gap: 30px; /* Increased gap for better spacing */
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+footer .social-icon {
+  font-size: 32px; /* Increased icon size */
+  color: #2980b9; /* Default blue color */
+  text-decoration: none;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+footer .social-icon:hover {
+  color: #1d6fa5; /* Darker blue on hover */
+  transform: scale(1.1); /* Slight enlargement on hover */
+}
+
+/* Privacy Notice */
+footer .privacy-notice {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+footer .privacy-link {
+  color: #126969;
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
-/* Footer Hover and Focus */
-footer a:hover {
-  color: #2980b9;
+footer .privacy-link:hover {
+  color: #1d6fa5;
 }
 
-footer .social-link a {
-  color: #2980b9;
-  transition: color 0.3s ease;
-}
-
-footer .social-link a:hover {
-  color: #3498db;
+/* Copyright Section */
+footer .copyright {
+  font-size: 14px;
+  color: #888;
 }
 
 /* Ensure Footer Stays at the Bottom of the Page */
@@ -310,77 +327,41 @@ html, body {
 
 /* Responsive Design for Smaller Screens */
 @media (max-width: 768px) {
-  .page-header .container {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  .page-header .left-section {
-    margin-bottom: 10px;
-  }
-
-  .page-header .right-nav ul {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  footer {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 20px 10px;
-  }
-
   footer .social-links {
-    margin-bottom: 10px;
+    gap: 20px; /* Adjust gap for smaller screens */
   }
 
-  .page-header .right-nav a {
-    padding: 8px 16px;
-    font-size: 14px;
+  footer .social-icon {
+    font-size: 28px; /* Slightly smaller icons on smaller screens */
   }
 
-  footer .social-link a {
-    font-size: 14px;
+  footer .privacy-notice {
+    font-size: 13px;
+  }
+
+  footer .privacy-link {
+    font-size: 13px;
   }
 }
 
-/* Responsive for very small screens */
 @media (max-width: 480px) {
-  .page-header .right-nav a {
-    font-size: 12px;
-    padding: 6px 12px;
-  }
-
-  footer .social-link a {
-    font-size: 12px;
-  }
-
-  .main-content {
-    padding: 15px;
-  }
-}
-
-@media (min-width: 1200px) {
-  .page-header .right-nav a {
-    font-size: 18px;
-  }
-}
-
-/* Footer on Small Screens */
-@media (max-width: 768px) {
-  footer {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 10px 0; /* Further reduce padding on small screens */
-  }
-
   footer .social-links {
-    margin-bottom: 10px;
+    gap: 15px; /* Further adjust gap for very small screens */
+  }
+
+  footer .social-icon {
+    font-size: 24px; /* Further reduce icon size for very small screens */
+  }
+
+  footer .privacy-notice {
+    font-size: 12px;
+  }
+
+  footer .privacy-link {
+    font-size: 12px;
   }
 }
+
 
   </style>
 
