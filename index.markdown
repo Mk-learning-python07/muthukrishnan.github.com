@@ -85,7 +85,7 @@ Here is a brief overview of my professional experience and education. For a more
       </div>
     </div>
   </section>
-
+<hr>
   <!-- Skills Section -->
   <section class="skills">
     <h2 style="text-align: center;">Skills</h2>
