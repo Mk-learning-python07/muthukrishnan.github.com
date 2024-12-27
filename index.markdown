@@ -65,7 +65,7 @@ Here is a brief overview of my professional experience and education. For a more
           <div class="timeline-content">
             <h3>University of Alberta</h3>
             <p><strong>Degree:</strong> M.Sc. Chemical Engineering</p>
-            <p><strong>Year:</strong> 2024 - 2026</p>
+            <p><strong>Duration:</strong> 2024 - 2026</p>
             <p><strong>Focus:</strong> Carbon Dioxide Removal (CDR) via Direct Air Capture (DAC) process</p>
           </div>
         </div>
@@ -78,7 +78,7 @@ Here is a brief overview of my professional experience and education. For a more
           <div class="timeline-content">
             <h3>National Institute of Technology, Tiruchirappalli (NITT)</h3>
             <p><strong>Degree:</strong> B.Tech(Hons.) Chemical Engineering</p>
-            <p><strong>Year:</strong> 2015 - 2019</p>
+            <p><strong>Duration:</strong> 2015 - 2019</p>
             <p><strong>Focus:</strong> Chemical Engineering</p>
           </div>
         </div>

@@ -17,10 +17,10 @@ I’m always open to discussing new projects, ideas, or potential collaborations
 
 I would love to hear from you! Whether you're interested in collaboration, have a question, or simply want to connect, feel free to reach out using any of the following methods:
 
-- **Email**: [Email Me](mailto:{{ site.email }})  
+- **[Email Me](mailto:{{ site.email }})** <br>
   I respond to all inquiries promptly, so don’t hesitate to get in touch.
 
-- **LinkedIn**: [Connect with me on LinkedIn]({{ site.linkedin }})  
+- **[Connect with me on LinkedIn]({{ site.linkedin }})**  
   Let's build our professional network and explore how we can work together.
 
 ---

@@ -34,7 +34,7 @@ You have control over your privacy. Here are a few options:
 - **Opt-Out of Google Analytics**: Use the [Google Analytics opt-out browser add-on](https://tools.google.com/dlpage/gaoptout/) for more control.
 
 #### **Third-Party Services**
-This site uses Google Analytics for traffic analysis. For more details, refer to [Google’s Privacy Policy](https://policies.google.com/privacy) and [Google Analytics Terms](https://marketingplatform.google.com/about/analytics/terms/us/).
+This site uses Google Analytics for traffic analysis. For more details, refer to **[Google’s Privacy Policy](https://policies.google.com/privacy)** and **[Google Analytics Terms](https://marketingplatform.google.com/about/analytics/terms/us/)**.
 
 #### **Contact me**
-If you have any questions about our privacy practices, please [email me](mailto:{{ site.email }})
+If you have any questions about our privacy practices, please **[email me](mailto:{{ site.email }})**.
