@@ -59,75 +59,6 @@ Click <b>[here](/Files/Resume_December2024.pdf)</b> to view my one-page professi
     </div>
   </div>-->
 
-  <!-- Timeline Item 3 -->
-  <div class="timeline-item" id="item-3">
-    <div class="timeline-marker" data-target="#item-3">2019</div>
-    <div class="timeline-content">
-      <h3>Upstream Process Surveillance Engineer</h3>
-      <p><strong>ExxonMobil Services and Technology Private Limited (EMSTPL)</strong></p>
-       <p><strong>Duration:</strong> Jun 2019 - Nov 2022</p>
-        <p><strong>Location:</strong> Bengaluru, India</p>
-      <p>
-    Served in various roles supporting multiple global business units, providing remote process monitoring and workflow support, developing advanced analytics tools, and leading process optimization and troubleshooting initiatives. While the specific subroles within EMSTPL are outlined below, the general tasks performed during this time are also highlighted.<br><br>
-    • <b>Applied SEEQ</b> expertise to <b>implement novel system health-based surveillance</b> which helps in prioritization of asset activities. This concept is now employed as a standard template for system health surveillance across all upstream business units.<br>
-    • <b>Charted pilot workflow</b> between <b>Upstream and Downstream Surveillance</b> teams in India and Malaysia to benefit from <b>common synergies</b>.<br>
-    • Operated in a cross functional team to map the <b>Company Plan workflow</b> for Nigeria which was utilized in building a tool that <b>improves efficiency for performing financial sensitivities</b>.<br>
-    • Achieved <b>~15% reduction</b> in analysis time by <b>automating the sand erosion workflow using Python</b> for Exxon Neftegas Limited (Russia).<br>
-</p>
-      <p><span style="color: #28a745;"><strong>Key Items:</strong></span><i> Workflow scaling and optimization, SEEQ Surveillance, Downstream Utilities Monitoring, Python and Company Plan</i></p>
-    </div>
-  </div>
-
-  <!-- Timeline Item 4 -->
-  <div class="timeline-item" id="item-4">
-    <div class="timeline-marker" data-target="#item-4">2019</div>
-    <div class="timeline-content">
-      <h3>Upstream Process Surveillance Engineer – Papua New Guinea (Hides Gas Conditioning Plant)</h3>
-      <p><strong>ExxonMobil Services and Technology Private Limited (EMSTPL)</strong></p>
-     <p><strong>Duration:</strong> Jun 2019 - Jun 2020</p>
-      <p><strong>Type of Process:</strong> Gas Condensate and Gas Dehydration/Compression <br></p>
-      <p>
-    •	Led the <b>multidisciplinary investigation</b> into the <b>root cause of frequent heat exchanger fouling</b> in the condensate system, applying process expertise and establishing equipment performance baselines through statistical analysis with <b>JMP</b>. Developed and implemented <b>first-principles-based performance monitoring models</b> for heat exchangers to assess performance and predict cleaning frequency and efficacy.</p>
-<p><span style="color: #28a745;"><strong>Key Items:</strong></span><i> Root Cause Failure Analysis, Condensate Processing, Dewpoint Control, Mono-Ethylene Glycol thermal degradation and Heat Exchanger Performance Monitoring</i></p>
- </div>
-  </div>
-
-  <!-- Timeline Item 5 -->
-  <div class="timeline-item" id="item-5">
-    <div class="timeline-marker" data-target="#item-5">2020</div>
-    <div class="timeline-content">
-      <h3> Upstream Process Surveillance Engineer –  Nigeria (East Asia Projects (EAP) and Bonny River Terminal (BRT))  </h3>
-      <p><strong>ExxonMobil Services and Technology Private Limited (EMSTPL)</strong></p>
-     <p><strong>Duration:</strong> Jun 2020 - Oct 2021</p>
-      <p><strong>Type of Process:</strong> NGL Extraction and Fractionation <br></p>
-      <p>
-      • Generated <b>cumulative savings of ~US$4.2 million</b> and improved operability by<b> identifying and implementing process surveillance workflow outcomes</b> for EAP.<br>
-• <b>Implemented advanced exception-based surveillance using SEEQ and Python</b>, leading to <b>increased reliability</b> for critical equipment valued at US$250 million.<br>
-• <b>Sensitivity analysis</b> utilizing <b>HYSYS simulations</b> for BRT resulted in minimizing <b>scope-1 GHG emissions by ~30%</b> and power savings of 2MW per day. <br>
-</p>
-<p><span style="color: #28a745;"><strong>Key Items:</strong></span><i> Molecular Sieves (Zeolite 13X), Ortloff`s SCORE process, Temperature Swing Adsorption process monitoring, Brazed Aluminium Heat Exchangers(BAHX) Reliability and performance monitoring - Lifetime estimation (FEA)/ALPEMA/GPA TB-001/API-668, NGL Fractionation and Propane Refrigeration Cycles, SEEQ Asset Framework,GPSA Handbook and Mcketta-Wehe Correlations</i></p>
-    </div>
-  </div>
- 
-
-  <!-- Timeline Item 6 -->
-  <div class="timeline-item" id="item-6">
-    <div class="timeline-marker" data-target="#item-6">2021</div>
-    <div class="timeline-content">
-      <h3> Upstream Process Surveillance Engineer –  Canada East (Hebron and Hibernia)  </h3>
-      <p><strong>ExxonMobil Services and Technology Private Limited (EMSTPL)</strong></p>
-     <p><strong>Duration:</strong> Oct 2021 - Nov 2022</p>
-      <p><strong>Type of Process:</strong> Crude Separation and Export <br></p>
-      <p>
-• <b>Point of contact</b> for process engineering in the cross-functional initiative of maintenance transformation aimed at <b>reducing maintenance effort</b> by <b>4000-man hours</b> for Hebron. <br>
-• <b>OPEX reduction >US$ 50k/yr.</b> is realized by <b>gas lift optimization study</b> involving data analysis by utilizing SEEQ and <b>benchmarking performance using HYSYS modelling</b> for Hibernia.<br>
-• <b> Reduction in Operational Expenditure of ~0.7M$/yr.</b> as an outcome of inter-department collaboration by enabling strategic decision making on <b>chemical dosage philosophies</b> for Hibernia.<br>
-• <b>Developed the methodology for subsurface fluid characterization</b> to ensure <b>accurate allocation of production volumes</b> for Hebron, aiding in facility mass balance reconciliation and reducing error margins. Additionally, facilitated the development of new competencies within the team.<br>
-
-</p>
-<p><span style="color: #28a745;"><strong>Key Items:</strong></span><i> Reliability and Maintenance, Gas Lift Optimization and TEG Dehydration, Upstream Maintenance Transformation, API MPMS(Multi-phase measurement systems),Chemical Trials and dosing philosophies</i></p>
-    </div>
-  </div>
 
 <!-- Timeline Item 7 -->
   <div class="timeline-item" id="item-7">
@@ -149,6 +80,75 @@ Click <b>[here](/Files/Resume_December2024.pdf)</b> to view my one-page professi
 </p>
 <p><span style="color: #28a745;"><strong>Key Items:</strong></span><i> Management of Change(MoC),Valve Maintenance,Produced Water Separation and Treatment, 3 phase Level Instrumentation, Project Management, Production Chemistry Challenges - Asphaltenes and Naphthenates,Gas Hydrates,Viscosity Reducer Chemical, Environment and Climate Change Canada Regulatory Reporting, Aspen HYSYS Dynamic Simulations and Process Safety Scenario Troubleshooting - (API RP14C/14J/520/521/526)</i></p>
  </div>
+  </div>
+  
+    <!-- Timeline Item 6 -->
+  <div class="timeline-item" id="item-6">
+    <div class="timeline-marker" data-target="#item-6">2021</div>
+    <div class="timeline-content">
+      <h3> Upstream Process Surveillance Engineer –  Canada East (Hebron and Hibernia)  </h3>
+      <p><strong>ExxonMobil Services and Technology Private Limited (EMSTPL)</strong></p>
+     <p><strong>Duration:</strong> Oct 2021 - Nov 2022</p>
+      <p><strong>Type of Process:</strong> Crude Separation and Export <br></p>
+      <p>
+• <b>Point of contact</b> for process engineering in the cross-functional initiative of maintenance transformation aimed at <b>reducing maintenance effort</b> by <b>4000-man hours</b> for Hebron. <br>
+• <b>OPEX reduction >US$ 50k/yr.</b> is realized by <b>gas lift optimization study</b> involving data analysis by utilizing SEEQ and <b>benchmarking performance using HYSYS modelling</b> for Hibernia.<br>
+• <b> Reduction in Operational Expenditure of ~0.7M$/yr.</b> as an outcome of inter-department collaboration by enabling strategic decision making on <b>chemical dosage philosophies</b> for Hibernia.<br>
+• <b>Developed the methodology for subsurface fluid characterization</b> to ensure <b>accurate allocation of production volumes</b> for Hebron, aiding in facility mass balance reconciliation and reducing error margins. Additionally, facilitated the development of new competencies within the team.<br>
+
+</p>
+<p><span style="color: #28a745;"><strong>Key Items:</strong></span><i> Reliability and Maintenance, Gas Lift Optimization and TEG Dehydration, Upstream Maintenance Transformation, API MPMS(Multi-phase measurement systems),Chemical Trials and dosing philosophies</i></p>
+    </div>
+  </div>
+
+<!-- Timeline Item 5 -->
+  <div class="timeline-item" id="item-5">
+    <div class="timeline-marker" data-target="#item-5">2020</div>
+    <div class="timeline-content">
+      <h3> Upstream Process Surveillance Engineer –  Nigeria (East Asia Projects (EAP) and Bonny River Terminal (BRT))  </h3>
+      <p><strong>ExxonMobil Services and Technology Private Limited (EMSTPL)</strong></p>
+     <p><strong>Duration:</strong> Jun 2020 - Oct 2021</p>
+      <p><strong>Type of Process:</strong> NGL Extraction and Fractionation <br></p>
+      <p>
+      • Generated <b>cumulative savings of ~US$4.2 million</b> and improved operability by<b> identifying and implementing process surveillance workflow outcomes</b> for EAP.<br>
+• <b>Implemented advanced exception-based surveillance using SEEQ and Python</b>, leading to <b>increased reliability</b> for critical equipment valued at US$250 million.<br>
+• <b>Sensitivity analysis</b> utilizing <b>HYSYS simulations</b> for BRT resulted in minimizing <b>scope-1 GHG emissions by ~30%</b> and power savings of 2MW per day. <br>
+</p>
+<p><span style="color: #28a745;"><strong>Key Items:</strong></span><i> Molecular Sieves (Zeolite 13X), Ortloff`s SCORE process, Temperature Swing Adsorption process monitoring, Brazed Aluminium Heat Exchangers(BAHX) Reliability and performance monitoring - Lifetime estimation (FEA)/ALPEMA/GPA TB-001/API-668, NGL Fractionation and Propane Refrigeration Cycles, SEEQ Asset Framework,GPSA Handbook and Mcketta-Wehe Correlations</i></p>
+    </div>
+  </div>
+  
+  <!-- Timeline Item 4 -->
+  <div class="timeline-item" id="item-4">
+    <div class="timeline-marker" data-target="#item-4">2019</div>
+    <div class="timeline-content">
+      <h3>Upstream Process Surveillance Engineer – Papua New Guinea (Hides Gas Conditioning Plant)</h3>
+      <p><strong>ExxonMobil Services and Technology Private Limited (EMSTPL)</strong></p>
+     <p><strong>Duration:</strong> Jun 2019 - Jun 2020</p>
+      <p><strong>Type of Process:</strong> Gas Condensate and Gas Dehydration/Compression <br></p>
+      <p>
+    •	Led the <b>multidisciplinary investigation</b> into the <b>root cause of frequent heat exchanger fouling</b> in the condensate system, applying process expertise and establishing equipment performance baselines through statistical analysis with <b>JMP</b>. Developed and implemented <b>first-principles-based performance monitoring models</b> for heat exchangers to assess performance and predict cleaning frequency and efficacy.</p>
+<p><span style="color: #28a745;"><strong>Key Items:</strong></span><i> Root Cause Failure Analysis, Condensate Processing, Dewpoint Control, Mono-Ethylene Glycol thermal degradation and Heat Exchanger Performance Monitoring</i></p>
+ </div>
+  </div>
+
+    <!-- Timeline Item 3 -->
+  <div class="timeline-item" id="item-3">
+    <div class="timeline-marker" data-target="#item-3">2019</div>
+    <div class="timeline-content">
+      <h3>Upstream Process Surveillance Engineer</h3>
+      <p><strong>ExxonMobil Services and Technology Private Limited (EMSTPL)</strong></p>
+       <p><strong>Duration:</strong> Jun 2019 - Nov 2022</p>
+        <p><strong>Location:</strong> Bengaluru, India</p>
+      <p>
+    Served in various roles supporting multiple global business units, providing remote process monitoring and workflow support, developing advanced analytics tools, and leading process optimization and troubleshooting initiatives. While the specific subroles within EMSTPL are outlined below, the general tasks performed during this time are also highlighted.<br><br>
+    • <b>Applied SEEQ</b> expertise to <b>implement novel system health-based surveillance</b> which helps in prioritization of asset activities. This concept is now employed as a standard template for system health surveillance across all upstream business units.<br>
+    • <b>Charted pilot workflow</b> between <b>Upstream and Downstream Surveillance</b> teams in India and Malaysia to benefit from <b>common synergies</b>.<br>
+    • Operated in a cross functional team to map the <b>Company Plan workflow</b> for Nigeria which was utilized in building a tool that <b>improves efficiency for performing financial sensitivities</b>.<br>
+    • Achieved <b>~15% reduction</b> in analysis time by <b>automating the sand erosion workflow using Python</b> for Exxon Neftegas Limited (Russia).<br>
+</p>
+      <p><span style="color: #28a745;"><strong>Key Items:</strong></span><i> Workflow scaling and optimization, SEEQ Surveillance, Downstream Utilities Monitoring, Python and Company Plan</i></p>
+    </div>
   </div>
 
 <!-- CSS Section -->
