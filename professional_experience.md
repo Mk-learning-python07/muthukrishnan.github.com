@@ -66,7 +66,7 @@ Click <b>[here](/Files/Resume_December2024.pdf)</b> to view my one-page professi
     <div class="timeline-content">
     <h3>Operations Technical - Process Surveillance Engineer</h3>
       <p><strong>ExxonMobil Canada East</strong></p>
-       <p><strong>Duration:</strong> Nov 2022 - Aug 2024</p>
+       <p><strong>Duration:</strong> Dec 2022 - Aug 2024</p>
         <p><strong>Location:</strong> St.John`s, Newfoundland Canada</p>
         <p><strong>Type of Process:</strong> Crude Separation and Export <br></p>
         <p>
