@@ -21,7 +21,7 @@ permalink: /professional-experience/
 This section provides a chronological overview of my professional journey from 2019 to 2024.
 
 During this period, I have gained valuable experience across various roles, each contributing to the development of my skills and expertise. My career progression reflects a consistent focus on technical excellence, problem-solving on multiple facets, and driving performance improvements.
-Click <b>[here](/Files/Resume_December2024.pdf)</b> to view my one-page professional resume.
+Click <b>[here](/Files/Resume_October2025.pdf)</b> to view my academic resume.
 
 <div class="timeline-container">
   <!-- Timeline Item 1 
