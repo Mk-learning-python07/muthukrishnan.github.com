@@ -7,27 +7,15 @@ permalink: /contact/
 
 # Let's Connect
 
-Are you ready to tackle complex challenges, optimize your processes, and drive innovation? Let’s connect and collaborate to create impactful solutions that pave the way for a sustainable and prosperous future.
+I am always open to discussing **Process Optimization**, **Carbon Capture**, or potential collaborations in the **Energy Transition** space.
 
-I’m always open to discussing new projects, ideas, or potential collaborations. Feel free to reach out—let’s start a conversation today!
+<div style="margin: 30px 0; padding: 20px; border-left: 5px solid #2c3e50; background: #f9f9f9;">
+  <p><strong>Email:</strong> <a href="mailto:{{ site.email }}">{{ site.email }}</a></p>
+  <p><strong>LinkedIn:</strong> <a href="{{ site.linkedin }}">muthu-krishnan1</a></p>
+  <p><strong>Location:</strong> Edmonton, Alberta, Canada</p>
+</div>
 
----
-
-## **Get in Touch**
-
-I would love to hear from you! Whether you're interested in collaboration, have a question, or simply want to connect, feel free to reach out using any of the following methods:
-
-- **[Email Me](mailto:{{ site.email }})** <br>
-  I respond to all inquiries promptly, so don’t hesitate to get in touch.
-
-- **[Connect with me on LinkedIn]({{ site.linkedin }})**  
-  Let's build our professional network and explore how we can work together.
-
----
-
-### **Thank You for Visiting!**
-
-Thank you for viewing my website and making it all the way to my contact page. I appreciate your time, and I’m excited to connect with you soon!
+Thank you for visiting. I look forward to connecting with you.
 
 
 
