@@ -21,7 +21,7 @@
 title: Muthukrishnan Anand
 email: contactmuthu@duck.com
 description: >- # this means to ignore newlines until "baseurl:"
-  This is my personal website.
+  Professional Portfolio: Process Engineering & Carbon Capture Research.
 baseurl: "/muthukrishnan.github.com" # the subpath of your site, e.g. /blog
 url: "https://mk-learning-python07.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 github: "https://www.github.com/Mk-learning-python07"
