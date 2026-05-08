@@ -4,7 +4,7 @@ title: "Research"
 permalink: /research/
 ---
 
-# Performance Evaluation of Structured Contactors for Carbon Capture 
+# **Performance Evaluation of Structured Contactors for Carbon Capture** 
 ### M.Sc. Thesis | University of Alberta (2024 - Present) 
 
 ## **Research Statement** 
