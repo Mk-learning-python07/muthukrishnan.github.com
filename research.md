@@ -10,7 +10,7 @@ permalink: /research/
 ## **Research Statement** 
 
 The objective of this research is to investigate and optimize **Pressure Vacuum Swing Adsorption (PVSA)** cycles for **Post-Combustion Capture (PCC)** applications. My work focuses on process simulation, sorbent characterization, and the design of experimental setups to compare contactor configurations using **Metal-Organic Frameworks (MOFs)**—specifically **CALF-20**—as a more efficient alternative to traditional commercial absorption technologies. 
---- 
+ 
 
 ## **The Context** 
 
@@ -36,7 +36,9 @@ Completing both unary and binary adsorption measurements using volumetry measurm
 
 --- 
 
-## **Industry Impact** This research demonstrates the benefits and limitations of using structured contactors in high-throughput post-combustion capture applications. By optimizing these cycles, we can move closer to industrial-scale deployment of MOF-based carbon capture, reducing the energy penalty and equipment footprint for the energy sector. 
+## **Industry Impact** 
+
+This research demonstrates the benefits and limitations of using structured contactors in high-throughput post-combustion capture applications. By optimizing these cycles, we can move closer to industrial-scale deployment of MOF-based carbon capture, reducing the energy penalty and equipment footprint for the energy sector. 
 
 
 *Note: This page is a work in progress. Additional sections (Introduction, Methodology, Findings, etc.) will follow as the research matures.*
