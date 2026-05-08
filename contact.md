@@ -5,7 +5,7 @@ permalink: /contact/
 ---
 
 
-# Let's Connect
+# **Let's Connect**
 
 I am always open to discussing **Process Optimization**, **Carbon Capture**, or potential collaborations in the **Energy Transition** space.
 
