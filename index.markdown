@@ -3,13 +3,25 @@ layout: default
 title: Home Page
 permalink: /
 ---
+<div style="text-align: center; padding: 40px 0 20px 0;">
+  <h1 style="margin-bottom: 10px; font-size: 2.5rem;"><strong>Muthukrishnan Anand</strong></h1>
+  <p style="font-size: 1.25rem; color: #7f8c8d; font-weight: bold; margin-bottom: 20px; letter-spacing: 1px; text-transform: uppercase;">
+    Process Engineer | Adsorption Based Carbon Capture
+  </p>
+  <p style="max-width: 750px; margin: 0 auto; line-height: 1.8; font-size: 1.1rem; color: #34495e;">
+    Senior Process Engineer with 5 years of experience at <strong>ExxonMobil</strong> in upstream operations and process surveillance. Currently advancing <strong>Carbon Capture and Storage (CCS)</strong> as an M.Sc. candidate at the University of Alberta, specializing in <strong>PVSA</strong> cycles and structured contactor scale-up.
+  </p>
+</div>
 
-<div style="text-align: center; padding: 40px 0 20px 0;"> <h1 style="margin-bottom: 10px; font-size: 2.5rem;"><strong>Muthukrishnan Anand</strong></h1> 
-  <p style="font-size: 1.25rem; color: #7f8c8d; font-weight: bold; margin-bottom: 20px; letter-spacing: 1px; text-transform: uppercase;"> Process Engineer | Energy Transition Specialist </p> 
-  <p style="max-width: 750px; margin: 0 auto; line-height: 1.8; font-size: 1.1rem; color: #34495e;"> Senior Process Engineer with 5 years of experience at <strong>ExxonMobil</strong> in upstream operations and process surveillance. Currently advancing the field of <strong>Carbon Capture and Storage (CCS)</strong> as an M.Sc. candidate at the University of Alberta, specializing in the optimization of <strong>PVSA</strong> cycles and structured contactor scale-up. </p> </div> 
-  
-  <div style="text-align: center; margin-bottom: 50px;"> <a href="{{ site.baseurl }}/professional-experience/" style="display: inline-block; padding: 14px 30px; border: 2px solid #2c3e50; color: #2c3e50; text-decoration: none; border-radius: 4px; font-weight: bold; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px;"> View Professional Experience & Impact → </a> </div> <hr style="border: 0; border-top: 1px solid #eee; margin: 40px 0;"> <h2 style="text-align: center; font-weight: bold; margin-bottom: 30px;">Career & Education Timeline</h2>
-Here is a brief overview of my professional experience and education. For a more detailed look, click [here]({{ site.baseurl }}/professional-experience/).
+<div style="text-align: center; margin-bottom: 50px;">
+  <a href="{{ site.baseurl }}/professional-experience/" style="display: inline-block; padding: 14px 30px; border: 2px solid #2c3e50; color: #2c3e50; text-decoration: none; border-radius: 4px; font-weight: bold; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px;">
+    View Professional Experience & Impact →
+  </a>
+</div>
+
+<hr style="border: 0; border-top: 1px solid #eee; margin: 40px 0;">
+
+<h2 style="text-align: center; font-weight: bold; margin-bottom: 30px;">Professional Background</h2>
 
 <body class="home-page">
   <!-- Professional Experience Section -->
