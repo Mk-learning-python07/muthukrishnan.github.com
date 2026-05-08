@@ -5,14 +5,34 @@ permalink: /about-me/
 ---
 # About Me
 
-Growing up in a developing country like India, I was acutely aware of the challenges that come with limited access to resources and the growing need for sustainable solutions. Raised in an environment where affordable energy and technology were often scarce, I was inspired by the idea that science and engineering could be the driving forces to overcome these limitations. This curiosity and drive led me to pursue a degree in **Chemical Engineering** at **National Institute of Technology (NIT) Trichy**, one of India’s premier institutions. My academic journey, combined with my passion for problem-solving, deepened my commitment to harnessing science for the betterment of humanity.
+Growing up in India, I was inspired by the idea that engineering could solve resource scarcity. This led me to pursue **Chemical Engineering** at **NIT Trichy**, which provided the foundation for my 5-year tenure at **ExxonMobil**.
 
-During my undergraduate years, I became increasingly interested in energy security and sustainability. My education provided me with a solid foundation in these fields, but it was my **5 years of professional experience at ExxonMobil** that truly shaped my expertise. In this role, I tackled multifaceted problems across energy production, process optimization, and operational efficiency. I was able to demonstrate significant results in **energy efficiency improvements, process enhancements, and troubleshooting**, all of which provided valuable insights into the practical applications of engineering solutions in the energy sector.
+Currently, as an **M.Sc. candidate** at the **University of Alberta**, I am investigating the optimization of structured adsorbents for carbon capture under **Prof. Arvind Rajendran**. My work bridges the gap between field-proven operations and the scale-up of **Pressure Vacuum Swing Adsorption (PVSA)** technology.
 
-Currently, I am a **Master’s candidate** at the **University of Alberta**, investigating the performance and optimization of **structured adsorbents** for carbon capture. Working under the guidance of **Prof. Arvind Rajendran**, my research addresses the critical trade-offs in purity, recovery, and productivity required for high-throughput industrial applications. I aim to leverage my background in **ExxonMobil operations** and **HYSYS-based GHG mitigation** to advance sustainable carbon cycle management. My study focuses on the process intensification of adsorption-based carbon capture, specifically evaluating the performance of structured contactors using **CALF-20** in **Pressure Vacuum Swing Adsorption (PVSA)** cycles to develop scalable, industrial-scale realities for the energy transition.
+---
 
+### **Core Expertise**
 
-I’ve always had a passion for continuous learning and solving complex problems, especially when it comes to technology and sustainability. Outside of work, I’m deeply into music, cricket, and enjoy indulging in sci-fi and crime thrillers, whether in movies or novels—they’re my go-to for staying creative and energized. Traveling and exploring new places also bring me joy, allowing me to immerse myself in different cultures. Fluent in three languages, I appreciate the ability to connect with people from diverse backgrounds. Above all, I believe in the importance of acting now for a sustainable future, and I’m committed to being part of solutions that truly make a difference.
+<div style="display: flex; justify-content: space-between; flex-wrap: wrap; text-align: center;">
+  <div style="flex: 1; min-width: 150px;">
+    <img src="{{ site.baseurl }}/Files/python.png" style="width: 50px;" alt="Python">
+    <p>Data Analytics</p>
+  </div>
+  <div style="flex: 1; min-width: 150px;">
+    <img src="{{ site.baseurl }}/Files/aspen-hysys.png" style="width: 50px;" alt="HYSYS">
+    <p>Process Modeling</p>
+  </div>
+  <div style="flex: 1; min-width: 150px;">
+    <img src="{{ site.baseurl }}/Files/seeq.png" style="width: 50px;" alt="SEEQ">
+    <p>Asset Surveillance</p>
+  </div>
+</div>
+
+---
+
+Outside of engineering, I am passionate about music, cricket, and sci-fi thrillers. Fluent in three languages, I enjoy connecting with people from diverse backgrounds to drive a sustainable future.
+
+[Connect on LinkedIn]({{ site.linkedin }}) | [View Research]({{ site.baseurl }}/research/)
 
 <img src="{{ site.baseurl }}/Files/Collage.png" alt="Collage Image" loading="lazy">
 
