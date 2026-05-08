@@ -15,7 +15,7 @@ permalink: /
 
 <div style="text-align: center; margin-bottom: 50px;">
   <a href="{{ site.baseurl }}/professional-experience/" style="display: inline-block; padding: 14px 30px; border: 2px solid #2c3e50; color: #2c3e50; text-decoration: none; border-radius: 4px; font-weight: bold; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px;">
-    View Professional Experience & Impact →
+    View Professional Journey & Impact →
   </a>
 </div>
 
