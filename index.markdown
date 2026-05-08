@@ -21,7 +21,6 @@ permalink: /
 
 <hr style="border: 0; border-top: 1px solid #eee; margin: 40px 0;">
 
-<h2 style="text-align: center; font-weight: bold; margin-bottom: 30px;">Professional Background</h2>
 
 <body class="home-page">
   <!-- Professional Experience Section -->
