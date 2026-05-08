@@ -14,7 +14,7 @@ The objective of this research is to investigate and optimize **Pressure Vacuum 
 
 ## **The Context** 
 
-Global anthropogenic carbon emissions reached an all-time high of ~38 billion tonnes in 2024, contributing to atmospheric CO2 concentrations exceeding 420 ppm. To meet 2˚C warming limits, rapid decarbonization across all industrial sectors is essential. This study focuses on capturing $CO_2$ from dry feed (15% $CO_2$) using CALF-20 to evaluate the performance trade-offs between traditional packed beds and structured adsorbent contactors.
+Global anthropogenic carbon emissions reached an all-time high of ~38 billion tonnes in 2024, contributing to atmospheric CO<sub>2</sub> concentrations exceeding 420 ppm. To meet 2˚C warming limits, rapid decarbonization across all industrial sectors is essential. This study focuses on capturing CO<sub>2</sub> from dry feed (15% CO<sub>2</sub>) using CALF-20 to evaluate the performance trade-offs between traditional packed beds and structured adsorbent contactors.
 
 ## **Technical Approach** 
 ### **1. Simulation & Optimization** 
