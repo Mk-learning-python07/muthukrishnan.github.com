@@ -3,7 +3,7 @@ layout: default
 title: About Me
 permalink: /about-me/
 ---
-# About Me
+# **About Me**
 
 Growing up in India, I was inspired by the idea that engineering could solve resource scarcity. This led me to pursue **Chemical Engineering** at **NIT Trichy**, which provided the foundation for my 5-year tenure at **ExxonMobil**.
 
