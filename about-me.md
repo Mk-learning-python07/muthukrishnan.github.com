@@ -7,7 +7,7 @@ permalink: /about-me/
 
 Growing up in India, I was inspired by the idea that engineering could solve resource scarcity. This led me to pursue **Chemical Engineering** at **NIT Trichy**, which provided the foundation for my 5-year tenure at **ExxonMobil**.
 
-Currently, as an **M.Sc. candidate** at the **University of Alberta**, I am investigating the optimization of structured adsorbents for carbon capture under **Prof. Arvind Rajendran**. My work bridges the gap between field-proven operations and the scale-up of **Pressure Vacuum Swing Adsorption (PVSA)** technology.
+Currently, as an **M.Sc. candidate** at the **University of Alberta**, I am investigating the optimization of structured adsorbents for carbon capture under **Prof. Arvind Rajendran**. My work bridges the gap between field-proven operations and the scale-up of **Pressure Vacuum Swing Adsorption (PVSA)** technology. 
 
 ---
 
