@@ -9,7 +9,7 @@ permalink: /
     Process Engineer | Adsorption Based Carbon Capture
   </p>
   <p style="max-width: 750px; margin: 0 auto; line-height: 1.8; font-size: 1.1rem; color: #34495e;">
-    Process Engineer with 5 years of experience at <strong>ExxonMobil</strong> in upstream operations and process surveillance. Currently advancing <strong>Carbon Capture and Storage (CCS)</strong> as an M.Sc. candidate at the University of Alberta, specializing in <strong>PVSA</strong> cycles and comparison of contactor configurations to understand performance tradeoffs.
+    Process Engineer with 5 years of experience at <strong>ExxonMobil</strong> in upstream operations and process surveillance. Currently advancing <strong>Carbon Capture and Storage (CCS)</strong> as an M.Sc. candidate at the University of Alberta, specializing in <strong>PVSA</strong> cycles and comparison of contactor configurations to understand performance tradeoffs. 
   </p>
 </div>
 
