@@ -441,13 +441,31 @@ tr:last-child td { border-bottom: none; }
 tr:hover td { background: var(--accent-glow); }
 
 /* ================================================================
-   LEGACY-CONTENT OVERRIDE (opt-in only)
-   Wrap old raw HTML/markdown blocks that still carry inline
-   color/background style attributes in a "legacy-content" class to
-   force them onto the theme in dark mode. New content written with
-   the component classes below never needs this — normal CSS
-   inheritance already themes it correctly with no specificity fights.
+   AUTOMATIC DARK-MODE CONTENT GUARD
+   Old markdown/HTML content on pages we haven't rewritten yet often
+   carries inline style="background:#fff" / "color:#000" left over
+   from before the redesign. This neutralizes that automatically, on
+   every page, with no per-page edits required.
+
+   Named components (.card, .stat, .badge, etc.) are explicitly
+   excluded by class so they keep using their own var()-based colors
+   untouched — no specificity fight, because excluded elements are
+   simply never matched by this rule at all.
 ================================================================ */
+[data-theme="dark"] .page-body :where(div, span, p, li, td, tr, table, section, article):not(.card):not(.card-title):not(.card-meta):not(.exec-summary):not(.exec-summary-label):not(.framework-card):not(.framework-num):not(.framework-title):not(.framework-desc):not(.stat):not(.stat-num):not(.stat-label):not(.timeline-item):not(.timeline-date):not(.timeline-title):not(.timeline-org):not(.timeline-desc):not(.pull-quote):not(.project-card):not(.project-card-head):not(.project-icon):not(.project-title):not(.project-desc):not(.project-tags):not(.project-link):not(.badge):not(.section-divider) {
+  background-color: transparent !important;
+  color: var(--text-dim) !important;
+  border-color: var(--line) !important;
+}
+[data-theme="dark"] .page-body :where(h1, h2, h3, h4, h5, h6, strong, b) {
+  color: var(--text) !important;
+}
+[data-theme="dark"] .page-body a { color: var(--accent) !important; }
+
+/* Stubborn one-off blocks (e.g. a big pasted HTML chunk with many
+   inline styles) can opt into the same treatment by wrapping in
+   <div class="legacy-content">...</div> if the automatic guard above
+   ever misses something odd inside it. */
 [data-theme="dark"] .legacy-content,
 [data-theme="dark"] .legacy-content * {
   color: var(--text-dim) !important;
