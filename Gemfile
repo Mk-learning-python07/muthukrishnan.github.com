@@ -32,6 +32,7 @@ source "https://rubygems.org"
 
 # Lock `http_parser.rb` gem to `v0.6.x` on JRuby builds since newer versions of the gem
 # do not have a Java counterpart.
+<<<<<<< HEAD
 # gem "http_parser.rb", "~> 0.6.0", :platforms => [:jruby]
 # gem "csv"
 # gem "logger"
@@ -62,3 +63,9 @@ end
 gem "wdm",            "~> 0.1",  platforms: [:mingw, :x64_mingw, :mswin]
 gem "http_parser.rb", "~> 0.6",  platforms: [:jruby]
 gem "webrick",        "~> 1.9"
+=======
+gem "http_parser.rb", "~> 0.6.0", :platforms => [:jruby]
+
+gem "csv", "~> 3.3"
+gem "logger", "~> 1.7"
+>>>>>>> aac6a62 (gemfile changes)
