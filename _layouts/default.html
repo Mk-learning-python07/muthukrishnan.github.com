@@ -1,374 +1,130 @@
 <!DOCTYPE html>
-<html lang="{{ site.lang | default: "en-US" }}">
-
+<html lang="{{ site.lang | default: 'en-US' }}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#157878">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
-  <!-- Web SEO -->
   <meta name="description" content="{{ page.description | default: site.description }}">
-  <meta name="author" content="{{ site.author }}">
+  <meta name="author" content="{{ site.author | default: site.title }}">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="{{ page.url | absolute_url }}">
-  <link rel="sitemap" type="application/xml" title="Sitemap" href="{{ '/sitemap.xml' | absolute_url }}">
 
-  <!-- LinkedIn Open Graph -->
   <meta property="og:title" content="{{ page.title | default: site.title }}">
   <meta property="og:description" content="{{ page.description | default: site.description }}">
   <meta property="og:type" content="website">
   <meta property="og:url" content="{{ page.url | absolute_url }}">
-  <meta property="og:image" content="{{ site.logo | default: '/Files/Logo.jpeg' | absolute_url }}">
+  <meta property="og:image" content="{{ '/Files/Logo.jpeg' | absolute_url }}">
   <meta property="og:site_name" content="{{ site.title }}">
 
-  <!-- Favicon -->
   <link rel="icon" href="{{ '/Files/Logo.jpeg' | relative_url }}" type="image/jpeg">
+  <title>{% if page.title %}{{ page.title }} – {% endif %}{{ site.title }}</title>
 
-  <!-- Title -->
-  <title>{% if page.title %}{{ page.title }} - {% endif %}{{ site.title }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
 
-  <!-- Stylesheet -->
-  <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
-
-  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QEPCGSFX9V"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-QEPCGSFX9V');
-  </script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-QEPCGSFX9V');</script>
 </head>
 
-
-
 <body>
-  <!-- Header Section with Flexbox -->
-  <header class="page-header" role="banner" style="background-color: #157878; padding: 10px 0;">
-    <div class="container" style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
-      <!-- Left Section (Photo, Name, Designation) -->
-      <div class="left-section" style="display: flex; align-items: center;">
-        <img src="{{ site.baseurl }}/Files/MK_ID_Photo.jpg" alt="Muthukrishnan Anand" class="profile-photo" style="width: 60px; height: 60px; border-radius: 50%; margin-right: 10px;" loading="lazy">
-        <div class="name-designation" style="color: white;">
-          <strong>Muthukrishnan Anand</strong><br>
+  <div class="gradient-bg" aria-hidden="true"></div>
+
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <a href="{{ site.baseurl }}/" class="header-brand" aria-label="{{ site.title }} home">
+        <img src="{{ site.baseurl }}/Files/MK_ID_Photo.jpg" alt="{{ site.title }}" class="header-avatar" loading="lazy" width="44" height="44">
+        <div class="header-identity">
+          <strong>Muthukrishnan Anand</strong>
           <span>Graduate Researcher</span>
         </div>
-      </div>
+      </a>
 
-      <!-- Right Section (Navigation Links) -->
-      <nav class="right-nav" aria-label="Primary navigation" style="display: flex; align-items: center;">
-        <ul style="list-style: none; padding: 0; margin: 0; display: flex;">
-          <li style="margin-right: 15px;"><a href="{{ site.baseurl }}/" style="color: white; text-decoration: none; padding: 5px 10px;">Home</a></li>
-          <li style="margin-right: 15px;"><a href="{{ site.baseurl }}/about-me/" style="color: white; text-decoration: none; padding: 5px 10px;">About Me</a></li>
-          <li style="margin-right: 15px;"><a href="{{ site.baseurl }}/professional-experience/" style="color: white; text-decoration: none; padding: 5px 10px;">Professional Journey</a></li>
-          <li style="margin-right: 15px;"><a href="{{ site.baseurl }}/research/" style="color: white; text-decoration: none; padding: 5px 10px;">Research</a></li>
-          <li style="margin-right: 15px;"><a href="{{ site.baseurl }}/contact/" style="color: white; text-decoration: none; padding: 5px 10px;">Contact Me</a></li>
+      <button class="hamburger" id="hamburger" aria-label="Toggle navigation" aria-expanded="false" aria-controls="site-nav">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
+        <ul role="list">
+          <li><a href="{{ site.baseurl }}/" {% if page.url == '/' or page.url == '/muthukrishnan.github.com/' %}class="active" aria-current="page"{% endif %}>Home</a></li>
+          <li><a href="{{ site.baseurl }}/about-me/" {% if page.url contains 'about' %}class="active" aria-current="page"{% endif %}>About Me</a></li>
+          <li><a href="{{ site.baseurl }}/professional-experience/" {% if page.url contains 'professional' %}class="active" aria-current="page"{% endif %}>Experience</a></li>
+          <li><a href="{{ site.baseurl }}/research/" {% if page.url contains 'research' %}class="active" aria-current="page"{% endif %}>Research</a></li>
+          <li><a href="{{ site.baseurl }}/contact/" {% if page.url contains 'contact' %}class="active" aria-current="page"{% endif %}>Contact</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
-  <!-- Main Content Area (White Box) -->
-  <main id="content" class="main-content" role="main" style="background-color: white; padding: 20px; flex-grow: 1;">
+  <main id="content" class="main-content" role="main">
     <div class="container">
       {{ content }}
     </div>
   </main>
 
-<!-- Footer Section -->
-<footer class="site-footer" style="background-color: #f8f8f8; padding: 20px; display: flex; flex-direction: column; align-items: center; text-align: center; border-top: 1px solid #ddd;">
-  <!-- Social Links Section -->
-  <div class="social-links" style="display: flex; gap: 25px; justify-content: center; margin-bottom: 15px;">
-    {% if site.linkedin %}
+  <footer class="site-footer">
+    <div class="footer-social">
+      {% if site.linkedin %}
       <a href="{{ site.linkedin }}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="social-icon">
-        <i class="fab fa-linkedin"></i>
+        <i class="fab fa-linkedin" aria-hidden="true"></i>
       </a>
-    {% endif %}
-
-    {% if site.email %}
+      {% endif %}
+      {% if site.email %}
       <a href="mailto:{{ site.email }}" aria-label="Email" class="social-icon">
-        <i class="fas fa-envelope"></i>
+        <i class="fas fa-envelope" aria-hidden="true"></i>
       </a>
-    {% endif %}
-
-    {% if site.github %}
+      {% endif %}
+      {% if site.github %}
       <a href="{{ site.github }}" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="social-icon">
-        <i class="fab fa-github"></i>
+        <i class="fab fa-github" aria-hidden="true"></i>
       </a>
-    {% endif %}
-  </div>
-
-  <!-- Privacy Notice -->
-  <p style="font-size: 14px; color: #666; margin-bottom: 10px;">
-    By using this site, you agree to our 
-    <a href="{{ site.baseurl }}/privacy-policy" style="color: #126969; text-decoration: none;">privacy policy</a>.
-  </p>
-
-  <!-- Copyright Section -->
-  <div class="copyright" style="font-size: 14px; color: #888;">
-    <p>© {{ site.time | date: '%Y' }} {{ site.title }}. All rights reserved.</p>
-    <p>Crafted with <span style="color: #e25555;">&#10084;</span> using 
-      <a href="https://jekyllrb.com" style="color: #126969; text-decoration: none;">Jekyll</a> and 
-      <a href="https://www.ruby-lang.org/en/" style="color: #126969; text-decoration: none;">Ruby</a>. 
-      Designed and developed by {{ site.title }}.</p>
-  </div>
-</footer>
-
-
- <!-- Pop-up for enabling Desktop Mode -->
-<div id="desktop-mode-popup" style="display: none;">
-  <div class="popup-overlay" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); z-index: 9999; display: flex; justify-content: center; align-items: center;">
-    <div class="popup-content" style="background: white; padding: 20px; border-radius: 8px; text-align: center; max-width: 400px;">
-      <h2 style="color: #157878;">Enable Desktop Mode</h2>
-      <p style="color: #333;">To view the site in the best way, please enable desktop mode in your browser. Here’s how:</p>
-      <ul style="list-style: none; padding: 0; color: #333;">
-        <li><strong>Chrome:</strong> Tap the three dots in the top-right corner, then check the "Request Desktop Site" checkbox.</li>
-        <li><strong>Safari:</strong> Tap the "aA" icon in the address bar, then select "Request Desktop Website."</li>
-        <li><strong>Firefox:</strong> Tap the three dots in the top-right corner, then enable "Request Desktop Site."</li>
-        <li><strong>Edge:</strong> Tap the <span style="font-size: 20px;">&#9776;</span> hamburger icon (three horizontal lines) in the bottom-center, then select "Request Desktop Site."</li>
-        <li><strong>DuckDuckGo:</strong> Tap the three dots in the bottom-center, then select "Desktop Site."</li>
-      </ul>
-      <p class="supported-browsers">
-        Supported Browsers: Edge, Chrome and Firefox
-      </p>
-      <button id="close-popup" style="background-color: #157878; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">Got It!</button>
+      {% endif %}
     </div>
-  </div>
-</div>
+    <p class="footer-legal">
+      By using this site, you agree to our
+      <a href="{{ site.baseurl }}/privacy-policy">privacy policy</a>.
+    </p>
+    <p class="footer-copy">
+      &copy; {{ site.time | date: '%Y' }} {{ site.title }} &middot;
+      Built with <a href="https://jekyllrb.com" target="_blank" rel="noopener noreferrer">Jekyll</a>
+    </p>
+  </footer>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const header = document.querySelector('.page-header');
+  <script>
+  (function () {
+    var hdr = document.getElementById('site-header');
+    var ham = document.getElementById('hamburger');
+    var nav = document.getElementById('site-nav');
 
-    // Smooth scroll effect
-    window.addEventListener('scroll', function() {
-      if (window.scrollY > 50) {  // Trigger the change when scrolled 50px
-        header.classList.add('scrolled');
-        header.classList.add('sticky-header');
-      } else {
-        header.classList.remove('scrolled');
-        header.classList.remove('sticky-header');
-      }
+    window.addEventListener('scroll', function () {
+      hdr.classList.toggle('scrolled', window.scrollY > 50);
+    }, { passive: true });
+
+    ham.addEventListener('click', function () {
+      var open = nav.classList.toggle('open');
+      ham.classList.toggle('open', open);
+      ham.setAttribute('aria-expanded', String(open));
     });
 
-    // Display the pop-up if it's a mobile device and user hasn't dismissed it
-    if (window.innerWidth <= 768 && !localStorage.getItem('desktopModePopupDismissed')) {
-      document.getElementById('desktop-mode-popup').style.display = 'flex';
-
-      // Close the pop-up when the button is clicked
-      document.getElementById('close-popup').addEventListener('click', function() {
-        document.getElementById('desktop-mode-popup').style.display = 'none';
-        // Store that the user has dismissed the popup in localStorage
-        localStorage.setItem('desktopModePopupDismissed', 'true');
+    nav.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        nav.classList.remove('open');
+        ham.classList.remove('open');
+        ham.setAttribute('aria-expanded', 'false');
       });
-    }
-  });
-</script>
+    });
+
+    document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        var t = document.querySelector(this.getAttribute('href'));
+        if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
+      });
+    });
+  })();
+  </script>
 </body>
-
-
-  
-  
-
-<style>
-/* Global Styles */
-body, html {
-  margin: 0;
-  padding: 0;
-  font-family: 'Helvetica', sans-serif;
-  box-sizing: border-box;
-  line-height: 1.6;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow-x: hidden; /* Prevent horizontal scroll */
-}
-
-/* Apply gradient to the outer container (not the body or html directly) */
-.gradient-background {
-  position: fixed; /* Keep gradient fixed on scroll */
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, #f0f8ff, #e0e7ff); /* Light blue gradient */
-  z-index: -1; /* Ensure it stays behind the content */
-}
-
-.container {
-  margin: 0 auto;
-  padding: 0 20px;
-  max-width: 1200px;
-}
-
-/* Sticky Header Styles */
-.sticky-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  z-index: 1000;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.scrolled {
-  background-color: #126969;
-}
-
-/* Header Section Styles */
-.page-header {
-  background-color: #157878;
-  padding: 10px 0;
-  transition: background-color 0.3s ease;
-}
-
-.page-header .left-section {
-  display: flex;
-  align-items: center;
-}
-
-.page-header .left-section img {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  margin-right: 10px;
-}
-
-.page-header .right-nav ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-}
-
-.page-header .right-nav a {
-  color: white;
-  text-decoration: none;
-  padding: 10px 20px;
-  transition: background-color 0.3s ease;
-  border-radius: 4px;
-}
-
-/* Hover Effect for Links */
-.page-header .right-nav a:hover {
-  background-color: #126969;
-}
-
-/* Footer Section */
-footer {
-  background-color: #f8f8f8;
-  padding: 20px 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  border-top: 1px solid #ddd;
-}
-
-footer .social-links {
-  display: flex;
-  gap: 30px; /* Increased gap for better spacing */
-  justify-content: center;
-  margin-bottom: 15px;
-}
-
-footer .social-icon {
-  font-size: 32px; /* Increased icon size */
-  color: #2980b9; /* Default blue color */
-  text-decoration: none;
-  transition: color 0.3s ease, transform 0.3s ease;
-}
-
-footer .social-icon:hover {
-  color: #1d6fa5; /* Darker blue on hover */
-  transform: scale(1.1); /* Slight enlargement on hover */
-}
-
-/* Privacy Notice */
-footer .privacy-notice {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 10px;
-}
-
-footer .privacy-link {
-  color: #126969;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-footer .privacy-link:hover {
-  color: #1d6fa5;
-}
-
-/* Copyright Section */
-footer .copyright {
-  font-size: 14px;
-  color: #888;
-}
-
-/* Ensure Footer Stays at the Bottom of the Page */
-html, body {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.main-content {
-  flex-grow: 1; /* This will make sure the content area grows to fill available space */
-  padding-bottom: 100px; /* Ensure there is space for footer */
-  background-color: white; /* Content area will be white */
-  border-radius: 8px; /* Rounded corners for the content box */
-  padding: 20px;
-  margin: 20px auto; /* Center content and add margin */
-  max-width: 1200px; /* Maximum width for the content */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Optional: Add shadow to make it stand out */
-}
-
-/* Responsive Design for Smaller Screens */
-@media (max-width: 768px) {
-  footer .social-links {
-    gap: 20px; /* Adjust gap for smaller screens */
-  }
-
-  footer .social-icon {
-    font-size: 28px; /* Slightly smaller icons on smaller screens */
-  }
-
-  footer .privacy-notice {
-    font-size: 13px;
-  }
-
-  footer .privacy-link {
-    font-size: 13px;
-  }
-}
-
-@media (max-width: 480px) {
-  footer .social-links {
-    gap: 15px; /* Further adjust gap for very small screens */
-  }
-
-  footer .social-icon {
-    font-size: 24px; /* Further reduce icon size for very small screens */
-  }
-
-  footer .privacy-notice {
-    font-size: 12px;
-  }
-
-  footer .privacy-link {
-    font-size: 12px;
-  }
-}
-
-
-  </style>
-
 </html>
-
-
