@@ -3,27 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#157878">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
+  <meta name="theme-color" content="#0b0f16">
   <meta name="description" content="{{ page.description | default: site.description }}">
   <meta name="author" content="{{ site.author | default: site.title }}">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="{{ page.url | absolute_url }}">
-
   <meta property="og:title" content="{{ page.title | default: site.title }}">
   <meta property="og:description" content="{{ page.description | default: site.description }}">
   <meta property="og:type" content="website">
   <meta property="og:url" content="{{ page.url | absolute_url }}">
   <meta property="og:image" content="{{ '/Files/Logo.jpeg' | absolute_url }}">
-  <meta property="og:site_name" content="{{ site.title }}">
-
   <link rel="icon" href="{{ '/Files/Logo.jpeg' | relative_url }}" type="image/jpeg">
   <title>{% if page.title %}{{ page.title }} – {% endif %}{{ site.title }}</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
 
@@ -32,91 +27,83 @@
 </head>
 
 <body>
-  <div class="gradient-bg" aria-hidden="true"></div>
+  <div id="progress" aria-hidden="true"></div>
 
-  <header class="site-header" id="site-header">
-    <div class="header-inner">
-      <a href="{{ site.baseurl }}/" class="header-brand" aria-label="{{ site.title }} home">
-        <img src="{{ site.baseurl }}/Files/MK_ID_Photo.jpg" alt="{{ site.title }}" class="header-avatar" loading="lazy" width="44" height="44">
-        <div class="header-identity">
-          <strong>Muthukrishnan Anand</strong>
-          <span>Graduate Researcher</span>
-        </div>
-      </a>
-
-      <button class="hamburger" id="hamburger" aria-label="Toggle navigation" aria-expanded="false" aria-controls="site-nav">
-        <span></span><span></span><span></span>
-      </button>
-
-      <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
-        <ul role="list">
-          <li><a href="{{ site.baseurl }}/" {% if page.url == '/' or page.url == '/muthukrishnan.github.com/' %}class="active" aria-current="page"{% endif %}>Home</a></li>
-          <li><a href="{{ site.baseurl }}/about-me/" {% if page.url contains 'about' %}class="active" aria-current="page"{% endif %}>About Me</a></li>
-          <li><a href="{{ site.baseurl }}/professional-experience/" {% if page.url contains 'professional' %}class="active" aria-current="page"{% endif %}>Experience</a></li>
-          <li><a href="{{ site.baseurl }}/research/" {% if page.url contains 'research' %}class="active" aria-current="page"{% endif %}>Research</a></li>
-          <li><a href="{{ site.baseurl }}/contact/" {% if page.url contains 'contact' %}class="active" aria-current="page"{% endif %}>Contact</a></li>
-        </ul>
-      </nav>
-    </div>
+  <header class="top-bar" id="top-bar">
+    <a href="{{ site.baseurl }}/" class="brand-link" aria-label="{{ site.title }} home">
+      <img src="{{ site.baseurl }}/Files/MK_ID_Photo.jpg" alt="{{ site.title }}" class="brand-avatar" loading="lazy" width="36" height="36">
+      <div class="brand-text">
+        <strong>Muthukrishnan Anand</strong>
+        <span>Graduate Researcher &middot; Carbon Capture</span>
+      </div>
+    </a>
   </header>
 
+  <nav class="dot-nav" aria-label="Page navigation">
+    <a href="{{ site.baseurl }}/"                        class="dot-item {% if page.url == '/' %}active{% endif %}"                      data-label="Home"       aria-label="Home"><span class="dot"></span></a>
+    <a href="{{ site.baseurl }}/about-me/"               class="dot-item {% if page.url contains 'about' %}active{% endif %}"            data-label="About Me"   aria-label="About Me"><span class="dot"></span></a>
+    <a href="{{ site.baseurl }}/professional-experience/" class="dot-item {% if page.url contains 'professional' %}active{% endif %}"   data-label="Experience" aria-label="Experience"><span class="dot"></span></a>
+    <a href="{{ site.baseurl }}/research/"               class="dot-item {% if page.url contains 'research' %}active{% endif %}"         data-label="Research"   aria-label="Research"><span class="dot"></span></a>
+    <a href="{{ site.baseurl }}/contact/"                class="dot-item {% if page.url contains 'contact' %}active{% endif %}"          data-label="Contact"    aria-label="Contact"><span class="dot"></span></a>
+  </nav>
+
+  <nav class="bottom-nav" aria-label="Mobile navigation">
+    <a href="{{ site.baseurl }}/"                         class="{% if page.url == '/' %}active{% endif %}">
+      <i class="fas fa-house" aria-hidden="true"></i><span>Home</span>
+    </a>
+    <a href="{{ site.baseurl }}/about-me/"                class="{% if page.url contains 'about' %}active{% endif %}">
+      <i class="fas fa-user" aria-hidden="true"></i><span>About</span>
+    </a>
+    <a href="{{ site.baseurl }}/professional-experience/" class="{% if page.url contains 'professional' %}active{% endif %}">
+      <i class="fas fa-briefcase" aria-hidden="true"></i><span>Work</span>
+    </a>
+    <a href="{{ site.baseurl }}/research/"                class="{% if page.url contains 'research' %}active{% endif %}">
+      <i class="fas fa-flask" aria-hidden="true"></i><span>Research</span>
+    </a>
+    <a href="{{ site.baseurl }}/contact/"                 class="{% if page.url contains 'contact' %}active{% endif %}">
+      <i class="fas fa-envelope" aria-hidden="true"></i><span>Contact</span>
+    </a>
+  </nav>
+
   <main id="content" class="main-content" role="main">
-    <div class="container">
-      {{ content }}
-    </div>
+    {{ content }}
   </main>
 
   <footer class="site-footer">
     <div class="footer-social">
-      {% if site.linkedin %}
-      <a href="{{ site.linkedin }}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="social-icon">
-        <i class="fab fa-linkedin" aria-hidden="true"></i>
-      </a>
-      {% endif %}
-      {% if site.email %}
-      <a href="mailto:{{ site.email }}" aria-label="Email" class="social-icon">
-        <i class="fas fa-envelope" aria-hidden="true"></i>
-      </a>
-      {% endif %}
-      {% if site.github %}
-      <a href="{{ site.github }}" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="social-icon">
-        <i class="fab fa-github" aria-hidden="true"></i>
-      </a>
-      {% endif %}
+      {% if site.linkedin %}<a href="{{ site.linkedin }}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="social-icon"><i class="fab fa-linkedin" aria-hidden="true"></i></a>{% endif %}
+      {% if site.email %}<a href="mailto:{{ site.email }}" aria-label="Email" class="social-icon"><i class="fas fa-envelope" aria-hidden="true"></i></a>{% endif %}
+      {% if site.github %}<a href="{{ site.github }}" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="social-icon"><i class="fab fa-github" aria-hidden="true"></i></a>{% endif %}
     </div>
-    <p class="footer-legal">
-      By using this site, you agree to our
-      <a href="{{ site.baseurl }}/privacy-policy">privacy policy</a>.
-    </p>
-    <p class="footer-copy">
-      &copy; {{ site.time | date: '%Y' }} {{ site.title }} &middot;
-      Built with <a href="https://jekyllrb.com" target="_blank" rel="noopener noreferrer">Jekyll</a>
-    </p>
+    <p class="footer-copy">&copy; {{ site.time | date: '%Y' }} {{ site.title }} &middot; Built with <a href="https://jekyllrb.com" target="_blank" rel="noopener noreferrer">Jekyll</a></p>
   </footer>
 
   <script>
   (function () {
-    var hdr = document.getElementById('site-header');
-    var ham = document.getElementById('hamburger');
-    var nav = document.getElementById('site-nav');
+    var prog   = document.getElementById('progress');
+    var topBar = document.getElementById('top-bar');
 
-    window.addEventListener('scroll', function () {
-      hdr.classList.toggle('scrolled', window.scrollY > 50);
-    }, { passive: true });
+    function onScroll() {
+      var pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+      prog.style.width = Math.min(pct, 100) + '%';
+      topBar.classList.toggle('scrolled', window.scrollY > 20);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
 
-    ham.addEventListener('click', function () {
-      var open = nav.classList.toggle('open');
-      ham.classList.toggle('open', open);
-      ham.setAttribute('aria-expanded', String(open));
-    });
+    var sel = '.main-content h2, .main-content h3, .main-content p, .main-content ul, .main-content ol, .main-content blockquote, .main-content table, .main-content .card';
+    var els = document.querySelectorAll(sel);
+    els.forEach(function (el) { el.classList.add('reveal'); });
 
-    nav.querySelectorAll('a').forEach(function (a) {
-      a.addEventListener('click', function () {
-        nav.classList.remove('open');
-        ham.classList.remove('open');
-        ham.setAttribute('aria-expanded', 'false');
-      });
-    });
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+      els.forEach(function (el) { io.observe(el); });
+    } else {
+      els.forEach(function (el) { el.classList.add('visible'); });
+    }
 
     document.querySelectorAll('a[href^="#"]').forEach(function (a) {
       a.addEventListener('click', function (e) {
