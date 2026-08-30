@@ -15,17 +15,18 @@
   <link rel="icon" href="{{ '/Files/Logo.jpeg' | relative_url }}" type="image/jpeg">
   <title>{% if page.title %}{{ page.title }} – {% endif %}{{ site.title }}</title>
 
-  <!-- Prevent FOUC on theme restore -->
+  <!-- Set theme before paint — avoids flash of wrong theme -->
   <script>
     (function(){
-      var t=localStorage.getItem('mk-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
-      document.documentElement.setAttribute('data-theme',t);
+      var t = localStorage.getItem('mk-theme') ||
+              (window.matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', t);
     })();
   </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,900;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
 
@@ -34,17 +35,13 @@
 </head>
 
 <body>
-  <!-- Skip link (a11y) -->
   <a href="#content" class="skip-link">Skip to content</a>
-
-  <!-- Scroll progress -->
   <div id="progress" aria-hidden="true"></div>
 
-  <!-- ── Header ── -->
+  <!-- ── Sticky header ── -->
   <header class="site-header" id="site-header">
     <div class="header-inner">
 
-      <!-- Brand -->
       <a href="{{ site.baseurl }}/" class="brand" aria-label="{{ site.title }} – home">
         <img src="{{ site.baseurl }}/Files/MK_ID_Photo.jpg" alt="" class="brand-avatar" loading="lazy" width="38" height="38" aria-hidden="true">
         <div class="brand-text">
@@ -53,17 +50,16 @@
         </div>
       </a>
 
-      <!-- Desktop nav -->
       <nav class="top-nav" aria-label="Primary navigation">
         <a href="{{ site.baseurl }}/"                         class="nav-link {% if page.url == '/' %}active{% endif %}">Home</a>
         <a href="{{ site.baseurl }}/about-me/"                class="nav-link {% if page.url contains 'about' %}active{% endif %}">About</a>
         <a href="{{ site.baseurl }}/professional-experience/" class="nav-link {% if page.url contains 'professional' %}active{% endif %}">Experience</a>
         <a href="{{ site.baseurl }}/research/"                class="nav-link {% if page.url contains 'research' %}active{% endif %}">Research</a>
+        <a href="{{ site.baseurl }}/apps/"                    class="nav-link {% if page.url contains 'apps' %}active{% endif %}">Apps</a>
         <a href="{{ site.baseurl }}/contact/"                 class="nav-link {% if page.url contains 'contact' %}active{% endif %}">Contact</a>
       </nav>
 
-      <!-- Theme toggle -->
-      <button class="theme-btn" id="theme-btn" aria-label="Toggle dark mode" title="Toggle dark / light">
+      <button class="theme-btn" id="theme-btn" aria-label="Switch to dark mode" title="Toggle dark / light mode">
         <i class="fas fa-moon" id="theme-icon" aria-hidden="true"></i>
       </button>
 
@@ -76,13 +72,41 @@
     <a href="{{ site.baseurl }}/about-me/"                class="bnav-item {% if page.url contains 'about' %}active{% endif %}"><i class="fas fa-user" aria-hidden="true"></i><span>About</span></a>
     <a href="{{ site.baseurl }}/professional-experience/" class="bnav-item {% if page.url contains 'professional' %}active{% endif %}"><i class="fas fa-briefcase" aria-hidden="true"></i><span>Work</span></a>
     <a href="{{ site.baseurl }}/research/"                class="bnav-item {% if page.url contains 'research' %}active{% endif %}"><i class="fas fa-flask" aria-hidden="true"></i><span>Research</span></a>
+    <a href="{{ site.baseurl }}/apps/"                    class="bnav-item {% if page.url contains 'apps' %}active{% endif %}"><i class="fas fa-code" aria-hidden="true"></i><span>Apps</span></a>
     <a href="{{ site.baseurl }}/contact/"                 class="bnav-item {% if page.url contains 'contact' %}active{% endif %}"><i class="fas fa-envelope" aria-hidden="true"></i><span>Contact</span></a>
   </nav>
 
-  <!-- ── Main ── -->
+  <!-- ── Main content: hero + body live in ONE card ── -->
   <main id="content" class="site-main" role="main">
     <div class="page-wrap">
-      {{ content }}
+
+      {% assign section_num = "01" %}
+      {% if page.url contains 'about' %}{% assign section_num = "02" %}
+      {% elsif page.url contains 'professional' %}{% assign section_num = "03" %}
+      {% elsif page.url contains 'research' %}{% assign section_num = "04" %}
+      {% elsif page.url contains 'apps' %}{% assign section_num = "05" %}
+      {% elsif page.url contains 'contact' %}{% assign section_num = "06" %}
+      {% endif %}
+
+      <div class="page-hero">
+        <span class="hero-num" aria-hidden="true">{{ section_num }}</span>
+        <div class="page-hero-inner">
+          {% if page.title %}
+            <p class="hero-eyebrow">{{ site.title }}</p>
+            <h1 class="hero-title">{{ page.title }}</h1>
+            {% if page.description %}<p class="hero-tagline">{{ page.description }}</p>{% endif %}
+          {% else %}
+            <p class="hero-eyebrow">Portfolio</p>
+            <h1 class="hero-title">{{ site.title }}</h1>
+            <p class="hero-tagline">{{ site.description }}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="page-body">
+        {{ content }}
+      </div>
+
     </div>
   </main>
 
@@ -91,8 +115,8 @@
     <div class="footer-inner">
       <div class="footer-social">
         {% if site.linkedin %}<a href="{{ site.linkedin }}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="social-link"><i class="fab fa-linkedin-in" aria-hidden="true"></i></a>{% endif %}
-        {% if site.email %}<a href="mailto:{{ site.email }}" aria-label="Email" class="social-link"><i class="fas fa-envelope" aria-hidden="true"></i></a>{% endif %}
-        {% if site.github %}<a href="{{ site.github }}" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="social-link"><i class="fab fa-github" aria-hidden="true"></i></a>{% endif %}
+        {% if site.email    %}<a href="mailto:{{ site.email }}" aria-label="Email" class="social-link"><i class="fas fa-envelope" aria-hidden="true"></i></a>{% endif %}
+        {% if site.github   %}<a href="{{ site.github }}" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="social-link"><i class="fab fa-github" aria-hidden="true"></i></a>{% endif %}
       </div>
       <p class="footer-copy">
         &copy; {{ site.time | date: '%Y' }} Muthukrishnan Anand &ensp;&middot;&ensp;
@@ -104,7 +128,7 @@
 
   <script>
   (function () {
-    /* ── Theme ── */
+    /* ── Theme toggle ── */
     var html = document.documentElement;
     var btn  = document.getElementById('theme-btn');
     var icon = document.getElementById('theme-icon');
@@ -121,21 +145,32 @@
       applyTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
     });
 
-    /* ── Progress + header shadow ── */
+    /* ── Progress bar + header shadow ── */
     var prog   = document.getElementById('progress');
     var header = document.getElementById('site-header');
-
     window.addEventListener('scroll', function () {
-      var s   = document.body.scrollHeight - window.innerHeight;
+      var s = document.body.scrollHeight - window.innerHeight;
       prog.style.width = (s > 0 ? Math.min(window.scrollY / s * 100, 100) : 0) + '%';
       header.classList.toggle('scrolled', window.scrollY > 30);
     }, { passive: true });
 
+    /* ── Auto-wrap bare tables (old markdown output) so they scroll
+       horizontally instead of being clipped by the card's rounded edge ── */
+    document.querySelectorAll('.page-body > table').forEach(function (t) {
+      var wrap = document.createElement('div');
+      wrap.className = 'table-wrap';
+      t.parentNode.insertBefore(wrap, t);
+      wrap.appendChild(t);
+    });
+
     /* ── Scroll reveal ── */
     var items = document.querySelectorAll(
-      '.page-wrap > h2, .page-wrap > h3, .page-wrap > p, ' +
-      '.page-wrap > ul, .page-wrap > ol, .page-wrap > blockquote, ' +
-      '.page-wrap > table, .page-wrap > .card, .page-wrap > hr'
+      '.page-body > h2, .page-body > h3, .page-body > p, ' +
+      '.page-body > ul, .page-body > ol, .page-body > blockquote, ' +
+      '.page-body > table, .page-body > .table-wrap, .page-body > .card, ' +
+      '.page-body > .exec-summary, .page-body > .stat-row, ' +
+      '.page-body > .framework-grid, .page-body > .project-grid, ' +
+      '.page-body > .timeline, .page-body > .pull-quote, .page-body > hr'
     );
     items.forEach(function (el) { el.classList.add('reveal'); });
 
