@@ -1013,6 +1013,7 @@ const MODELS={
       if(p._fnSrc===p.expr && p._fn) return p._fn;
       const src=String(p.expr||'0').replace(/\^/g,'**');
       try{
+        if(!isSafeExpr(src)){ throw new Error('Expression contains disallowed identifiers'); }
         const fn=new Function('P','T',`with(Math){return (${src});}`);
         fn(1,298);
         p._fn=fn; p._fnSrc=p.expr; p._err=null;
@@ -1140,6 +1141,25 @@ const points=[
   {label:'delta',P:1.00,y:0.00,color:'#7048e8'}
 ];
 const GREEK_SYMS=['\u03b1','\u03b2','\u03b3','\u03b4','\u03b5','\u03b6'];
+// ── Security helpers ────────────────────────────────────────────────────────
+// Escape user-controlled strings before interpolating into innerHTML.
+// safeText()   → safe for text nodes and attribute values
+// safeAttr()   → same (alias kept for reader clarity at call sites)
+const ESC_MAP={'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};
+function safeText(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>ESC_MAP[c]); }
+const safeAttr=safeText;
+
+// ── Expression allowlist ─────────────────────────────────────────────────────
+// Tokens permitted inside Custom q(P) expressions compiled via new Function().
+// Blocks access to globals (window, document, fetch, eval, etc.) by rejecting
+// any expression that contains a disallowed identifier.
+const EXPR_ALLOW_RE=/^[\s\d\+\-\*\/\(\)\.\^eE,]+$|^([\s\d\+\-\*\/\(\)\.\^\,eE]|(Math\.(abs|acos|acosh|asin|asinh|atan|atanh|atan2|cbrt|ceil|clz32|cos|cosh|exp|expm1|floor|fround|hypot|imul|log|log10|log1p|log2|max|min|pow|random|round|sign|sin|sinh|sqrt|tan|tanh|trunc)|P|T|Infinity|NaN))+$/;
+function isSafeExpr(src){
+  // Strip string literals and comments, then test remaining tokens
+  const stripped=src.replace(/\/\/[^\n]*/g,'').replace(/'[^']*'|"[^"]*"/g,'""');
+  return !/\b(window|document|globalThis|self|frames|parent|top|location|navigator|fetch|XMLHttpRequest|eval|Function|setTimeout|setInterval|requestAnimationFrame|import|require|process|global)\b/.test(stripped);
+}
+
 const PALETTE=['#4db8ff','#4fd6b8','#f0b429','#e05a6a','#ae82f7','#5fd49e','#e07a5f','#6699ff','#72d9a0'];
 
 // ── DOM refs ───────────────────────────────────────────────────────────────
@@ -1231,11 +1251,11 @@ function buildComponentCard(cardEl,comp,which){
     <div class="lib-pick-row">
       <select class="libSel" aria-label="Use library component for ${which}" title="Pull a fitted component from the library">
         <option value="">\u2795 Use library component\u2026</option>
-        ${libComps.map(c=>`<option value="${c.key}">${c.label}</option>`).join('')}
+        ${libComps.map(c=>`<option value="${safeAttr(c.key)}">${safeText(c.label)}</option>`).join('')}
       </select>
     </div>
     <div class="row2">
-      <input type="text" class="nameInp" value="${comp.name}" placeholder="Component name" aria-label="Comp ${which} name">
+      <input type="text" class="nameInp" value="${safeAttr(comp.name)}" placeholder="Component name" aria-label="Comp ${which} name">
       <select class="modelSel" aria-label="Comp ${which} model">
         ${Object.keys(MODELS).map(k=>`<option value="${k}">${MODELS[k].label}</option>`).join('')}
       </select>
@@ -1354,7 +1374,7 @@ function buildPointTable(){
   points.forEach((pt,i)=>{
     const tr=document.createElement('tr');
     tr.innerHTML=`
-      <td><input type="text" data-i="${i}" data-f="label" value="${pt.label}"></td>
+      <td><input type="text" data-i="${i}" data-f="label" value="${safeAttr(pt.label)}"></td>
       <td><input type="number" data-i="${i}" data-f="P" value="${pt.P}" min="0.0001" step="0.01"></td>
       <td><input type="number" data-i="${i}" data-f="y" value="${pt.y}" min="0" max="1" step="0.01"></td>
       <td><input type="color" class="swatch-input" data-i="${i}" data-f="color" value="${pt.color}"></td>
@@ -1732,8 +1752,8 @@ function render(){
     const yLbl=binaryComp==='both'
       ?'Adsorbed amount (mol kg\u207b\u00b9)'
       :binaryComp==='B'
-        ?`${compB.name} in mixture (mol kg\u207b\u00b9)`
-        :`${compA.name} in mixture (mol kg\u207b\u00b9)`;
+        ?`${safeText(compB.name)} in mixture (mol kg\u207b\u00b9)`
+        :`${safeText(compA.name)} in mixture (mol kg\u207b\u00b9)`;
 
     // pre-compute raw IAST loadings for every curve (axis-native pressure grid)
     const _loEff=Math.max(Pmin,Pmax/1e4,1e-6);
@@ -1810,9 +1830,9 @@ function render(){
       const bx=f.ML+10, by=f.pB-54;
       s+=`<rect x="${bx-2}" y="${by-2}" width="110" height="44" fill="${f.plotBg}" stroke="${f.frameClr}" stroke-width="1" rx="2"/>`;
       s+=`<line x1="${bx+4}" y1="${by+12}" x2="${bx+22}" y2="${by+12}" stroke="${f.frameClr}" stroke-width="2"/>`;
-      s+=`<text x="${bx+26}" y="${by+16}" font-size="13" fill="${f.labelClr}" ${CHART_FONT}>${compA.name}</text>`;
+      s+=`<text x="${bx+26}" y="${by+16}" font-size="13" fill="${f.labelClr}" ${CHART_FONT}>${safeText(compA.name)}</text>`;
       s+=`<line x1="${bx+4}" y1="${by+32}" x2="${bx+22}" y2="${by+32}" stroke="${f.frameClr}" stroke-width="1.3" stroke-dasharray="4,2" opacity="0.65"/>`;
-      s+=`<text x="${bx+26}" y="${by+36}" font-size="13" fill="${f.labelClr}" ${CHART_FONT}>${compB.name}</text>`;
+      s+=`<text x="${bx+26}" y="${by+36}" font-size="13" fill="${f.labelClr}" ${CHART_FONT}>${safeText(compB.name)}</text>`;
     }
 
     // hover crosshair overlays
@@ -1866,7 +1886,7 @@ function render(){
         return `<tr><td style="color:${col};padding:1px 6px 1px 0;font-weight:600;">y=${yv.toFixed(2)}</td>${cell}</tr>`;
       }).join('');
       const hdr=showA&&showB
-        ?`<tr style="font-size:9px;opacity:0.6;"><td></td><td style="text-align:right;padding-right:4px;">${compA.name}</td><td style="text-align:right;">${compB.name}</td></tr>`
+        ?`<tr style="font-size:9px;opacity:0.6;"><td></td><td style="text-align:right;padding-right:4px;">${safeText(compA.name)}</td><td style="text-align:right;">${safeText(compB.name)}</td></tr>`
         :'';
       const isDark=theme==='dark';
       return {html:`<div style="background:${isDark?'rgba(10,20,16,0.95)':'rgba(255,255,255,0.97)'};border:1px solid ${isDark?'#3a5a50':'#b0c8be'};border-radius:5px;padding:8px 10px;font-size:11.5px;color:${isDark?'#c8d8d2':'#1a1a1a'};white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.3);">
@@ -2071,7 +2091,7 @@ function plotXY(T,holder,noteEl){
   for(let i=0;i<=N;i++){const yA=i/N;let xA;
     if(yA<=0)xA=0;else if(yA>=1)xA=1;else{const r=iastSolve([compA,compB],[yA,1-yA],Pmax,T);xA=r.x[0];}
     ys.push(yA);xs.push(isFinite(xA)?xA:NaN);}
-  const f=drawLinFrameCard(0,1,0,1,`Gas y_${compA.name}`,`Adsorbed x_${compA.name}`,{nX:5,nY:5});
+  const f=drawLinFrameCard(0,1,0,1,`Gas y_${safeText(compA.name)}`,`Adsorbed x_${safeText(compA.name)}`,{nX:5,nY:5});
   let s=f.s;
   s+=`<line x1="${f.xP(0)}" y1="${f.yP(0)}" x2="${f.xP(1)}" y2="${f.yP(1)}" stroke="${theme==='dark'?'#3a5a50':'#c0d0c8'}" stroke-width="1.1" stroke-dasharray="4,4"/>`;
   // Optional extended (competitive) Langmuir overlay — only meaningful when both
@@ -2120,8 +2140,8 @@ function plotXY(T,holder,noteEl){
     const yA=Math.max(0,Math.min(1,f.xInv(sx)));
     let xA=yA<=0?0:yA>=1?1:iastSolve([compA,compB],[yA,1-yA],Pmax,T).x[0];
     broadcastHover(Pmax,yA,'xy');
-    if(!isFinite(xA))return {html:ttWrap(`y_${compA.name} = ${yA.toFixed(3)}<br>x = (no solution)`),overlay:''};
-    return {html:ttWrap(`y_${compA.name} = ${yA.toFixed(3)}<br>x_${compA.name} = ${xA.toFixed(3)}`),
+    if(!isFinite(xA))return {html:ttWrap(`y_${safeText(compA.name)} = ${yA.toFixed(3)}<br>x = (no solution)`),overlay:''};
+    return {html:ttWrap(`y_${safeText(compA.name)} = ${yA.toFixed(3)}<br>x_${safeText(compA.name)} = ${xA.toFixed(3)}`),
       overlay:crosshair(f,f.xP(yA),f.yP(xA),PALETTE[0])};
   });
 }
@@ -2155,11 +2175,11 @@ function plotPsi(T,holder,noteEl){
       s+=`<line x1="${px}" y1="${yPsi}" x2="${px}" y2="${f.MT+f.pH}" stroke="${o.c}" stroke-width="1.2" stroke-dasharray="4,3"/>`;
       s+=`<circle cx="${px}" cy="${yPsi}" r="4" fill="${o.c}" stroke="${theme==='dark'?'#0a0f0e':'#fff'}" stroke-width="1.3"/>`;});
   }
-  s+=legBox([{label:`ψ ${compA.name}`,color:PALETTE[0]},{label:`ψ ${compB.name}`,color:PALETTE[3]},{label:'equal-ψ',color:theme==='dark'?'#e0b020':'#b07800',dash:'6,3'}],f.ML+14,f.MT+16,f.frameClr);
+  s+=legBox([{label:`ψ ${safeText(compA.name)}`,color:PALETTE[0]},{label:`ψ ${safeText(compB.name)}`,color:PALETTE[3]},{label:'equal-ψ',color:theme==='dark'?'#e0b020':'#b07800',dash:'6,3'}],f.ML+14,f.MT+16,f.frameClr);
   holder.innerHTML=s+'</svg>';
   if(solOK){
     let warn=(p0A>Pmax||p0B>Pmax)?` <span style="color:var(--amber)">⚠ p_i⁰ extrapolated beyond P range</span>`:'';
-    noteEl.innerHTML=`P=${Ptot.toFixed(3)} bar, y=0.5 · ψ*=${psiStar.toFixed(2)} · p⁰(${compA.name})=${p0A.toFixed(3)}, p⁰(${compB.name})=${p0B.toFixed(3)} bar.${warn}`;
+    noteEl.innerHTML=`P=${Ptot.toFixed(3)} bar, y=0.5 · ψ*=${psiStar.toFixed(2)} · p⁰(${safeText(compA.name)})=${p0A.toFixed(3)}, p⁰(${safeText(compB.name)})=${p0B.toFixed(3)} bar.${warn}`;
   } else {
     noteEl.innerHTML=`<span style="color:var(--amber)">No IAST solution at P=${Ptot.toFixed(3)} bar, y=0.5</span> — a component saturates (e.g. BET/Anti-Langmuir limit) in this range. ψ curves shown for reference.`;
   }
@@ -2184,7 +2204,7 @@ function plotPsi(T,holder,noteEl){
     let ov=`<line x1="${f.xP(P)}" y1="${f.MT}" x2="${f.xP(P)}" y2="${f.MT+f.pH}" stroke="${f.frameClr}" stroke-width="0.8" stroke-dasharray="3,3" opacity="0.5"/>`;
     if(isFinite(a))ov+=`<circle cx="${f.xP(P)}" cy="${f.yP(a)}" r="3.5" fill="${PALETTE[0]}"/>`;
     if(isFinite(b))ov+=`<circle cx="${f.xP(P)}" cy="${f.yP(b)}" r="3.5" fill="${PALETTE[3]}"/>`;
-    return {html:ttWrap(`p⁰ = ${P.toFixed(3)} bar<br><span style="color:${PALETTE[0]}">ψ ${compA.name} = ${av}</span><br><span style="color:${PALETTE[3]}">ψ ${compB.name} = ${bv}</span>`),overlay:ov};
+    return {html:ttWrap(`p⁰ = ${P.toFixed(3)} bar<br><span style="color:${PALETTE[0]}">ψ ${safeText(compA.name)} = ${av}</span><br><span style="color:${PALETTE[3]}">ψ ${safeText(compB.name)} = ${bv}</span>`),overlay:ov};
   });
 }
 
@@ -2196,7 +2216,7 @@ function plotSel(T,holder,noteEl){
   const N=50;const series=Ps.map(P=>{const arr=[];for(let i=1;i<N;i++){const yA=i/N;arr.push([yA,selectivityAt(P,yA,T)]);}return {P,arr};});
   let sMax=0;series.forEach(se=>se.arr.forEach(([,s])=>{if(isFinite(s))sMax=Math.max(sMax,s);}));
   sMax=sMax>0?sMax*1.1:10;
-  const f=drawLinFrameCard(0,1,0,sMax,`Gas y_${compA.name}`,`S(${compA.name}/${compB.name})`,{nX:5,nY:6});
+  const f=drawLinFrameCard(0,1,0,sMax,`Gas y_${safeText(compA.name)}`,`S(${safeText(compA.name)}/${safeText(compB.name)})`,{nX:5,nY:6});
   let s=f.s;
   const y1=f.yP(1);if(1<=sMax)s+=`<line x1="${f.ML}" y1="${y1}" x2="${f.ML+f.pW}" y2="${y1}" stroke="${theme==='dark'?'#e0b020':'#b07800'}" stroke-width="1" stroke-dasharray="5,4"/>`;
   series.forEach((se,si)=>{const c=PALETTE[si%PALETTE.length];let d='',st=false;
@@ -2223,7 +2243,7 @@ function plotSel(T,holder,noteEl){
     broadcastHover(Pmax,yA,'sel');
     let ov=`<line x1="${f.xP(yA)}" y1="${f.MT}" x2="${f.xP(yA)}" y2="${f.MT+f.pH}" stroke="${f.frameClr}" stroke-width="0.8" stroke-dasharray="3,3" opacity="0.5"/>`;
     series.forEach((se,si)=>{if(isFinite(vals[si])&&vals[si]<=sMax)ov+=`<circle cx="${f.xP(yA)}" cy="${f.yP(vals[si])}" r="3" fill="${PALETTE[si%PALETTE.length]}"/>`;});
-    return {html:ttWrap(`y_${compA.name}=${yA.toFixed(3)}<br>${body}`),overlay:ov};
+    return {html:ttWrap(`y_${safeText(compA.name)}=${yA.toFixed(3)}<br>${body}`),overlay:ov};
   });
 }
 
@@ -2248,7 +2268,7 @@ function plotHeat(T,holder,noteEl){
         if(isS&&v>0){const l=Math.log10(v);logSmin=Math.min(logSmin,l);logSmax=Math.max(logSmax,l);if(v>1)anyHi=true;if(v<1)anyLo=true;}}}
     grid.push(row);}
   const hasRev=isS&&anyLo&&anyHi, absMax=Math.max(Math.abs(logSmin),Math.abs(logSmax))||1;
-  const f=drawLinFrameCard(Pmin,Pmax,0,1,'P (bar)',`Gas y_${compA.name}`,{nX:6,nY:5,rightPad:64});
+  const f=drawLinFrameCard(Pmin,Pmax,0,1,'P (bar)',`Gas y_${safeText(compA.name)}`,{nX:6,nY:5,rightPad:64});
   let s=f.s;
   const cellW=f.pW/nX,cellH=f.pH/nY;
   // viridis for sequential (q1,q2,x1); red-white-blue diverging for S about 1
@@ -2299,7 +2319,7 @@ function plotHeat(T,holder,noteEl){
     const v=fieldAt(P,yA);
     broadcastHover(P,yA,'heat');
     const vLbl=isS?('S = '+(isFinite(v)?v.toFixed(2):'—')):(label.split(' ')[0]+' = '+(isFinite(v)?v.toFixed(3):'—'));
-    return {html:ttWrap(`P=${P.toFixed(3)} bar<br>y_${compA.name}=${yA.toFixed(3)}<br>${vLbl}`),
+    return {html:ttWrap(`P=${P.toFixed(3)} bar<br>y_${safeText(compA.name)}=${yA.toFixed(3)}<br>${vLbl}`),
       overlay:`<circle cx="${sx}" cy="${sy}" r="4" fill="none" stroke="${f.frameClr}" stroke-width="1.4"/>`};
   });
   // click-to-pin
@@ -2414,8 +2434,8 @@ function plotSurf(T,holder,noteEl){
     // axis titles (follow the rotating base edges)
     const midP=proj(0.5,0,0),midY=proj(0,0.5,0),topQ=proj(0,0,1);
     s+=`<text x="${midP[0]}" y="${midP[1]+20}" text-anchor="middle" font-size="13" fill="${labelClr}" ${CHART_FONT}>P (bar)</text>`;
-    s+=`<text x="${midY[0]}" y="${midY[1]+20}" text-anchor="middle" font-size="13" fill="${labelClr}" ${CHART_FONT}>y_${compA.name}</text>`;
-    s+=`<text x="${topQ[0]-6}" y="${topQ[1]-8}" text-anchor="end" font-size="13" fill="${labelClr}" ${CHART_FONT}>q_${compA.name}</text>`;
+    s+=`<text x="${midY[0]}" y="${midY[1]+20}" text-anchor="middle" font-size="13" fill="${labelClr}" ${CHART_FONT}>y_${safeText(compA.name)}</text>`;
+    s+=`<text x="${topQ[0]-6}" y="${topQ[1]-8}" text-anchor="end" font-size="13" fill="${labelClr}" ${CHART_FONT}>q_${safeText(compA.name)}</text>`;
     // colorbar (fixed, right side)
     const cbW=13,cbH=Math.min(180,availH*0.8),cbX=W-padR+20,cbY=padT+(availH-cbH)/2;
     for(let k=0;k<=40;k++){const t=k/40,yy=cbY+cbH*(1-t);s+=`<rect x="${cbX}" y="${yy.toFixed(1)}" width="${cbW}" height="${(cbH/40+0.6).toFixed(1)}" fill="${col(t)}"/>`;}
@@ -2433,7 +2453,7 @@ function plotSurf(T,holder,noteEl){
     svg.addEventListener('dblclick',()=>{holder._surfSpin=!holder._surfSpin;});
   }
   paint();
-  noteEl.innerHTML=`IAST loading of ${compA.name} over the P–y surface (peak ${qMax.toFixed(2)} mol/kg). <span style="opacity:0.75">Drag to rotate · double-click to pause/resume spin.</span>`;
+  noteEl.innerHTML=`IAST loading of ${safeText(compA.name)} over the P–y surface (peak ${qMax.toFixed(2)} mol/kg). <span style="opacity:0.75">Drag to rotate · double-click to pause/resume spin.</span>`;
 
   // window-level drag listeners attached ONCE; they read/write holder state so
   // they always control whatever the current surface is (survives re-renders).
@@ -2481,9 +2501,9 @@ function plotSliceP(T,holder,noteEl){
   const path=arr=>arr.map((p,i)=>(i?'L':'M')+f.xP(p.P).toFixed(1)+','+f.yP(Math.min(p.q,f.yMax||qm)).toFixed(1)).join(' ');
   s+=`<path d="${path(A)}" fill="none" stroke="${PALETTE[0]}" stroke-width="2"/>`;
   s+=`<path d="${path(B)}" fill="none" stroke="${PALETTE[3]}" stroke-width="2" stroke-dasharray="6,3"/>`;
-  s+=legBox([{label:`q₁ ${compA.name}`,color:PALETTE[0]},{label:`q₂ ${compB.name}`,color:PALETTE[3],dash:'6,3'}],f.ML+14,f.MT+16,f.frameClr);
+  s+=legBox([{label:`q₁ ${safeText(compA.name)}`,color:PALETTE[0]},{label:`q₂ ${safeText(compB.name)}`,color:PALETTE[3],dash:'6,3'}],f.ML+14,f.MT+16,f.frameClr);
   holder.innerHTML=s+'</svg>';
-  noteEl.innerHTML=`Loadings vs total pressure at fixed y<sub>${compA.name}</sub> = <b>${y.toFixed(3)}</b>${IAST_PIN?' (pinned)':' — click heatmap to pin'}.`;
+  noteEl.innerHTML=`Loadings vs total pressure at fixed y<sub>${safeText(compA.name)}</sub> = <b>${y.toFixed(3)}</b>${IAST_PIN?' (pinned)':' — click heatmap to pin'}.`;
   IAST_CSV.sliceP={name:'slice_qP_fixed_y',rows};
   registerLink('sliceP',holder,(P,yy)=>{ if(P<Pmin||P>Pmax)return'';
     const [qa]=safeIASTsolve(P,y,T); if(!isFinite(qa))return'';
@@ -2502,12 +2522,12 @@ function plotSliceY(T,holder,noteEl){
   let qm=0; const A=[],B=[];
   for(let i=0;i<=N;i++){const y=i/N; const [qa,qb]=safeIASTsolve(P,y,T);
     A.push({y,q:qa}); B.push({y,q:qb}); qm=Math.max(qm,qa,qb); rows.push([y.toFixed(4),qa.toFixed(4),qb.toFixed(4)]);}
-  const f=drawLinFrameCard(0,1,0,niceCeil(qm)||1,`Gas y_${compA.name}`,'q* (mol kg⁻¹)',{nX:5,nY:5});
+  const f=drawLinFrameCard(0,1,0,niceCeil(qm)||1,`Gas y_${safeText(compA.name)}`,'q* (mol kg⁻¹)',{nX:5,nY:5});
   let s=f.s;
   const path=arr=>arr.map((p,i)=>(i?'L':'M')+f.xP(p.y).toFixed(1)+','+f.yP(Math.min(p.q,qm)).toFixed(1)).join(' ');
   s+=`<path d="${path(A)}" fill="none" stroke="${PALETTE[0]}" stroke-width="2"/>`;
   s+=`<path d="${path(B)}" fill="none" stroke="${PALETTE[3]}" stroke-width="2" stroke-dasharray="6,3"/>`;
-  s+=legBox([{label:`q₁ ${compA.name}`,color:PALETTE[0]},{label:`q₂ ${compB.name}`,color:PALETTE[3],dash:'6,3'}],f.ML+14,f.MT+16,f.frameClr);
+  s+=legBox([{label:`q₁ ${safeText(compA.name)}`,color:PALETTE[0]},{label:`q₂ ${safeText(compB.name)}`,color:PALETTE[3],dash:'6,3'}],f.ML+14,f.MT+16,f.frameClr);
   holder.innerHTML=s+'</svg>';
   noteEl.innerHTML=`Loadings vs gas composition at fixed P = <b>${P.toFixed(3)} bar</b>${IAST_PIN?' (pinned)':' — click heatmap to pin'}.`;
   IAST_CSV.sliceY={name:'slice_qy_fixed_P',rows};
@@ -2767,7 +2787,7 @@ function buildReport(){
   const fitTxt=(fitStatsEl.textContent||'').trim();
   const Pmid=Math.min(Math.max(1,Pmin),Pmax);
   let selHead='';
-  try{const S=selectivityAt(Pmid,0.5,T); if(isFinite(S))selHead=`S(${compA.name}/${compB.name}) = ${S.toFixed(1)} at ${Pmid.toFixed(2)} bar, y=0.5`;}catch(e){}
+  try{const S=selectivityAt(Pmid,0.5,T); if(isFinite(S))selHead=`S(${safeText(compA.name)}/${safeText(compB.name)}) = ${S.toFixed(1)} at ${Pmid.toFixed(2)} bar, y=0.5`;}catch(e){}
   const IN=reportInsights(T);
   const cite=(function(){try{
     const key=(document.getElementById('sorbentSel')||{}).value;
@@ -2837,7 +2857,7 @@ function buildReport(){
     <div class="rc-btnbar rc-noprint"><button class="rc-btn" onclick="window.print()">Print / Save as PDF</button><button class="rc-btn sec" onclick="window.close()">Close</button></div>
     <div class="rc-titlewrap">
       <div class="rc-eyebrow">Adsorption Equilibrium Analysis Report</div>
-      <h1>${compA.name} / ${compB.name} — Binary IAST${caseName&&!/^iast/i.test(caseName)?` · ${caseName}`:''}</h1>
+      <h1>${safeText(compA.name)} / ${safeText(compB.name)} — Binary IAST${caseName&&!/^iast/i.test(caseName)?` · ${caseName}`:''}</h1>
       <div class="rc-sub">Competitive adsorption predicted by Ideal Adsorbed Solution Theory (Myers–Prausnitz) · ${T} K · ${Pmin}–${Pmax} bar · generated ${now}</div>
     </div>
 
@@ -2847,8 +2867,8 @@ function buildReport(){
     <div class="rc-meta">
       <div><span>Temperature</span><b>${T} K</b></div>
       <div><span>Pressure range</span><b>${Pmin} – ${Pmax} bar</b></div>
-      <div><span>Component A (1)</span><b>${compA.name}</b></div>
-      <div><span>Component B (2)</span><b>${compB.name}</b></div>
+      <div><span>Component A (1)</span><b>${safeText(compA.name)}</b></div>
+      <div><span>Component B (2)</span><b>${safeText(compB.name)}</b></div>
       <div><span>Solver</span><b>Newton–Raphson (ln p)</b></div>
       <div><span>Framework</span><b>Myers–Prausnitz IAST</b></div>
     </div>
@@ -2868,7 +2888,7 @@ function buildReport(){
     ${cite?`<p style="font-size:11px;color:#5c7168;margin-top:8px;"><b>Parameter source:</b> ${cite.text||cite.short||''}${cite.doi?` (doi:${cite.doi})`:''}</p>`:''}
 
     <h2>Pure-Component Isotherms — the Input Data</h2>
-    ${wideFig('chartHolderUnary','Pure-component isotherms q°(P)',`Single-component adsorption isotherms of ${compA.name} and ${compB.name} at ${T} K over ${Pmin}–${Pmax} bar — the only experimental input to the IAST prediction.`,insightBullets(IN.pure))}
+    ${wideFig('chartHolderUnary','Pure-component isotherms q°(P)',`Single-component adsorption isotherms of ${safeText(compA.name)} and ${safeText(compB.name)} at ${T} K over ${Pmin}–${Pmax} bar — the only experimental input to the IAST prediction.`,insightBullets(IN.pure))}
 
     <h2>Competitive Loading</h2>
     ${wideFig('chartHolderBinary','Competitive loading (IAST) vs pressure',`IAST-predicted mixture loadings q<sub>i</sub>*(P) at the listed gas-phase compositions; the shortfall from each pure isotherm is the capacity lost to co-adsorption.`,`<div class="rc-insight">Competitive loadings q<sub>i</sub>*(P) at the listed gas compositions. Each curve is a full IAST solve; the gap between a component's pure and competitive loading is the capacity it loses to co-adsorption of the partner. This is the practical read of the theory: what the bed actually holds under a real feed, not in single-gas idealisation.</div>`)}
@@ -2876,13 +2896,13 @@ function buildReport(){
 
     <h2>IAST Analysis — Figure by Figure</h2>
     <div class="rc-charts">
-      ${gridFig('x–y equilibrium','xy',`Adsorbed- vs gas-phase mole fraction of ${compA.name} at ${(+pmaxEl.value).toFixed(2)} bar.`,IN.xy)}
+      ${gridFig('x–y equilibrium','xy',`Adsorbed- vs gas-phase mole fraction of ${safeText(compA.name)} at ${(+pmaxEl.value).toFixed(2)} bar.`,IN.xy)}
       ${gridFig('ψ-construction (spreading pressure)','psi',`Spreading-pressure integrals ψ<sub>i</sub>(p) and the equal-ψ construction that sets the hypothetical pressures p<sub>i</sub>⁰.`,IN.psi)}
-      ${gridFig('Selectivity vs composition','sel',`IAST selectivity S<sub>${compA.name}/${compB.name}</sub> across gas composition at several total pressures.`,IN.sel)}
+      ${gridFig('Selectivity vs composition','sel',`IAST selectivity S<sub>${safeText(compA.name)}/${safeText(compB.name)}</sub> across gas composition at several total pressures.`,IN.sel)}
       ${gridFig('Heatmap (P × y)','heat',`Map of the selected quantity over the pressure–composition operating window.`,IN.heat)}
       ${gridFig('Slice q*(P) at fixed y₁','sliceP',`Mixture loadings vs total pressure at a fixed gas composition (pinned slice).`,IN.slices)}
       ${gridFig('Slice q*(y₁) at fixed P','sliceY',`Mixture loadings vs gas composition at a fixed total pressure (pinned slice).`,'Companion cut to the q*(P) slice — together they bound the working capacity between two operating states.')}
-      ${wideFig('ih_surf','3-D loading surface',`Full IAST loading surface q<sub>${compA.name}</sub>*(P, y); the two slice figures are orthogonal cuts through it.`,insightBullets(IN.surf))}
+      ${wideFig('ih_surf','3-D loading surface',`Full IAST loading surface q<sub>${safeText(compA.name)}</sub>*(P, y); the two slice figures are orthogonal cuts through it.`,insightBullets(IN.surf))}
     </div>
 
     <h2>Interpretation, Consistency &amp; Caveats</h2>
@@ -3171,7 +3191,7 @@ function populateSorbentDropdown(){
   sorbentSel.innerHTML=
     '<option value="__custom__">\u270f\ufe0f Custom case (build your own)</option>'+
     '<option value="">\u2014 preset material / gas pair \u2014</option>'+
-    Object.keys(SORBENT_LIBRARY).map(k=>`<option value="${k}">${SORBENT_LIBRARY[k].label}</option>`).join('');
+    Object.keys(SORBENT_LIBRARY).map(k=>`<option value="${safeAttr(k)}">${safeText(SORBENT_LIBRARY[k].label)}</option>`).join('');
   if(cur&&(cur==='__custom__'||SORBENT_LIBRARY[cur]))sorbentSel.value=cur;
   updateSorbentCredit();
 }
