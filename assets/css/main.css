@@ -432,6 +432,40 @@ pre code { background: none; border: none; padding: 0; font-size: .875rem; }
 /* Badges */
 .badge { display: inline-block; font-size: .72rem; font-weight: 500; padding: .2rem .65rem; border-radius: 999px; background: var(--accent-glow); color: var(--accent); border: 1px solid var(--line); margin: .15rem; }
 
+/* Status / warning callout */
+.callout {
+  padding: 1rem 1.5rem; margin: 2rem 0;
+  background: var(--accent-glow); border-left: 4px solid var(--accent);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  color: var(--text-dim); font-size: .95rem;
+}
+.callout strong { color: var(--text); }
+
+/* CTA buttons */
+.btn-row { display: flex; gap: .75rem; flex-wrap: wrap; justify-content: center; margin: 2rem 0; }
+.btn {
+  display: inline-flex; align-items: center; gap: .5rem;
+  padding: .7rem 1.4rem; border-radius: var(--radius-sm);
+  font-weight: 600; font-size: .9rem; text-decoration: none;
+  background: var(--accent); color: var(--on-accent); border: 2px solid var(--accent);
+  transition: background .2s, transform .2s, box-shadow .2s, color .2s;
+}
+.btn:hover { background: var(--accent-dk); border-color: var(--accent-dk); transform: translateY(-2px); box-shadow: var(--shadow); text-decoration: none; color: var(--on-accent); }
+.btn-outline { background: transparent; color: var(--accent); }
+.btn-outline:hover { background: var(--accent); color: var(--on-accent); }
+
+/* Contact tiles */
+.contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0; }
+.contact-tile {
+  display: flex; align-items: center; gap: .85rem; padding: 1.25rem;
+  background: var(--bg-alt); border: 1px solid var(--line); border-radius: var(--radius-sm);
+  text-decoration: none; transition: transform .2s, box-shadow .2s, border-color .2s;
+}
+.contact-tile:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--accent-lt); text-decoration: none; }
+.contact-icon { width: 42px; height: 42px; border-radius: 10px; background: var(--accent-glow); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0; }
+.contact-label { font-size: .68rem; text-transform: uppercase; letter-spacing: .08em; color: var(--text-faint); margin-bottom: .15rem; }
+.contact-value { font-weight: 600; color: var(--text); font-size: .95rem; }
+
 /* Tables */
 .table-wrap { overflow-x: auto; margin: 2rem 0; border-radius: var(--radius-sm); border: 1px solid var(--line); box-shadow: var(--shadow-sm); }
 table { width: 100%; border-collapse: collapse; }
@@ -452,7 +486,7 @@ tr:hover td { background: var(--accent-glow); }
    untouched — no specificity fight, because excluded elements are
    simply never matched by this rule at all.
 ================================================================ */
-[data-theme="dark"] .page-body :where(div, span, p, li, td, tr, table, section, article):not(.card):not(.card-title):not(.card-meta):not(.exec-summary):not(.exec-summary-label):not(.framework-card):not(.framework-num):not(.framework-title):not(.framework-desc):not(.stat):not(.stat-num):not(.stat-label):not(.timeline-item):not(.timeline-date):not(.timeline-title):not(.timeline-org):not(.timeline-desc):not(.pull-quote):not(.project-card):not(.project-card-head):not(.project-icon):not(.project-title):not(.project-desc):not(.project-tags):not(.project-link):not(.badge):not(.section-divider) {
+[data-theme="dark"] .page-body :where(div, span, p, li, td, tr, table, section, article):not(.card):not(.card-title):not(.card-meta):not(.exec-summary):not(.exec-summary-label):not(.framework-card):not(.framework-num):not(.framework-title):not(.framework-desc):not(.stat):not(.stat-num):not(.stat-label):not(.timeline-item):not(.timeline-date):not(.timeline-title):not(.timeline-org):not(.timeline-desc):not(.pull-quote):not(.project-card):not(.project-card-head):not(.project-icon):not(.project-title):not(.project-desc):not(.project-tags):not(.project-link):not(.badge):not(.section-divider):not(.contact-tile):not(.contact-icon):not(.contact-label):not(.contact-value):not(.btn-row):not(.callout) {
   background-color: transparent !important;
   color: var(--text-dim) !important;
   border-color: var(--line) !important;
@@ -460,7 +494,7 @@ tr:hover td { background: var(--accent-glow); }
 [data-theme="dark"] .page-body :where(h1, h2, h3, h4, h5, h6, strong, b) {
   color: var(--text) !important;
 }
-[data-theme="dark"] .page-body a { color: var(--accent) !important; }
+[data-theme="dark"] .page-body a:not(.btn):not(.project-link) { color: var(--accent) !important; }
 
 /* Stubborn one-off blocks (e.g. a big pasted HTML chunk with many
    inline styles) can opt into the same treatment by wrapping in
