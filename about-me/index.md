@@ -11,56 +11,17 @@ permalink: /about-me/
 
 <p>Currently, as an <strong>M.Sc. candidate</strong> at the <strong>University of Alberta</strong>, I am investigating the optimization of structured adsorbents for carbon capture under <strong>Prof. Arvind Rajendran</strong>. My work bridges the gap between field-proven operations and the scale-up of <strong>Pressure Vacuum Swing Adsorption (PVSA)</strong> technology.</p>
 
-<div class="expertise-grid">
-  <div class="expertise-item">
-    <img src="{{ site.baseurl }}/Files/python.png" alt="Python" class="expertise-icon">
-    <p class="expertise-label">Data Analytics</p>
-  </div>
-  <div class="expertise-item">
-    <img src="{{ site.baseurl }}/Files/aspen-hysys.png" alt="Aspen HYSYS" class="expertise-icon">
-    <p class="expertise-label">Process Modeling</p>
-  </div>
-  <div class="expertise-item">
-    <img src="{{ site.baseurl }}/Files/seeq.png" alt="SEEQ" class="expertise-icon">
-    <p class="expertise-label">Asset Surveillance</p>
-  </div>
-</div>
-
 <h2>Toolkit</h2>
-<div class="expertise-grid">
-  <div class="expertise-item">
-    <img src="{{ site.baseurl }}/Files/aspen-hysys.png" alt="Aspen HYSYS" class="expertise-icon">
-    <p class="expertise-label">Aspen HYSYS</p>
-  </div>
-  <div class="expertise-item">
-    <img src="{{ site.baseurl }}/Files/htri.png" alt="HTRI" class="expertise-icon">
-    <p class="expertise-label">HTRI</p>
-  </div>
-  <div class="expertise-item">
-    <img src="{{ site.baseurl }}/Files/promax.png" alt="ProMax" class="expertise-icon">
-    <p class="expertise-label">ProMax</p>
-  </div>
-  <div class="expertise-item">
-    <img src="{{ site.baseurl }}/Files/python.png" alt="Python" class="expertise-icon">
-    <p class="expertise-label">Python</p>
-  </div>
-  <div class="expertise-item">
-    <img src="{{ site.baseurl }}/Files/matlab.png" alt="MATLAB" class="expertise-icon">
-    <p class="expertise-label">MATLAB</p>
-  </div>
-  <div class="expertise-item">
-    <img src="{{ site.baseurl }}/Files/seeq.png" alt="SEEQ" class="expertise-icon">
-    <p class="expertise-label">SEEQ</p>
-  </div>
-  <div class="expertise-item">
-    <img src="{{ site.baseurl }}/Files/aveva-pi.png" alt="AVEVA PI" class="expertise-icon">
-    <p class="expertise-label">AVEVA PI</p>
-  </div>
-  <div class="expertise-item">
-    <img src="{{ site.baseurl }}/Files/sas-jmp.png" alt="SAS JMP" class="expertise-icon">
-    <p class="expertise-label">SAS JMP</p>
-  </div>
-</div>
+<p>
+  <span class="icon-chip"><img src="{{ site.baseurl }}/Files/aspen-hysys.png" alt="">Aspen HYSYS</span>
+  <span class="icon-chip"><img src="{{ site.baseurl }}/Files/htri.png" alt="">HTRI</span>
+  <span class="icon-chip"><img src="{{ site.baseurl }}/Files/promax.png" alt="">ProMax</span>
+  <span class="icon-chip"><img src="{{ site.baseurl }}/Files/python.png" alt="">Python</span>
+  <span class="icon-chip"><img src="{{ site.baseurl }}/Files/matlab.png" alt="">MATLAB</span>
+  <span class="icon-chip"><img src="{{ site.baseurl }}/Files/seeq.png" alt="">SEEQ</span>
+  <span class="icon-chip"><img src="{{ site.baseurl }}/Files/aveva-pi.png" alt="">AVEVA PI</span>
+  <span class="icon-chip"><img src="{{ site.baseurl }}/Files/sas-jmp.png" alt="">SAS JMP</span>
+</p>
 
 <h2>Languages</h2>
 <p>
