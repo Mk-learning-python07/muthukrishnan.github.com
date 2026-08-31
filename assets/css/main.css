@@ -439,8 +439,10 @@ pre code { background: none; border: none; padding: 0; font-size: .875rem; }
 /* Tag row — justifies a wrapped list of badges so blank space is
    distributed evenly between them (including the last line), rather
    than left-hugging with all the slack on the right */
-.tag-row { text-align: justify; text-align-last: justify; margin-top: .75rem; }
-.tag-row::after { content: ''; display: inline-block; width: 100%; }
+/* Tag row - plain left-aligned wrap, no justify (text-align-last isn't
+   supported in Safari at all, and stretched gaps on sparse tag rows
+   looked wrong regardless of browser) */
+.tag-row { text-align: left; margin-top: .75rem; }
 
 /* Icon chip — badge with a small image, for languages/interests */
 .icon-chip {

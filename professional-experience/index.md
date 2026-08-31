@@ -68,16 +68,16 @@ permalink: /professional-experience/
     <div class="timeline-org">ExxonMobil Canada Energy &middot; St. John's, NL</div>
     <div class="timeline-desc">Onsite technical support for Hebron operations - process monitoring, optimization, safety, and asset modifications.</div>
     <p class="tag-row">
-      <span class="badge">Management of Change (MoC)</span>
-      <span class="badge">API RP14C / 14J / 520 / 521 / 526</span>
       <span class="badge">API MPMS</span>
-      <span class="badge">ECCC Regulatory Reporting</span>
-      <span class="badge">Project Management</span>
       <span class="badge">Valve Maintenance</span>
-      <span class="badge">3-Phase Level Instrumentation</span>
-      <span class="badge">Produced Water Separation and Treatment</span>
+      <span class="badge">Project Management</span>
       <span class="badge">Production Chemistry</span>
+      <span class="badge">ECCC Regulatory Reporting</span>
       <span class="badge">Viscosity Reducer Chemical</span>
+      <span class="badge">Management of Change (MoC)</span>
+      <span class="badge">3-Phase Level Instrumentation</span>
+      <span class="badge">API RP14C / 14J / 520 / 521 / 526</span>
+      <span class="badge">Produced Water Separation and Treatment</span>
     </p>
   </div>
   <div class="timeline-item">
@@ -86,24 +86,24 @@ permalink: /professional-experience/
     <div class="timeline-org">ExxonMobil S&amp;T Pt. Ltd. &middot; Bengaluru, India</div>
     <div class="timeline-desc">Remote process engineering support across global upstream assets - monitoring, safety, and optimization.</div>
     <p class="tag-row">
-      <span class="badge">Brazed Aluminium Heat Exchangers (BAHX)</span>
-      <span class="badge">Temperature Swing Adsorption (TSA)</span>
-      <span class="badge">NGL Fractionation &amp; Propane Refrigeration</span>
-      <span class="badge">Molecular Sieves (Zeolite 13X)</span>
-      <span class="badge">Ortloff's SCORE Process</span>
-      <span class="badge">Gas Lift Optimization &amp; TEG Dehydration</span>
-      <span class="badge">Condensate Processing &amp; Dewpoint Control</span>
-      <span class="badge">MEG Thermal Degradation</span>
-      <span class="badge">Heat Exchanger Performance Monitoring</span>
-      <span class="badge">Root Cause Failure Analysis</span>
-      <span class="badge">Chemical Trials and Dosing Philosophies</span>
-      <span class="badge">Reliability and Maintenance</span>
-      <span class="badge">Upstream Maintenance Transformation</span>
-      <span class="badge">Workflow Scaling and Optimization</span>
-      <span class="badge">SEEQ Asset Framework</span>
-      <span class="badge">SEEQ Surveillance</span>
-      <span class="badge">Downstream Utilities Monitoring</span>
       <span class="badge">Company Plan</span>
+      <span class="badge">SEEQ Surveillance</span>
+      <span class="badge">SEEQ Asset Framework</span>
+      <span class="badge">Ortloff's SCORE Process</span>
+      <span class="badge">MEG Thermal Degradation</span>
+      <span class="badge">Root Cause Failure Analysis</span>
+      <span class="badge">Reliability and Maintenance</span>
+      <span class="badge">Molecular Sieves (Zeolite 13X)</span>
+      <span class="badge">Downstream Utilities Monitoring</span>
+      <span class="badge">Workflow Scaling and Optimization</span>
+      <span class="badge">Temperature Swing Adsorption (TSA)</span>
+      <span class="badge">Upstream Maintenance Transformation</span>
+      <span class="badge">Heat Exchanger Performance Monitoring</span>
+      <span class="badge">Brazed Aluminium Heat Exchangers (BAHX)</span>
+      <span class="badge">Gas Lift Optimization &amp; TEG Dehydration</span>
+      <span class="badge">Chemical Trials and Dosing Philosophies</span>
+      <span class="badge">Condensate Processing &amp; Dewpoint Control</span>
+      <span class="badge">NGL Fractionation &amp; Propane Refrigeration</span>
     </p>
   </div>
 </div>
