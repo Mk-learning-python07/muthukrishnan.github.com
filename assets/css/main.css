@@ -236,7 +236,7 @@ body {
   line-height: 1.2; letter-spacing: -.02em; margin-bottom: .65rem;
 }
 
-.hero-tagline { font-size: .95rem; color: var(--hero-text-dim); max-width: 500px; margin: 0 auto; line-height: 1.6; }
+.hero-tagline { font-size: .95rem; color: var(--hero-text-dim); max-width: 500px; margin: 0 auto; line-height: 1.6; text-align: center; }
 
 /* ================================================================
    HEADINGS
@@ -269,7 +269,11 @@ h4 { font-size: .74rem; font-weight: 600; color: var(--text-faint); text-transfo
 /* ================================================================
    BODY COPY
 ================================================================ */
-p { color: var(--text-dim); font-size: 1rem; line-height: 1.78; margin-bottom: 1.15rem; }
+p {
+  color: var(--text-dim); font-size: 1rem; line-height: 1.78; margin-bottom: 1.15rem;
+  text-align: justify; text-align-last: left;
+  hyphens: auto; -webkit-hyphens: auto; -ms-hyphens: auto;
+}
 p:last-child { margin-bottom: 0; }
 p strong, li strong { color: var(--text); font-weight: 600; }
 a { color: var(--accent); text-decoration: none; transition: color .18s; }
@@ -412,7 +416,7 @@ pre code { background: none; border: none; padding: 0; font-size: .875rem; }
 }
 .pull-quote p {
   font-family: var(--font-display); font-style: italic; font-size: 1.25rem;
-  color: var(--text); line-height: 1.5; margin-bottom: .75rem;
+  color: var(--text); line-height: 1.5; margin-bottom: .75rem; text-align: center;
 }
 .pull-quote cite { font-size: .78rem; color: var(--text-faint); font-style: normal; letter-spacing: .03em; }
 
@@ -441,12 +445,19 @@ pre code { background: none; border: none; padding: 0; font-size: .875rem; }
 }
 .icon-chip img { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; display: inline-block; }
 
-/* Profile photo */
+/* Profile photo — single headshot, circular */
 .profile-photo {
   display: block; width: 148px; height: 148px; border-radius: 50%;
   object-fit: cover; margin: 0 auto 2rem;
   border: 4px solid var(--bg-card); box-shadow: var(--shadow-lg);
   outline: 1px solid var(--line);
+}
+
+/* Profile collage — multi-photo image, rounded rectangle (not cropped to a circle) */
+.profile-collage {
+  display: block; width: 100%; max-width: 480px;
+  margin: 0 auto 2.25rem; border-radius: var(--radius);
+  box-shadow: var(--shadow-lg); border: 1px solid var(--line);
 }
 
 /* Status / warning callout */

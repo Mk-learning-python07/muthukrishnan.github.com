@@ -7,7 +7,7 @@ permalink: /professional-experience/
 
 <div class="exec-summary">
   <span class="exec-summary-label">Track Record</span>
-  <p>Five years earning trust across offshore and remote upstream operations — from commissioning next-generation instrumentation to leading safety-critical incident response, always turning field data into decisions operators can act on.</p>
+  <p>Five years across offshore and remote upstream operations — commissioning new instrumentation, leading targeted safety and reliability projects, and grounding it all in exception-based process surveillance.</p>
 </div>
 
 <div class="stat-row">

@@ -38,25 +38,10 @@ permalink: /apps/
     <div class="project-tags">
       <span class="badge">Research</span>
       <span class="badge">Data Viz</span>
+      <span class="badge">HTML/JS</span>
     </div>
     <a href="{{ site.baseurl }}/apps/vector-acceleration.html" class="project-link">
       <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i> Open App
-    </a>
-  </div>
-
-  <div class="project-card">
-    <div class="project-card-head">
-      <div class="project-icon"><i class="fas fa-diagram-project"></i></div>
-      <div class="project-title">Paper &rarr; Mind Map</div>
-    </div>
-    <p class="project-desc">Turns a research paper into an interactive, scrollable mind-map — automatically extracting the core idea flow, key equations, and results into a single shareable HTML file.</p>
-    <div class="project-tags">
-      <span class="badge">Python</span>
-      <span class="badge">Data Viz</span>
-      <span class="badge">HTML/JS</span>
-    </div>
-    <a href="https://github.com/Mk-learning-python07/REPLACE-WITH-REPO-NAME" class="project-link" target="_blank" rel="noopener noreferrer">
-      <i class="fab fa-github" aria-hidden="true"></i> View on GitHub
     </a>
   </div>
 

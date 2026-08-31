@@ -5,7 +5,7 @@ description: Process engineer and gas adsorption-based separation technology res
 permalink: /about-me/
 ---
 
-<img src="{{ site.baseurl }}/Files/MK_ID_Photo.jpg" alt="Muthukrishnan Anand" class="profile-photo">
+<img src="{{ site.baseurl }}/Files/Collage.png" alt="Muthukrishnan Anand" class="profile-collage" loading="lazy">
 
 <p>Growing up in India, I was drawn to engineering as a way to solve resource scarcity. That curiosity led to Chemical Engineering at NIT Trichy, and from there to five years with ExxonMobil — onsite at the Hebron and Hibernia offshore assets in Newfoundland, and before that, remote technical support across gas and NGL operations worldwide from Bengaluru.</p>
 
