@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vector Acceleration for Adsorption CSS Convergence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.27.0/plotly.min.js"></script>
+<style>
+:root{
+  --ink:#0b0f16;
+  --ink-2:#111826;
+  --ink-3:#171f2f;
+  --paper:#edeff3;
+  --paper-dim:#9aa3b5;
+  --paper-faint:#5b6478;
+  --cyan:#5eead4;
+  --cyan-dim:#2c7266;
+  --amber:#f5a623;
+  --coral:#fb6f63;
+  --indigo:#8b93f8;
+  --line:#212a3b;
+  --serif:'Fraunces', serif;
+  --sans:'IBM Plex Sans', sans-serif;
+  --mono:'IBM Plex Mono', monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+}
+body{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:var(--sans);
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--cyan);color:var(--ink)}
+a{color:inherit}
+
+/* ---------- Side nav ---------- */
+.sidenav{
+  position:fixed; right:22px; top:50%; transform:translateY(-50%);
+  z-index:100; display:flex; flex-direction:column; gap:16px;
+  align-items:center;
+}
+.sidenav .dot{
+  width:8px; height:8px; border-radius:50%;
+  background:var(--line); cursor:pointer; transition:all .3s;
+  position:relative;
+}
+.sidenav .dot::after{
+  content:attr(data-label);
+  position:absolute; right:18px; top:50%; transform:translateY(-50%);
+  font-family:var(--mono); font-size:10px; letter-spacing:.05em;
+  color:var(--paper-dim); white-space:nowrap; opacity:0;
+  transition:opacity .2s; pointer-events:none;
+  text-transform:uppercase;
+}
+.sidenav .dot:hover::after{opacity:1}
+.sidenav .dot.active{background:var(--cyan); width:10px; height:10px}
+@media (max-width:720px){.sidenav{display:none}}
+
+/* ---------- Mobile bottom nav (replaces side dots) ---------- */
+.mobilenav{
+  display:none; position:fixed; bottom:0; left:0; right:0; z-index:100;
+  background:rgba(11,15,22,0.92); backdrop-filter:blur(8px);
+  border-top:1px solid var(--line);
+  justify-content:space-around; padding:10px 6px calc(10px + env(safe-area-inset-bottom));
+}
+@media (max-width:720px){.mobilenav{display:flex}}
+.mobilenav .mdot{
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+  font-family:var(--mono); font-size:9px; color:var(--paper-faint); text-transform:uppercase;
+  letter-spacing:.04em; background:none; border:none; cursor:pointer; flex:1;
+}
+.mobilenav .mdot .dotpip{width:6px; height:6px; border-radius:50%; background:var(--line); transition:all .25s}
+.mobilenav .mdot.active{color:var(--cyan)}
+.mobilenav .mdot.active .dotpip{background:var(--cyan); box-shadow:0 0 6px rgba(94,234,212,.7)}
+
+/* ---------- Progress bar ---------- */
+.progress{
+  position:fixed; top:0; left:0; height:2px; background:var(--cyan);
+  z-index:200; width:0%; transition:width .1s linear;
+}
+
+/* ---------- Sections shared ---------- */
+section{
+  min-height:100vh; width:100%; position:relative;
+  display:flex; flex-direction:column; justify-content:center;
+  padding:100px 8vw;
+}
+@media (max-width:720px){
+  section{min-height:auto; padding:64px 6vw; justify-content:flex-start}
+  #hero{padding-top:56px}
+  body{padding-bottom:62px} /* room for mobile bottom nav */
+}
+.eyebrow{
+  font-family:var(--mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--cyan); margin-bottom:18px; display:flex; align-items:center; gap:10px;
+}
+.eyebrow::before{content:'';width:22px;height:1px;background:var(--cyan)}
+h1,h2,h3{font-family:var(--serif); font-weight:600; letter-spacing:-.01em}
+.reveal{opacity:0; transform:translateY(28px); transition:opacity .8s ease, transform .8s ease}
+.reveal.in{opacity:1; transform:translateY(0)}
+
+/* ---------- HERO ---------- */
+#hero{padding-top:60px}
+.hero-grid{
+  display:grid; grid-template-columns:1.1fr .9fr; gap:60px; align-items:center;
+  max-width:1320px; margin:0 auto; width:100%;
+}
+@media (max-width:900px){.hero-grid{grid-template-columns:1fr}}
+.hero-kicker{font-family:var(--mono); font-size:12px; color:var(--paper-faint); letter-spacing:.1em; text-transform:uppercase; margin-bottom:24px}
+h1.hero-title{
+  font-size:clamp(2.2rem, 4.4vw, 3.6rem); line-height:1.08; color:var(--paper);
+  margin-bottom:22px;
+}
+h1.hero-title em{font-style:italic; color:var(--cyan)}
+.hero-sub{
+  font-size:1.05rem; color:var(--paper-dim); line-height:1.65; max-width:520px; margin-bottom:34px;
+}
+.hero-meta{display:flex; gap:28px; flex-wrap:wrap; font-family:var(--mono); font-size:12.5px; color:var(--paper-faint)}
+.hero-meta b{color:var(--paper); font-weight:600}
+#hero-canvas-wrap{position:relative; height:340px}
+#hero-canvas{width:100%; height:100%; display:block}
+.canvas-caption{
+  font-family:var(--mono); font-size:11px; color:var(--paper-faint); text-align:center; margin-top:12px;
+  letter-spacing:.03em;
+}
+.canvas-caption .coral{color:var(--coral)} .canvas-caption .cyan{color:var(--cyan)}
+.scroll-cue{
+  position:absolute; bottom:36px; left:50%; transform:translateX(-50%);
+  font-family:var(--mono); font-size:10px; color:var(--paper-faint); letter-spacing:.1em;
+  display:flex; flex-direction:column; align-items:center; gap:8px; text-transform:uppercase;
+}
+.scroll-cue .line{width:1px; height:28px; background:linear-gradient(var(--paper-faint), transparent); animation:pulse-y 1.8s ease-in-out infinite}
+@keyframes pulse-y{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* ---------- FLOW SECTION ---------- */
+#flow{padding-left:0; padding-right:0}
+.flow-head{padding:0 8vw; max-width:800px; margin-bottom:10px}
+.flow-head h2{font-size:clamp(1.7rem,3vw,2.4rem); margin-bottom:14px}
+.flow-head p{color:var(--paper-dim); line-height:1.6; font-size:.98rem}
+.legend-row{display:flex; gap:18px; flex-wrap:wrap; padding:0 8vw; margin:22px 0 8px; font-family:var(--mono); font-size:11px}
+.legend-chip{display:flex; align-items:center; gap:7px; color:var(--paper-faint)}
+.legend-chip .sw{width:10px;height:10px;border-radius:3px}
+#flow-canvas-wrap{position:relative; width:100%; margin-top:10px}
+#flow-svg{width:100%; display:block}
+.node-tip{
+  position:fixed; background:var(--ink-3); border:1px solid var(--line); color:var(--paper);
+  font-size:12.5px; padding:12px 15px; border-radius:10px; max-width:290px; line-height:1.6;
+  pointer-events:none; opacity:0; transition:opacity .12s; z-index:999;
+  box-shadow:0 12px 32px rgba(0,0,0,.5); font-family:var(--sans);
+}
+.node-tip .tt-flag{font-family:var(--mono); color:var(--amber); font-size:10.5px; font-weight:600; letter-spacing:.06em; margin-bottom:5px; text-transform:uppercase}
+.node-tip .tt-name{font-weight:600; font-size:13.5px; margin-bottom:5px; color:var(--paper)}
+
+/* ---------- SANKEY SECTION ---------- */
+/* ---------- MATH DEEP-DIVE SECTION ---------- */
+#math{padding-top:110px; padding-bottom:110px}
+.math-head{max-width:780px; margin-bottom:40px}
+.math-head h2{font-size:clamp(1.7rem,3vw,2.4rem); margin-bottom:14px}
+.math-head p{color:var(--paper-dim); line-height:1.6; font-size:.98rem}
+.math-panels{display:grid; grid-template-columns:1fr 1fr; gap:22px; max-width:1300px; align-items:stretch}
+@media (max-width:920px){.math-panels{grid-template-columns:1fr}}
+.m-panel{
+  border:1px solid var(--line); border-radius:18px; padding:30px 28px;
+  background:linear-gradient(165deg, var(--ink-3), var(--ink-2));
+  display:flex; flex-direction:column;
+}
+.m-panel .m-step{font-family:var(--mono); font-size:11px; color:var(--cyan); letter-spacing:.1em; text-transform:uppercase; margin-bottom:10px}
+.m-panel h3{font-size:1.25rem; color:var(--paper); margin-bottom:14px}
+.m-panel .m-lede{font-size:.92rem; color:var(--paper-dim); line-height:1.6; margin-bottom:22px}
+.eqbox{
+  background:var(--ink); border:1px solid var(--line); border-radius:10px;
+  padding:16px 18px; font-family:var(--mono); font-size:.98rem; color:var(--paper);
+  margin-bottom:14px; overflow-x:auto; white-space:nowrap;
+}
+.eqbox .lbl{display:block; font-size:.68rem; color:var(--paper-faint); text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; white-space:normal}
+.eqbox .hl-cyan{color:var(--cyan)} .eqbox .hl-amber{color:var(--amber)} .eqbox .hl-coral{color:var(--coral)} .eqbox .hl-indigo{color:var(--indigo)}
+.def-list{display:flex; flex-direction:column; gap:10px; margin-top:6px}
+.def-row{display:flex; gap:12px; align-items:baseline; font-size:.86rem}
+.def-row .sym{font-family:var(--mono); color:var(--cyan); min-width:64px; font-weight:600}
+.def-row .desc{color:var(--paper-dim); line-height:1.55}
+
+/* cycle chain diagram (panel 1) */
+.chain-diagram{display:flex; align-items:center; gap:0; margin:10px 0 22px; flex-wrap:wrap}
+.chain-node{
+  display:flex; flex-direction:column; align-items:center; gap:6px; min-width:70px;
+}
+.chain-node .c-circle{
+  width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-family:var(--mono); font-weight:600; font-size:.92rem; border:2px solid var(--indigo); color:var(--paper);
+  background:rgba(139,147,248,0.12);
+}
+.chain-node .c-label{font-size:.68rem; color:var(--paper-faint); font-family:var(--mono); text-align:center}
+.chain-arrow{color:var(--paper-faint); font-size:1.1rem; margin:0 6px; padding-bottom:22px}
+.chain-arrow .fn{display:block; font-family:var(--mono); font-size:.62rem; color:var(--cyan); margin-top:2px; white-space:nowrap}
+
+/* extrapolation diagram (panel 2) */
+.extrap-diagram{position:relative; height:150px; margin:8px 0 22px}
+.extrap-track{position:absolute; left:20px; right:20px; top:75px; height:1px; background:var(--line)}
+.extrap-pt{position:absolute; top:75px; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:5px}
+.extrap-pt .p-dot{width:14px; height:14px; border-radius:50%; border:2px solid var(--indigo); background:var(--ink-2)}
+.extrap-pt .p-dot.h{border-color:var(--cyan); background:var(--cyan); box-shadow:0 0 12px rgba(94,234,212,0.6)}
+.extrap-pt .p-lbl{font-family:var(--mono); font-size:.72rem; color:var(--paper-dim); position:absolute; top:20px; white-space:nowrap}
+.extrap-pt .p-lbl.up{top:auto; bottom:20px}
+.extrap-arc{position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none}
+
+.glossary{
+  max-width:1300px; margin-top:26px; border:1px solid var(--line); border-radius:16px;
+  background:var(--ink-2); padding:26px 28px;
+}
+.glossary .g-title{font-family:var(--mono); font-size:11px; color:var(--paper-faint); text-transform:uppercase; letter-spacing:.08em; margin-bottom:16px}
+.glossary-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:18px 24px}
+@media (max-width:900px){.glossary-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:520px){.glossary-grid{grid-template-columns:1fr}}
+.g-item .g-sym{font-family:var(--mono); color:var(--amber); font-size:1rem; font-weight:600; margin-bottom:4px}
+.g-item .g-def{font-size:.82rem; color:var(--paper-dim); line-height:1.5}
+
+.why-v-note{
+  max-width:1300px; margin-top:20px; border-left:3px solid var(--amber); padding:16px 22px;
+  background:rgba(245,166,35,0.06); border-radius:0 12px 12px 0;
+}
+.why-v-note .wv-tag{font-family:var(--mono); font-size:11px; color:var(--amber); text-transform:uppercase; letter-spacing:.08em; margin-bottom:8px}
+.why-v-note p{font-size:.9rem; color:var(--paper-dim); line-height:1.6}
+.why-v-note b{color:var(--paper)}
+
+#outcomes{background:var(--ink-2); border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
+.outcomes-head{max-width:760px; margin-bottom:10px}
+.outcomes-head h2{font-size:clamp(1.7rem,3vw,2.4rem); margin-bottom:14px}
+.outcomes-head p{color:var(--paper-dim); line-height:1.6; font-size:.98rem}
+#sankey-chart{width:100%; height:460px; margin-top:20px}
+.outcome-stats{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:26px; max-width:1100px}
+@media (max-width:760px){.outcome-stats{grid-template-columns:1fr}}
+.o-stat{border:1px solid var(--line); border-radius:14px; padding:22px; background:var(--ink)}
+.o-stat .num{font-family:var(--mono); font-size:2.4rem; font-weight:600}
+.o-stat .lbl{font-size:.82rem; color:var(--paper-dim); margin-top:6px; line-height:1.5}
+.o-stat.c1 .num{color:var(--indigo)} .o-stat.c2 .num{color:var(--cyan)} .o-stat.c3 .num{color:var(--amber)}
+
+/* ---------- KEY RESULTS SECTION ---------- */
+#results{padding-bottom:140px}
+.results-head{max-width:760px; margin-bottom:34px}
+.results-head h2{font-size:clamp(1.7rem,3vw,2.4rem); margin-bottom:14px}
+.results-head p{color:var(--paper-dim); line-height:1.6; font-size:.98rem}
+.result-wall{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; max-width:1200px}
+@media (max-width:900px){.result-wall{grid-template-columns:1fr 1fr}}
+@media (max-width:600px){.result-wall{grid-template-columns:1fr}}
+.r-card{
+  border:1px solid var(--line); border-radius:16px; padding:26px 24px;
+  background:linear-gradient(160deg, var(--ink-3), var(--ink-2));
+  position:relative; overflow:hidden; transition:border-color .25s, transform .25s;
+}
+.r-card:hover{border-color:var(--cyan); transform:translateY(-3px)}
+.r-card.flag::before{
+  content:'⚑'; position:absolute; top:16px; right:18px; color:var(--amber); font-size:14px;
+}
+.r-card .tag{font-family:var(--mono); font-size:10.5px; color:var(--paper-faint); text-transform:uppercase; letter-spacing:.08em; margin-bottom:14px}
+.r-card .big{font-family:var(--mono); font-size:2.1rem; font-weight:600; color:var(--paper); line-height:1}
+.r-card .big span{font-size:1rem; color:var(--paper-faint); font-weight:400; margin-left:6px}
+.r-card .desc{font-size:.86rem; color:var(--paper-dim); margin-top:12px; line-height:1.55}
+.r-card.wide{grid-column:span 3}
+@media (max-width:900px){.r-card.wide{grid-column:span 2}}
+@media (max-width:600px){.r-card.wide{grid-column:span 1}}
+
+.impl-rules{display:flex; flex-direction:column; gap:0; margin-top:12px}
+.impl-rules .rule{display:flex; gap:16px; padding:14px 0; border-top:1px solid var(--line)}
+.impl-rules .rule:first-child{border-top:none}
+.impl-rules .rule .rn{font-family:var(--mono); color:var(--cyan); font-size:.82rem; min-width:26px}
+.impl-rules .rule .rt{font-weight:600; font-size:.92rem; margin-bottom:3px}
+.impl-rules .rule .rd{font-size:.84rem; color:var(--paper-dim); line-height:1.55}
+
+/* ---------- Footer ---------- */
+footer{
+  padding:60px 8vw 90px; border-top:1px solid var(--line); background:var(--ink);
+  font-family:var(--mono); font-size:11.5px; color:var(--paper-faint); line-height:1.8;
+}
+footer a{color:var(--cyan); text-decoration:none}
+</style>
+</head>
+<body>
+<noscript>
+  <div style="position:fixed; inset:0; z-index:99999; background:#0b0f16; color:#edeff3; display:flex; align-items:center; justify-content:center; padding:40px; text-align:center; font-family:sans-serif;">
+    <div style="max-width:420px;">
+      <p style="color:#f5a623; font-weight:700; margin-bottom:12px;">⚑ JavaScript is disabled or blocked</p>
+      <p style="color:#9aa3b5; line-height:1.6; font-size:.92rem;">This page needs JavaScript to render its diagrams and charts. If you're viewing this in a preview pane (e.g. iOS Quick Look, a Mail attachment, or a Files app tap-preview), try opening it directly in a full browser instead — e.g. Share → Open in Safari.</p>
+    </div>
+  </div>
+</noscript>
+
+<div class="progress" id="progress"></div>
+<nav class="sidenav" id="sidenav">
+  <div class="dot" data-target="hero" data-label="Hero"></div>
+  <div class="dot" data-target="flow" data-label="Idea flow"></div>
+  <div class="dot" data-target="math" data-label="Reading the math"></div>
+  <div class="dot" data-target="outcomes" data-label="Outcomes"></div>
+  <div class="dot" data-target="results" data-label="Key results"></div>
+</nav>
+
+<nav class="mobilenav" id="mobilenav">
+  <button class="mdot" data-target="hero"><span class="dotpip"></span>Hero</button>
+  <button class="mdot" data-target="flow"><span class="dotpip"></span>Flow</button>
+  <button class="mdot" data-target="math"><span class="dotpip"></span>Math</button>
+  <button class="mdot" data-target="outcomes"><span class="dotpip"></span>Outcomes</button>
+  <button class="mdot" data-target="results"><span class="dotpip"></span>Results</button>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section id="hero">
+  <div class="hero-grid">
+    <div>
+      <div class="hero-kicker">Ind. Eng. Chem. Res. · 2026 · Subraveti, Karimi &amp; Gazzani</div>
+      <h1 class="hero-title reveal">Making simulations reach<br><em>steady state</em>, faster.</h1>
+      <p class="hero-sub reveal">Cyclic adsorption processes take hundreds of simulated cycles to settle. This paper shows that a handful of Steffensen-style extrapolation formulas &mdash; applied to the raw sequence of simulation outputs, no Jacobian required &mdash; cut that wait by up to <b style="color:var(--paper)">4&times;</b>.</p>
+      <div class="hero-meta reveal">
+        <div><b>3</b> process types tested</div>
+        <div><b>12</b> acceleration variants</div>
+        <div><b>500</b> operating conditions swept</div>
+      </div>
+    </div>
+    <div>
+      <div id="hero-canvas-wrap"><canvas id="hero-canvas"></canvas></div>
+      <div class="canvas-caption"><span class="coral">&#9679; successive substitution</span> &nbsp;vs&nbsp; <span class="cyan">&#9679; accelerated</span> &mdash; same start, same finish, very different trip.</div>
+    </div>
+  </div>
+  <div class="scroll-cue"><span>Scroll</span><span class="line"></span></div>
+</section>
+
+<!-- ============ IDEA FLOW ============ -->
+<section id="flow">
+  <div class="flow-head reveal">
+    <div class="eyebrow">Idea flow</div>
+    <h2>From bottleneck to practical fix</h2>
+    <p>The argument moves through six currents &mdash; drag your eye left to right. Nodes ringed in amber (⚑) are the ones worth slowing down for; everything else is supporting context. Hover any node for the full detail.</p>
+  </div>
+  <div class="legend-row reveal">
+    <div class="legend-chip"><span class="sw" style="background:var(--amber)"></span>⚑ Key concept</div>
+    <div class="legend-chip"><span class="sw" style="background:var(--line)"></span>Supporting context</div>
+    <div class="legend-chip" style="margin-left:auto; opacity:.7">Hover to explore →</div>
+  </div>
+  <div id="flow-canvas-wrap">
+    <svg id="flow-svg" viewBox="0 0 1560 640"></svg>
+  </div>
+</section>
+
+<!-- ============ MATH DEEP-DIVE ============ -->
+<section id="math">
+  <div class="math-head reveal">
+    <div class="eyebrow">Reading the math</div>
+    <h2>What F(&Delta;n) actually means, step by step</h2>
+    <p>The idea-flow diagram compresses this into one node. Here it is unpacked into two windows: the baseline loop the paper is trying to speed up, and the correction it adds on top.</p>
+  </div>
+
+  <div class="math-panels">
+    <!-- PANEL 1: baseline FPI -->
+    <div class="m-panel reveal">
+      <div class="m-step">Window 1 · the baseline</div>
+      <h3>Successive substitution: &Delta;n+1 = F(&Delta;n)</h3>
+      <p class="m-lede"><span class="hl-cyan" style="font-family:var(--mono)">F</span> is the entire adsorption simulator treated as a black box &mdash; it takes the column&rsquo;s state at the end of one cycle and returns the state at the end of the next. <span class="hl-indigo" style="font-family:var(--mono)">&Delta;</span> is a vector: gas composition, adsorbed loading, pressure, and temperature across every point in the column.</p>
+
+      <div class="eqbox"><span class="lbl">Fixed-point iteration (eq. 1 in the paper)</span>&Delta;<sub>n+1</sub> = <span class="hl-cyan">F</span>(&Delta;<sub>n</sub>)</div>
+
+      <p class="m-lede" style="margin-bottom:10px">Run this three times in a row and you get three stored states &mdash; the raw material every acceleration method needs:</p>
+
+      <div class="chain-diagram">
+        <div class="chain-node">
+          <div class="c-circle">A</div>
+          <div class="c-label">cycle 1 end</div>
+        </div>
+        <div class="chain-arrow">&rarr;<span class="fn">F(A)</span></div>
+        <div class="chain-node">
+          <div class="c-circle">B</div>
+          <div class="c-label">cycle 2 end</div>
+        </div>
+        <div class="chain-arrow">&rarr;<span class="fn">F(B)</span></div>
+        <div class="chain-node">
+          <div class="c-circle">C</div>
+          <div class="c-label">cycle 3 end</div>
+        </div>
+      </div>
+
+      <div class="def-list">
+        <div class="def-row"><span class="sym">A, B, C</span><span class="desc">Three consecutive plain-FPI outputs. Nothing accelerated has happened yet &mdash; this is just three ordinary simulation cycles run back to back.</span></div>
+        <div class="def-row"><span class="sym">Why 3?</span><span class="desc">One extrapolation step needs two consecutive differences to estimate a direction and a step size &mdash; that requires three data points, not two.</span></div>
+      </div>
+    </div>
+
+    <!-- PANEL 2: extrapolation correction -->
+    <div class="m-panel reveal">
+      <div class="m-step">Window 2 · the correction</div>
+      <h3>Graves-Morris: H = F(&Delta;n) &minus; &lambda;v</h3>
+      <p class="m-lede">Instead of accepting <span class="hl-indigo" style="font-family:var(--mono)">C</span> as the next starting point, the method looks at how the sequence has been moving and jumps further ahead along that same direction.</p>
+
+      <div class="eqbox"><span class="lbl">Step 1 &mdash; build two consecutive differences</span><span class="hl-amber">u</span> = B &minus; A &nbsp;&nbsp; <span class="hl-cyan">v</span> = C &minus; B &nbsp;&nbsp; w = v &minus; u</div>
+      <div class="eqbox"><span class="lbl">Step 2 &mdash; scalar step size (approximates 1 / Jacobian along this direction)</span>&lambda; = (u<sup>T</sup>v) / (u<sup>T</sup>w)</div>
+      <div class="eqbox"><span class="lbl">Step 3 &mdash; extrapolated guess, replaces &Delta;n for the next cycle</span>H = B &minus; &lambda; &middot; <span class="hl-cyan">v</span></div>
+
+      <div class="extrap-diagram">
+        <div class="extrap-track"></div>
+        <svg class="extrap-arc" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <path d="M 14 50 Q 40 20 66 50" fill="none" stroke="#5b6478" stroke-width="0.6" stroke-dasharray="2 2"/>
+        </svg>
+        <div class="extrap-pt" style="left:8%"><div class="p-dot"></div><div class="p-lbl up">A</div></div>
+        <div class="extrap-pt" style="left:38%"><div class="p-dot"></div><div class="p-lbl up">B = F(A)</div></div>
+        <div class="extrap-pt" style="left:68%"><div class="p-dot"></div><div class="p-lbl up">C = F(B)</div></div>
+        <div class="extrap-pt" style="left:92%"><div class="p-dot h"></div><div class="p-lbl">H &larr; next start</div></div>
+      </div>
+
+      <div class="def-list">
+        <div class="def-row"><span class="sym">u</span><span class="desc">The older step the sequence took &mdash; from A to B.</span></div>
+        <div class="def-row"><span class="sym">v</span><span class="desc">The newer step &mdash; from B to C. This is the direction Graves-Morris extrapolates along.</span></div>
+        <div class="def-row"><span class="sym">&lambda;</span><span class="desc">How far past C to jump. Too small and it barely helps; too large and it can overshoot and oscillate.</span></div>
+        <div class="def-row"><span class="sym">H</span><span class="desc">The new starting state fed into cycle 4 &mdash; replacing what plain FPI would have used.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Symbol glossary -->
+  <div class="glossary reveal">
+    <div class="g-title">Symbol cheat sheet &mdash; used throughout this page</div>
+    <div class="glossary-grid">
+      <div class="g-item"><div class="g-sym">&Delta;<sub>n</sub></div><div class="g-def">Full state vector of the column at the end of cycle n &mdash; composition, loading, pressure, temperature.</div></div>
+      <div class="g-item"><div class="g-sym">F( &middot; )</div><div class="g-def">The adsorption simulator itself, treated as a black-box function. No Jacobian or derivative needed.</div></div>
+      <div class="g-item"><div class="g-sym">u, v, w</div><div class="g-def">Consecutive differences between three stored FPI outputs. Every one of the 12 variants is built from these three.</div></div>
+      <div class="g-item"><div class="g-sym">&lambda;<sub>n</sub></div><div class="g-def">Scalar step size along the search direction &mdash; each variant defines this differently (see Table 1 in the paper).</div></div>
+      <div class="g-item"><div class="g-sym">H</div><div class="g-def">The extrapolated guess that replaces &Delta;n as the starting point for the next cycle.</div></div>
+      <div class="g-item"><div class="g-sym">CSS</div><div class="g-def">Cyclic steady state &mdash; the point where consecutive cycles stop changing beyond a strict tolerance.</div></div>
+      <div class="g-item"><div class="g-sym">&Lambda;&#772;</div><div class="g-def">Average logarithmic contraction ratio &mdash; how fast the residual shrinks per iteration, on average. More negative = faster.</div></div>
+      <div class="g-item"><div class="g-sym">FPI</div><div class="g-def">Fixed-point iteration, i.e. successive substitution &mdash; the un-accelerated baseline every method is compared against.</div></div>
+    </div>
+  </div>
+
+  <div class="why-v-note reveal">
+    <div class="wv-tag">⚑ Why Class V specifically wins</div>
+    <p>Notice the base of the formula is <b>B = F(A)</b>, not the raw input A. That single choice is why Class V methods (Graves-Morris, Zienkiewicz-Lohner) outperform Class U methods, which correct A directly. B is already one FPI step closer to CSS &mdash; extrapolating from there, along the freshest available direction v, means every correction starts from better ground and points where the sequence is actually heading.</p>
+  </div>
+</section>
+
+<!-- ============ OUTCOMES / SANKEY ============ -->
+<section id="outcomes">
+  <div class="outcomes-head reveal">
+    <div class="eyebrow">Outcomes</div>
+    <h2>Where the time actually gets saved</h2>
+    <p>Each band is <b style="color:var(--paper)">computational time saved</b> (%) versus plain successive substitution, for the best method in each class on each process. Width tells the story: Class V’s advantage is visible, not just statistical.</p>
+  </div>
+  <div id="sankey-chart" class="reveal"></div>
+  <div class="outcome-stats reveal">
+    <div class="o-stat c1"><div class="num">4&times;</div><div class="lbl">VSA speedup &mdash; Graves-Morris, 23% of baseline time</div></div>
+    <div class="o-stat c2"><div class="num">3&times;</div><div class="lbl">TSA speedup &mdash; 𝒜4 variant, 35% of baseline time</div></div>
+    <div class="o-stat c3"><div class="num">35%</div><div class="lbl">VTSA time reduction &mdash; Zienkiewicz-Lohner, 72% of baseline</div></div>
+  </div>
+</section>
+
+<!-- ============ KEY RESULTS ============ -->
+<section id="results">
+  <div class="results-head reveal">
+    <div class="eyebrow">Key results</div>
+    <h2>What to remember from this paper</h2>
+    <p>Five numbers and one rule of thumb. If you read nothing else, read this section.</p>
+  </div>
+
+  <div class="result-wall">
+    <div class="r-card flag reveal">
+      <div class="tag">VSA · 4-step cycle</div>
+      <div class="big">121<span>/ 340 cycles</span></div>
+      <div class="desc">Graves-Morris reaches CSS in 121 cycles versus 340 for plain successive substitution &mdash; <b style="color:var(--cyan)">23% of the compute time</b>.</div>
+    </div>
+    <div class="r-card reveal">
+      <div class="tag">TSA · 6-step cycle</div>
+      <div class="big">13<span>/ 28 cycles</span></div>
+      <div class="desc">The 𝒜4 variant and Zienkiewicz-Lohner both roughly halve cycle count, cutting compute time to about a third.</div>
+    </div>
+    <div class="r-card reveal">
+      <div class="tag">VTSA · 3-step cycle</div>
+      <div class="big">35<span>% time saved</span></div>
+      <div class="desc">Fewer cycles saved (only 1&ndash;2) but extrapolated guesses speed up the ODE integration itself &mdash; savings show up in wall-clock time more than cycle count.</div>
+    </div>
+
+    <div class="r-card flag reveal">
+      <div class="tag">Design-space sweep</div>
+      <div class="big">2&times;<span>average, n = 500</span></div>
+      <div class="desc">Across 500 Latin-hypercube-sampled operating conditions for VSA, Graves-Morris delivers a consistent ~2&times; average speedup &mdash; not a cherry-picked reference case.</div>
+    </div>
+    <div class="r-card reveal">
+      <div class="tag">Portability</div>
+      <div class="big">Py &harr; F90</div>
+      <div class="desc">The same acceleration logic, unmodified, produces comparable speedups in both a Python 3.13 and a Fortran 2023 simulator &mdash; the method is genuinely code-agnostic.</div>
+    </div>
+    <div class="r-card reveal">
+      <div class="tag">Failure mode</div>
+      <div class="big">C2<span>diverged</span></div>
+      <div class="desc">Not every variant helps: Class W's C2 method failed to converge within 500 cycles on the VSA case &mdash; ill-conditioned &lambda; can make things worse.</div>
+    </div>
+
+    <div class="r-card wide reveal">
+      <div class="tag">Implementation rule of thumb</div>
+      <div class="impl-rules">
+        <div class="rule"><div class="rn">01</div><div><div class="rt">Warm up with 3 plain cycles</div><div class="rd">Acceleration needs three stored FPI outputs (A, B, C) before it can compute u, v, w and fire.</div></div></div>
+        <div class="rule"><div class="rn">02</div><div><div class="rt">Re-apply every 3 cycles</div><div class="rd">Fewer risks instability from overuse; more loses the benefit of frequent correction. Three was empirically optimal.</div></div></div>
+        <div class="rule"><div class="rn">03</div><div><div class="rt">Disable below 10&#8315;&#8308; residual</div><div class="rd">Near CSS the mapping is quasi-linear and extrapolation can overshoot &mdash; revert to plain substitution to avoid oscillation.</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Subraveti, S. G.; Karimi, K.; Gazzani, M. &mdash; <i>Vector Acceleration Methods for Faster Convergence of Cyclic Steady State in Adsorption Process Simulations.</i> Ind. Eng. Chem. Res. 2026, 65, 9656&ndash;9669.<br>
+  <a href="https://doi.org/10.1021/acs.iecr.6c00407" target="_blank">doi.org/10.1021/acs.iecr.6c00407</a> &middot; CC-BY 4.0 &middot; Summary visualization, not affiliated with the authors.
+</footer>
+
+<div class="node-tip" id="tip"><div class="tt-flag" id="tip-flag"></div><div class="tt-name" id="tip-name"></div><div id="tip-body"></div></div>
+
+<script>
+/* ================= Scroll progress + sidenav ================= */
+const progress=document.getElementById('progress');
+const sections=[...document.querySelectorAll('section')];
+const dots=[...document.querySelectorAll('.sidenav .dot')];
+const mdots=[...document.querySelectorAll('.mobilenav .mdot')];
+function onScroll(){
+  const h=document.documentElement;
+  const pct=(h.scrollTop)/(h.scrollHeight-h.clientHeight)*100;
+  progress.style.width=pct+'%';
+  let active=sections[0].id;
+  for(const s of sections){ if(s.getBoundingClientRect().top<window.innerHeight*0.5) active=s.id; }
+  dots.forEach(d=>d.classList.toggle('active', d.dataset.target===active));
+  mdots.forEach(d=>d.classList.toggle('active', d.dataset.target===active));
+}
+document.addEventListener('scroll', onScroll, {passive:true});
+onScroll();
+dots.forEach(d=>d.addEventListener('click',()=>{
+  document.getElementById(d.dataset.target).scrollIntoView({behavior:'smooth'});
+}));
+mdots.forEach(d=>d.addEventListener('click',()=>{
+  document.getElementById(d.dataset.target).scrollIntoView({behavior:'smooth'});
+}));
+
+/* ================= Reveal on scroll ================= */
+const io=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); });
+},{threshold:0.15});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* ================= HERO CANVAS: convergence race ================= */
+(function(){
+  const canvas=document.getElementById('hero-canvas');
+  const wrap=document.getElementById('hero-canvas-wrap');
+  const ctx=canvas.getContext('2d');
+  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let W,H,dpr;
+  function resize(){
+    dpr=window.devicePixelRatio||1;
+    W=wrap.clientWidth; H=wrap.clientHeight;
+    canvas.width=W*dpr; canvas.height=H*dpr;
+    canvas.style.width=W+'px'; canvas.style.height=H+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const marginX=30, startY=H, padTop=30;
+  let t=0;
+  const DURATION=280; // frames per loop
+
+  function oscillatingY(progress){
+    // slow, decaying oscillation toward the finish line
+    const decay=Math.exp(-progress*3.1);
+    const osc=Math.sin(progress*26)*decay*0.42;
+    const linear=progress;
+    return linear+osc*(1-progress*0.6);
+  }
+  function acceleratedY(progress){
+    // fast ease, reaches target quickly then holds
+    const p=Math.min(1, progress*1.9);
+    return 1-Math.pow(1-p,3);
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const cx=(t%DURATION)/DURATION;
+
+    const baseY=H-50, topY=40;
+    const x0=marginX, x1=W-marginX;
+
+    // finish line
+    ctx.strokeStyle='rgba(154,163,181,0.25)';
+    ctx.setLineDash([3,4]);
+    ctx.beginPath(); ctx.moveTo(x1,topY-10); ctx.lineTo(x1,baseY+20); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // labels
+    ctx.font='11px IBM Plex Mono, monospace';
+    ctx.fillStyle='rgba(154,163,181,0.6)';
+    ctx.fillText('cycle 0', x0-14, baseY+34);
+    ctx.fillText('CSS', x1-14, baseY+34);
+
+    // draw trailing paths
+    function drawPath(fn, color, steps){
+      ctx.beginPath();
+      for(let i=0;i<=steps;i++){
+        const p=i/steps;
+        if(p>cx) break;
+        const x=x0+(x1-x0)*p;
+        const y=baseY-(baseY-topY)*fn(p);
+        if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+      }
+      ctx.strokeStyle=color; ctx.lineWidth=2; ctx.lineCap='round'; ctx.stroke();
+    }
+    drawPath(oscillatingY, 'rgba(251,111,99,0.85)', 200);
+    drawPath(acceleratedY, 'rgba(94,234,212,0.9)', 200);
+
+    // dots at current position
+    function dotAt(fn,color){
+      const x=x0+(x1-x0)*cx;
+      const y=baseY-(baseY-topY)*fn(cx);
+      ctx.beginPath(); ctx.arc(x,y,5,0,7); ctx.fillStyle=color; ctx.fill();
+      ctx.beginPath(); ctx.arc(x,y,9,0,7); ctx.strokeStyle=color; ctx.globalAlpha=0.35; ctx.lineWidth=1.5; ctx.stroke(); ctx.globalAlpha=1;
+    }
+    dotAt(oscillatingY,'#fb6f63');
+    dotAt(acceleratedY,'#5eead4');
+
+    if(!reduced){ t++; requestAnimationFrame(draw); }
+  }
+  draw();
+  if(reduced){
+    // draw a static final frame
+    t=DURATION*0.99; draw();
+  }
+})();
+
+/* ================= FLOW SVG: organic free-flowing canvas ================= */
+(function(){
+  const NS='http://www.w3.org/2000/svg';
+  const svg=document.getElementById('flow-svg');
+  function el(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+  const W=1560,H=640;
+  // organic, staggered positions -- not a rigid grid
+  const NODES=[
+    { id:'problem', x:100, y:200, r:54, color:'#fb6f63', dark:'#7a2b25', key:false,
+      title:'Problem', body:'Why this paper exists. Successive substitution has linear convergence near CSS — cycle counts explode for strongly nonlinear adsorption systems, and optimization needs thousands of runs.' ,
+      kids:[
+        {x:44,y:340,r:28,label:'FPI is slow',key:false,title:'FPI is slow',body:'Linear convergence near the CSS solution can mean hundreds to thousands of cycles for nonlinear isotherms.'},
+        {x:190,y:365,r:28,label:'Optimization\ncost',key:false,title:'Optimization cost',body:'Thousands of operating conditions × many adsorbents makes even a 2× speedup enormously valuable at scale.'},
+        {x:58,y:88,r:26,label:'No universal\nfix',key:false,title:'No universal fix',body:'No single acceleration strategy dominates for all process types — motivates this systematic 12-variant study.'}
+      ]},
+    { id:'math', x:335, y:420, r:58, color:'#8b93f8', dark:'#31366e', key:true,
+      title:'⚑ Math base', body:'The vectorized Steffensen formulation. All 12 variants share the same three vectors (u, v, w) — they differ only in how they combine them into a step size λ. Full worked breakdown in the "Reading the math" section below ↓',
+      kids:[
+        {x:268,y:558,r:30,label:'u, v, w\nvectors',key:true,title:'⚑ u, v, w vectors',body:'u = B−A, v = C−B, w = v−u, built from three stored FPI outputs A→B→C. Raw material for every variant. Full breakdown below ↓'},
+        {x:432,y:540,r:30,label:'λₙ scalar\nstep',key:true,title:'⚑ λₙ scalar step',body:'Approximates the inverse Jacobian along one dominant eigendirection. Different inner products of u,v,w give different λ formulas. Full breakdown below ↓'},
+        {x:378,y:282,r:26,label:'H = F(Δn)\n− λv',key:true,title:'⚑ Graves-Morris update',body:'Extrapolated guess H replaces the plain FPI output as the starting state for the next simulation cycle. Full breakdown below ↓'}
+      ]},
+    { id:'variants', x:580, y:150, r:56, color:'#8b93f8', dark:'#31366e', key:true,
+      title:'⚑ 12 variants', body:'Three classes (U, V, W) share the math base but differ in base iterate and λ formula. Class V consistently wins — understanding why is the paper’s core insight.',
+      kids:[
+        {x:508,y:44,r:26,label:'Class U',key:false,title:'Class U',body:'Corrects the raw iterate Δₙ. Moderate gains — best variants reach ~28% of baseline time on VSA.'},
+        {x:668,y:62,r:30,label:'Class V ★',key:true,title:'⚑ Class V — best',body:'Corrects 𝒻(Δₙ), the FPI output — already closer to CSS. Its search direction aligns better with the dominant eigenmode.'},
+        {x:645,y:258,r:26,label:'Class W',key:false,title:'Class W',body:'Uses the w-direction. Often ill-conditioned — C2 fails to converge for VSA within 500 cycles.'}
+      ]},
+    { id:'tests', x:825, y:400, r:54, color:'#f5a623', dark:'#6b4a10', key:false,
+      title:'Test cases', body:'Three processes with distinct cycle dynamics — pressure-driven, temperature-driven, and dilute trace-gas separation.',
+      kids:[
+        {x:758,y:528,r:26,label:'VSA\n4-step',key:false,title:'VSA (4-step)',body:'CO₂/N₂ on zeolite 13X. 340 baseline cycles; qCO₂ loading dominates 69% of the residual.'},
+        {x:918,y:520,r:26,label:'TSA\n6-step',key:false,title:'TSA (6-step)',body:'28 baseline cycles. Slow heat transfer limits oscillation during acceleration compared to VSA.'},
+        {x:895,y:278,r:28,label:'VTSA\n3-step',key:true,title:'⚑ VTSA (3-step)',body:'Dilute CH₄/CO₂ trace separation, validated in both Python and Fortran — proves the method is code-agnostic.'}
+      ]},
+    { id:'results', x:1070, y:155, r:60, color:'#5eead4', dark:'#215c52', key:true,
+      title:'⚑ Results', body:'The headline numbers — and the one that matters most: a consistent ~2× average speedup across 500 sampled operating conditions, not a cherry-picked case.',
+      kids:[
+        {x:1000,y:44,r:28,label:'VSA:\n4× faster',key:true,title:'⚑ VSA: 4× faster',body:'Graves-Morris hits CSS in 121 cycles at 23% of baseline compute time.'},
+        {x:1168,y:60,r:26,label:'TSA:\n3× faster',key:false,title:'TSA: 3× faster',body:'𝒜4 variant at 35% of baseline time; Zienkiewicz-Lohner at 31%.'},
+        {x:1148,y:262,r:26,label:'500 sims:\n2× avg',key:true,title:'⚑ 500 sims: 2× avg',body:'Latin hypercube sweep across the full design space confirms robustness, not a fluke.'}
+      ]},
+    { id:'howto', x:1400, y:400, r:58, color:'#06b6d4', dark:'#0e4f57', key:true,
+      title:'⚑ How to use', body:'Practical implementation rules for plugging this into any existing simulator. Getting the two guardrails right (warm-up and stop condition) is what separates a speedup from a divergence.',
+      kids:[
+        {x:1332,y:530,r:28,label:'3 FPIs\nfirst',key:true,title:'⚑ 3 FPIs first',body:'Run 3 plain successive substitutions to populate A, B, C before acceleration can compute u, v, w and fire.'},
+        {x:1492,y:520,r:26,label:'Every\n3 FPIs',key:false,title:'Every 3 FPIs',body:'Re-apply acceleration after every 3 cycles — empirically the optimal frequency, balancing stability against speed.'},
+        {x:1470,y:280,r:28,label:'Stop\n< 10⁻⁴',key:true,title:'⚑ Stop below 10⁻⁴',body:'Disable acceleration once the residual drops below 1×10⁻⁴ to avoid oscillation in the quasi-linear region near CSS.'},
+        {x:1400,y:540,r:24,label:'Code-\nagnostic',key:false,title:'Code-agnostic',body:'Wraps the simulator as a black box — no changes needed to the PDE discretization or ODE integrator.'}
+      ]},
+  ];
+
+  const defs=el('defs',{});
+  const mainGrad=el('linearGradient',{id:'flowline',x1:'0',y1:'0',x2:'1',y2:'0'});
+  mainGrad.appendChild(el('stop',{offset:'0%','stop-color':'#fb6f63'}));
+  mainGrad.appendChild(el('stop',{offset:'40%','stop-color':'#8b93f8'}));
+  mainGrad.appendChild(el('stop',{offset:'75%','stop-color':'#f5a623'}));
+  mainGrad.appendChild(el('stop',{offset:'100%','stop-color':'#5eead4'}));
+  defs.appendChild(mainGrad);
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  svg.appendChild(defs);
+
+  const gPath=el('g',{}); const gKidLines=el('g',{}); const gKids=el('g',{}); const gMain=el('g',{});
+  svg.append(gPath,gKidLines,gKids,gMain);
+
+  // main flowing path through all node centers (organic curve, not straight lines)
+  let d=`M ${NODES[0].x} ${NODES[0].y}`;
+  for(let i=0;i<NODES.length-1;i++){
+    const a=NODES[i], b=NODES[i+1];
+    const mx=(a.x+b.x)/2;
+    d+=` C ${mx} ${a.y}, ${mx} ${b.y}, ${b.x} ${b.y}`;
+  }
+  const flowPath=el('path',{d, fill:'none', stroke:'url(#flowline)', 'stroke-width':'3', 'stroke-linecap':'round', opacity:'0.55'});
+  gPath.appendChild(flowPath);
+
+  // animated traveling dot along the path (reduced-motion safe)
+  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!reduced){
+    const dashLen = flowPath.getTotalLength ? null : null;
+  }
+  const traveler=el('circle',{r:'5', fill:'#fff'});
+  gPath.appendChild(traveler);
+
+  function animateTraveler(){
+    const len=flowPath.getTotalLength();
+    let start=null;
+    const dur=7000;
+    function step(ts){
+      if(!start) start=ts;
+      const p=((ts-start)%dur)/dur;
+      const pt=flowPath.getPointAtLength(p*len);
+      traveler.setAttribute('cx',pt.x); traveler.setAttribute('cy',pt.y);
+      traveler.setAttribute('opacity', 0.55+0.45*Math.sin(p*Math.PI*2*3));
+      requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  if(!reduced) animateTraveler(); else traveler.setAttribute('opacity','0');
+
+  // tooltip
+  const tip=document.getElementById('tip');
+  const tipFlag=document.getElementById('tip-flag');
+  const tipName=document.getElementById('tip-name');
+  const tipBody=document.getElementById('tip-body');
+  function showTip(e,t){
+    tipFlag.textContent = t.key? '⚑ Key concept' : '';
+    tipFlag.style.display = t.key? 'block':'none';
+    tipName.textContent=t.title.replace('⚑ ','');
+    tipBody.textContent=t.body;
+    tip.style.opacity='1'; moveTip(e);
+  }
+  function moveTip(e){
+    const x=Math.max(12, Math.min(e.clientX+16, window.innerWidth-tip.offsetWidth-12));
+    let y=e.clientY-10;
+    const th=tip.offsetHeight||150;
+    // if it would overflow the bottom, flip to sit above the tap/cursor point instead
+    if(y+th > window.innerHeight-12){ y = e.clientY - th - 16; }
+    y=Math.max(12, Math.min(y, window.innerHeight-th-12));
+    tip.style.left=x+'px'; tip.style.top=y+'px';
+  }
+  document.addEventListener('mousemove',e=>{ if(tip.style.opacity==='1') moveTip(e); });
+  function hideTip(){ tip.style.opacity='0'; tip.dataset.pinned=''; }
+  function pinTip(){
+    // On touch devices, keep the tooltip open until the next tap elsewhere
+    tip.dataset.pinned='1';
+  }
+  document.addEventListener('click',()=>{ if(tip.dataset.pinned==='1'){ hideTip(); } });
+
+  function wrapLabel(str){ return str.split('\n'); }
+
+  NODES.forEach(node=>{
+    // kid connectors + kid nodes
+    node.kids.forEach(kid=>{
+      const mx=(node.x+kid.x)/2, my=(node.y+kid.y)/2 - 20;
+      const path=el('path',{
+        d:`M ${node.x} ${node.y} Q ${mx} ${my} ${kid.x} ${kid.y}`,
+        fill:'none', stroke:node.color, 'stroke-opacity':'0.35', 'stroke-width':'1.6'
+      });
+      gKidLines.appendChild(path);
+
+      const kg=el('g',{style:'cursor:pointer'});
+      if(kid.key){
+        kg.appendChild(el('circle',{cx:kid.x,cy:kid.y,r:kid.r+6,fill:'none',stroke:'#f5a623','stroke-width':'1.5','stroke-dasharray':'4 3','stroke-opacity':'0.7'}));
+      }
+      kg.appendChild(el('circle',{cx:kid.x,cy:kid.y,r:kid.r,fill:node.dark,'fill-opacity':'0.9',stroke:kid.key?'#f5a623':node.color,'stroke-width':kid.key?'2':'1.3'}));
+      const lines=wrapLabel(kid.label);
+      lines.forEach((ln,i)=>{
+        const ty=kid.y + (i-(lines.length-1)/2)*11 + 1;
+        const t=el('text',{x:kid.x,y:ty,'text-anchor':'middle','dominant-baseline':'central',fill:'#edeff3','font-size':'9.5','font-family':'IBM Plex Sans, sans-serif','font-weight':'600'});
+        t.textContent=ln; kg.appendChild(t);
+      });
+      if(kid.key){
+        const star=el('text',{x:kid.x+kid.r-3,y:kid.y-kid.r+5,'text-anchor':'middle',fill:'#f5a623','font-size':'11','font-weight':'800'});
+        star.textContent='⚑'; kg.appendChild(star);
+      }
+      kg.addEventListener('mouseenter',e=>showTip(e,kid));
+      kg.addEventListener('mouseleave',hideTip);
+      kg.addEventListener('click',e=>{ e.stopPropagation(); showTip(e,kid); pinTip(); });
+      gKids.appendChild(kg);
+    });
+
+    // main node
+    const mg=el('g',{style:'cursor:pointer'});
+    if(node.key){
+      mg.appendChild(el('circle',{cx:node.x,cy:node.y,r:node.r+9,fill:'none',stroke:'#f5a623','stroke-width':'2','stroke-dasharray':'6 4','stroke-opacity':'0.75'}));
+    }
+    mg.appendChild(el('circle',{cx:node.x+2,cy:node.y+3,r:node.r,fill:node.dark,'fill-opacity':'0.5'}));
+    mg.appendChild(el('circle',{cx:node.x,cy:node.y,r:node.r,fill:node.color,stroke:'#0b0f16','stroke-width':'2.5'}));
+    const mlines=wrapLabel(node.title.replace('⚑ ',''));
+    mlines.forEach((ln,i)=>{
+      const ty=node.y + (i-(mlines.length-1)/2)*15 + 2;
+      const t=el('text',{x:node.x,y:ty,'text-anchor':'middle','dominant-baseline':'central',fill:'#0b0f16','font-size':'13','font-family':'IBM Plex Sans, sans-serif','font-weight':'700'});
+      t.textContent=ln; mg.appendChild(t);
+    });
+    if(node.key){
+      const star=el('text',{x:node.x-node.r+8,y:node.y-node.r+10,'text-anchor':'middle',fill:'#f5a623','font-size':'15','font-weight':'800'});
+      star.textContent='⚑'; mg.appendChild(star);
+    }
+    mg.addEventListener('mouseenter',e=>showTip(e,node));
+    mg.addEventListener('mouseleave',hideTip);
+    mg.addEventListener('click',e=>{ e.stopPropagation(); showTip(e,node); pinTip(); });
+    gMain.appendChild(mg);
+  });
+})();
+
+/* ================= SANKEY ================= */
+let skDone=false;
+const skObserver=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting && !skDone){ skDone=true; drawSankey(); }
+  });
+},{threshold:0.2});
+skObserver.observe(document.getElementById('sankey-chart'));
+
+function drawSankey(){
+  const container = document.getElementById('sankey-chart');
+  if(typeof Plotly === 'undefined'){
+    // Graceful fallback if the CDN script didn't load (offline, blocked, etc.)
+    container.innerHTML = `
+      <div style="border:1px solid var(--line); border-radius:12px; padding:24px; background:var(--ink);">
+        <p style="font-family:var(--mono); font-size:11px; color:var(--amber); text-transform:uppercase; letter-spacing:.06em; margin-bottom:14px;">⚑ Chart library didn't load — showing the numbers directly</p>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; font-family:var(--mono); font-size:.82rem; color:var(--paper-dim);">
+          <div><b style="color:#8b93f8">Class U →</b><br>VSA 72% · TSA 65% · VTSA 13%</div>
+          <div><b style="color:#a78bfa">Class V ★ →</b><br>VSA 77% · TSA 69% · VTSA 28%</div>
+          <div><b style="color:#94a3b8">Class W →</b><br>VSA 13% · TSA 50% · VTSA 23%</div>
+        </div>
+        <p style="font-size:.8rem; color:var(--paper-faint); margin-top:14px;">(Values = % computational time saved vs. successive substitution. Reload with an internet connection to see the interactive chart.)</p>
+      </div>`;
+    return;
+  }
+  try{
+  Plotly.newPlot('sankey-chart',[{
+    type:'sankey', orientation:'h', arrangement:'snap',
+    node:{
+      pad:24, thickness:26, line:{color:'#212a3b',width:0.8},
+      label:[
+        "Class U methods\n(𝒜1, 𝒜4, Lemaréchal, Sedogbo)",
+        "Class V methods ★\n(Graves-Morris, Zienkiewicz-Lohner,\nIrons-Tuck, B1)",
+        "Class W methods\n(C1, C2, M6, ε₂)",
+        "VSA cycle\n(4-step, CO₂/N₂)\nBaseline: 340 cycles",
+        "TSA cycle\n(6-step, CO₂/N₂)\nBaseline: 28 cycles",
+        "VTSA cycle\n(3-step, CH₄ trace)\nBaseline: 9 cycles"
+      ],
+      color:["#8b93f8","#7c5cff","#5b6478","#f5a623","#fb9a3c","#fb6f63"],
+      hovertemplate:"<b>%{label}</b><extra></extra>"
+    },
+    link:{
+      source:[0,0,0, 1,1,1, 2,2,2],
+      target:[3,4,5, 3,4,5, 3,4,5],
+      value: [72,65,13, 77,69,28, 13,50,23],
+      color:[
+        "rgba(139,147,248,0.28)","rgba(139,147,248,0.28)","rgba(139,147,248,0.14)",
+        "rgba(124,92,255,0.45)","rgba(124,92,255,0.45)","rgba(124,92,255,0.3)",
+        "rgba(91,100,120,0.22)","rgba(91,100,120,0.28)","rgba(91,100,120,0.22)"
+      ],
+      hovertemplate:"%{source.label} → %{target.label}<br><b>%{value}% time saved</b><extra></extra>"
+    }
+  }],{
+    paper_bgcolor:'rgba(0,0,0,0)', plot_bgcolor:'rgba(0,0,0,0)',
+    font:{size:12,family:"'IBM Plex Sans',sans-serif",color:'#9aa3b5'},
+    margin:{l:10,r:10,t:10,b:10},
+    hoverlabel:{bgcolor:'#171f2f',bordercolor:'#212a3b',font:{color:'#edeff3',size:13}}
+  },{responsive:true,displayModeBar:false});
+  } catch(err){
+    container.innerHTML = `<p style="font-family:var(--mono); font-size:.82rem; color:var(--coral);">Chart failed to render: ${err.message}</p>`;
+  }
+}
+</script>
+</body>
+</html>

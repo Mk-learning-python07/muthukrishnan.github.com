@@ -432,6 +432,23 @@ pre code { background: none; border: none; padding: 0; font-size: .875rem; }
 /* Badges */
 .badge { display: inline-block; font-size: .72rem; font-weight: 500; padding: .2rem .65rem; border-radius: 999px; background: var(--accent-glow); color: var(--accent); border: 1px solid var(--line); margin: .15rem; }
 
+/* Icon chip — badge with a small image, for languages/interests */
+.icon-chip {
+  display: inline-flex; align-items: center; gap: .5rem;
+  padding: .3rem .8rem .3rem .3rem; border-radius: 999px;
+  background: var(--accent-glow); border: 1px solid var(--line);
+  margin: .2rem; font-size: .8rem; font-weight: 500; color: var(--text);
+}
+.icon-chip img { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; display: inline-block; }
+
+/* Profile photo */
+.profile-photo {
+  display: block; width: 148px; height: 148px; border-radius: 50%;
+  object-fit: cover; margin: 0 auto 2rem;
+  border: 4px solid var(--bg-card); box-shadow: var(--shadow-lg);
+  outline: 1px solid var(--line);
+}
+
 /* Status / warning callout */
 .callout {
   padding: 1rem 1.5rem; margin: 2rem 0;
@@ -486,7 +503,7 @@ tr:hover td { background: var(--accent-glow); }
    untouched — no specificity fight, because excluded elements are
    simply never matched by this rule at all.
 ================================================================ */
-[data-theme="dark"] .page-body :where(div, span, p, li, td, tr, table, section, article):not(.card):not(.card-title):not(.card-meta):not(.exec-summary):not(.exec-summary-label):not(.framework-card):not(.framework-num):not(.framework-title):not(.framework-desc):not(.stat):not(.stat-num):not(.stat-label):not(.timeline-item):not(.timeline-date):not(.timeline-title):not(.timeline-org):not(.timeline-desc):not(.pull-quote):not(.project-card):not(.project-card-head):not(.project-icon):not(.project-title):not(.project-desc):not(.project-tags):not(.project-link):not(.badge):not(.section-divider):not(.contact-tile):not(.contact-icon):not(.contact-label):not(.contact-value):not(.btn-row):not(.callout) {
+[data-theme="dark"] .page-body :where(div, span, p, li, td, tr, table, section, article):not(.card):not(.card-title):not(.card-meta):not(.exec-summary):not(.exec-summary-label):not(.framework-card):not(.framework-num):not(.framework-title):not(.framework-desc):not(.stat):not(.stat-num):not(.stat-label):not(.timeline-item):not(.timeline-date):not(.timeline-title):not(.timeline-org):not(.timeline-desc):not(.pull-quote):not(.project-card):not(.project-card-head):not(.project-icon):not(.project-title):not(.project-desc):not(.project-tags):not(.project-link):not(.badge):not(.section-divider):not(.contact-tile):not(.contact-icon):not(.contact-label):not(.contact-value):not(.btn-row):not(.callout):not(.icon-chip) {
   background-color: transparent !important;
   color: var(--text-dim) !important;
   border-color: var(--line) !important;

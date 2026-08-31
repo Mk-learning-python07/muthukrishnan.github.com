@@ -43,6 +43,6 @@ permalink: /research/
 </div>
 
 <div class="pull-quote">
-  <p>"Moving closer to industrial-scale deployment of MOF-based carbon capture — reducing energy penalty and equipment footprint."</p>
-  <cite>&mdash; Research Statement</cite>
+  <p>"By optimizing these cycles, we can move closer to industrial-scale deployment of MOF-based carbon capture, reducing the energy penalty and equipment footprint for the energy sector."</p>
+  <cite>&mdash; Industry Impact</cite>
 </div>

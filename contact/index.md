@@ -11,16 +11,12 @@ permalink: /contact/
 </div>
 
 <div class="contact-grid">
-  <a href="mailto:{{ site.email }}" class="contact-tile">
+  <a href="mailto:muthu.krishnan1@hotmail.com" class="contact-tile">
     <div class="contact-icon"><i class="fas fa-envelope" aria-hidden="true"></i></div>
-    <div><div class="contact-label">Email</div><div class="contact-value">{{ site.email }}</div></div>
+    <div><div class="contact-label">Email</div><div class="contact-value">muthu.krishnan1@hotmail.com</div></div>
   </a>
-  <a href="{{ site.linkedin }}" target="_blank" rel="noopener noreferrer" class="contact-tile">
+  <a href="https://www.linkedin.com/in/muthu-krishnan1/" target="_blank" rel="noopener noreferrer" class="contact-tile">
     <div class="contact-icon"><i class="fab fa-linkedin-in" aria-hidden="true"></i></div>
     <div><div class="contact-label">LinkedIn</div><div class="contact-value">muthu-krishnan1</div></div>
   </a>
-  <div class="contact-tile">
-    <div class="contact-icon"><i class="fas fa-location-dot" aria-hidden="true"></i></div>
-    <div><div class="contact-label">Location</div><div class="contact-value">Edmonton, Alberta, Canada</div></div>
-  </div>
 </div>

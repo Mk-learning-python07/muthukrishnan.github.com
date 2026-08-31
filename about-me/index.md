@@ -1,13 +1,15 @@
 ---
 layout: default
 title: About Me
-description: Chemical engineer, process safety specialist, carbon-capture researcher.
+description: Process engineer and gas adsorption-based separation technology researcher (carbon capture).
 permalink: /about-me/
 ---
 
+<img src="{{ site.baseurl }}/Files/MK_ID_Photo.jpg" alt="Muthukrishnan Anand" class="profile-photo">
+
 <p>Growing up in India, I was drawn to engineering as a way to solve resource scarcity. That curiosity led to Chemical Engineering at NIT Trichy, and from there to five years with ExxonMobil — onsite at the Hebron and Hibernia offshore assets in Newfoundland, and before that, remote technical support across gas and NGL operations worldwide from Bengaluru.</p>
 
-<p>The work varied — commissioning novel level-measurement technology, untangling why a heat exchanger kept fouling, building the exception-based surveillance workflows that catch problems before they become outages — but the thread running through it was always the same: use data and simulation to make a process safer and more efficient than it was yesterday.</p>
+<p>Some of the best problems don't come with a manual. When an overpressure incident took Hebron's water injection system offline, I helped build the risk screening that got it safely restarted. When a heat exchanger kept fouling at a gas plant in Papua New Guinea, I built machine-learning models to predict it before it happened. When a control valve's failure history hinted at more risk than anyone had quantified, I turned it into an <strong>$11.7M</strong> mitigation plan. The instinct is always the same: find the real problem hiding in the data, then fix it before it becomes an outage.</p>
 
 <p>That's the same instinct I'm chasing now as an M.Sc. candidate at the University of Alberta under Prof. Arvind Rajendran — except the process in question is pulling carbon out of the air, and the tool is a structured adsorbent called CALF-20.</p>
 
@@ -23,25 +25,22 @@ permalink: /about-me/
   <span class="badge">SAS JMP</span>
 </p>
 
-<h2>Areas of Expertise</h2>
-<p>
-  <span class="badge">Upstream Operations</span>
-  <span class="badge">Process Safety</span>
-  <span class="badge">Process Modelling</span>
-  <span class="badge">Adsorption-Based Separation</span>
-  <span class="badge">Regulatory Compliance</span>
-  <span class="badge">Heat Exchanger Performance</span>
-</p>
-
 <h2>Languages</h2>
 <p>
-  <span class="badge">English</span>
-  <span class="badge">Tamil</span>
-  <span class="badge">Hindi</span>
+  <span class="icon-chip"><img src="{{ site.baseurl }}/Files/en-icon.png" alt="">English</span>
+  <span class="icon-chip"><img src="{{ site.baseurl }}/Files/ta-icon.png" alt="">Tamil</span>
+  <span class="icon-chip"><img src="{{ site.baseurl }}/Files/hi-icon.png" alt="">Hindi</span>
 </p>
 
 <div class="section-divider"><span>Outside the Lab</span></div>
-<p>Music, cricket, sci-fi thrillers, travel, and the occasional motorcycle ride.</p>
+<p>
+  <span class="icon-chip"><img src="{{ site.baseurl }}/Files/music.png" alt="">Music</span>
+  <span class="icon-chip"><img src="{{ site.baseurl }}/Files/crime-icon.png" alt="">Crime Thrillers</span>
+  <span class="icon-chip"><img src="{{ site.baseurl }}/Files/travel-icon.png" alt="">Travel</span>
+  <span class="icon-chip"><img src="{{ site.baseurl }}/Files/motorcycle-icon.png" alt="">Motorcycles</span>
+  <span class="icon-chip"><img src="{{ site.baseurl }}/Files/movies.png" alt="">Movies</span>
+</p>
+<p style="text-align:center;font-size:.85rem;color:var(--text-faint);">...and cricket, whenever there's a match on.</p>
 
 <div class="pull-quote">
   <p>"Bridging the gap between field-proven operations and next-generation carbon capture technology."</p>
