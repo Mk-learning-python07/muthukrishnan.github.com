@@ -27,16 +27,40 @@ permalink: /about-me/
 </div>
 
 <h2>Toolkit</h2>
-<p>
-  <span class="badge">Aspen HYSYS</span>
-  <span class="badge">HTRI</span>
-  <span class="badge">ProMax</span>
-  <span class="badge">Python</span>
-  <span class="badge">MATLAB</span>
-  <span class="badge">SEEQ</span>
-  <span class="badge">AVEVA PI</span>
-  <span class="badge">SAS JMP</span>
-</p>
+<div class="expertise-grid">
+  <div class="expertise-item">
+    <img src="{{ site.baseurl }}/Files/aspen-hysys.png" alt="Aspen HYSYS" class="expertise-icon">
+    <p class="expertise-label">Aspen HYSYS</p>
+  </div>
+  <div class="expertise-item">
+    <img src="{{ site.baseurl }}/Files/htri.png" alt="HTRI" class="expertise-icon">
+    <p class="expertise-label">HTRI</p>
+  </div>
+  <div class="expertise-item">
+    <img src="{{ site.baseurl }}/Files/promax.png" alt="ProMax" class="expertise-icon">
+    <p class="expertise-label">ProMax</p>
+  </div>
+  <div class="expertise-item">
+    <img src="{{ site.baseurl }}/Files/python.png" alt="Python" class="expertise-icon">
+    <p class="expertise-label">Python</p>
+  </div>
+  <div class="expertise-item">
+    <img src="{{ site.baseurl }}/Files/matlab.png" alt="MATLAB" class="expertise-icon">
+    <p class="expertise-label">MATLAB</p>
+  </div>
+  <div class="expertise-item">
+    <img src="{{ site.baseurl }}/Files/seeq.png" alt="SEEQ" class="expertise-icon">
+    <p class="expertise-label">SEEQ</p>
+  </div>
+  <div class="expertise-item">
+    <img src="{{ site.baseurl }}/Files/aveva-pi.png" alt="AVEVA PI" class="expertise-icon">
+    <p class="expertise-label">AVEVA PI</p>
+  </div>
+  <div class="expertise-item">
+    <img src="{{ site.baseurl }}/Files/sas-jmp.png" alt="SAS JMP" class="expertise-icon">
+    <p class="expertise-label">SAS JMP</p>
+  </div>
+</div>
 
 <h2>Languages</h2>
 <p>
