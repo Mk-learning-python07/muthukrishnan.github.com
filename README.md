@@ -1,6 +1,6 @@
 # 🖥️ Muthukrishnan Anand's Personal Website
 
-Welcome to my personal website! 🚀 This site serves as an online portfolio showcasing my **professional journey**, **research** work, and how to **contact** me. It's built using **Jekyll**, designed with the **Cayman theme**, and leverages **ChatGPT** for technical support and content curation.<br>
+Welcome to my personal website! 🚀 This site serves as an online portfolio showcasing my **professional journey**, **research** work, and how to **contact** me. It's built using **Jekyll**, designed with the **Cayman theme**, and leverages **LLM (Claude)** for technical support and content curation.<br>
 
 
 ## 📑 Table of Contents
