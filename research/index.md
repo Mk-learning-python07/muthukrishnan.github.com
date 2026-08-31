@@ -7,10 +7,10 @@ permalink: /research/
 
 <div class="exec-summary">
   <span class="exec-summary-label">Research Focus</span>
-  <p>Optimizing Pressure Vacuum Swing Adsorption (PVSA) cycles for post-combustion CO&#8322; capture using CALF-20 MOF structured contactors — benchmarked against traditional packed beds.</p>
+  <p>Optimizing Pressure Vacuum Swing Adsorption (PVSA) cycles for post-combustion CO&#8322; capture using CALF-20 MOF structured contactors - benchmarked against traditional packed beds.</p>
 </div>
 
-<div class="card-meta" style="text-align:center;">M.Sc. Thesis &middot; University of Alberta (2024 &ndash; Present) &middot; Advisor: Prof. Arvind Rajendran</div>
+<div class="card-meta" style="text-align:center;">M.Sc. Thesis &middot; University of Alberta (2024 - Present) &middot; Advisor: Prof. Arvind Rajendran</div>
 
 <div class="stat-row">
   <div class="stat"><span class="stat-num">38B</span><span class="stat-label">Tonnes CO&#8322; (2024)</span></div>
@@ -28,7 +28,7 @@ permalink: /research/
   <div class="framework-card">
     <span class="framework-num">02</span>
     <div class="framework-title">Configure</div>
-    <div class="framework-desc">Structured contactors vs. packed beds — evaluating pressure drop and mass transfer trade-offs.</div>
+    <div class="framework-desc">Structured contactors vs. packed beds - evaluating pressure drop and mass transfer trade-offs.</div>
   </div>
   <div class="framework-card">
     <span class="framework-num">03</span>
@@ -44,5 +44,5 @@ permalink: /research/
 
 <div class="pull-quote">
   <p>"By optimizing these cycles, we can move closer to industrial-scale deployment of MOF-based carbon capture, reducing the energy penalty and equipment footprint for the energy sector."</p>
-  <cite>&mdash; Industry Impact</cite>
+  <cite>- Industry Impact</cite>
 </div>

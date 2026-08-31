@@ -1,13 +1,13 @@
 ---
 layout: default
 title: Apps & Tools
-description: Small tools and interactive apps I've built — mostly Python, mostly research-adjacent.
+description: Small tools and interactive apps I've built - mostly Python, mostly research-adjacent.
 permalink: /apps/
 ---
 
 <div class="exec-summary">
   <span class="exec-summary-label">What's here</span>
-  <p>A running list of small tools and visual apps I build on the side — mostly Python, mostly scratching a research or curiosity itch. Try them directly in the browser, or read the code on GitHub.</p>
+  <p>A running list of small tools and visual apps I build on the side - mostly Python, mostly scratching a research or curiosity itch. Try them directly in the browser, or read the code on GitHub.</p>
 </div>
 
 <h2>Featured</h2>
@@ -18,7 +18,7 @@ permalink: /apps/
       <div class="project-icon"><i class="fas fa-chart-line"></i></div>
       <div class="project-title">Isotherm &amp; IAST Explorer</div>
     </div>
-    <p class="project-desc">Fit 12 isotherm models, predict binary competitive adsorption via Ideal Adsorbed Solution Theory (IAST), and analyze selectivity — publication-quality charts, all in the browser.</p>
+    <p class="project-desc">Fit 12 isotherm models, predict binary competitive adsorption via Ideal Adsorbed Solution Theory (IAST), and analyze selectivity - publication-quality charts, all in the browser.</p>
     <div class="project-tags">
       <span class="badge">Adsorption</span>
       <span class="badge">IAST</span>
@@ -34,7 +34,7 @@ permalink: /apps/
       <div class="project-icon"><i class="fas fa-book-open"></i></div>
       <div class="project-title">Paper Visualizer</div>
     </div>
-    <p class="project-desc">A scrolling visual breakdown of "Vector Acceleration for Adsorption CSS Convergence" — idea flow, math, and results in one continuous read.</p>
+    <p class="project-desc">A scrolling visual breakdown of "Vector Acceleration for Adsorption CSS Convergence" - idea flow, math, and results in one continuous read.</p>
     <div class="project-tags">
       <span class="badge">Research</span>
       <span class="badge">Data Viz</span>
@@ -42,6 +42,22 @@ permalink: /apps/
     </div>
     <a href="{{ site.baseurl }}/apps/vector-acceleration.html" class="project-link">
       <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i> Open App
+    </a>
+  </div>
+
+  <div class="project-card">
+    <div class="project-card-head">
+      <div class="project-icon"><i class="fas fa-dna"></i></div>
+      <div class="project-title">NSGA-II Optimization Reference</div>
+    </div>
+    <p class="project-desc">A personal technical reference on multi-objective optimization with pymoo's NSGA-II - parameters, kwargs, and worked examples from hands-on exposure. Directly relevant to Purity-vs-Recovery trade-offs in PVSA cycle design.</p>
+    <div class="project-tags">
+      <span class="badge">Python</span>
+      <span class="badge">Optimization</span>
+      <span class="badge">Documentation</span>
+    </div>
+    <a href="{{ site.baseurl }}/apps/nsga2-optimization/" class="project-link">
+      <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i> Open Reference
     </a>
   </div>
 

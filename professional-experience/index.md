@@ -7,7 +7,7 @@ permalink: /professional-experience/
 
 <div class="exec-summary">
   <span class="exec-summary-label">Track Record</span>
-  <p>Five years across offshore and remote upstream operations — commissioning new instrumentation, leading targeted safety and reliability projects, and grounding it all in exception-based process surveillance.</p>
+  <p>Five years across offshore and remote upstream operations - commissioning new instrumentation, leading targeted safety and reliability projects, and grounding it all in exception-based process surveillance.</p>
 </div>
 
 <div class="stat-row">
@@ -21,12 +21,12 @@ permalink: /professional-experience/
   <div class="framework-card">
     <span class="framework-num">01</span>
     <div class="framework-title">New Tech Qualification</div>
-    <div class="framework-desc">Commissioned <strong>Electrical Tomography</strong> 3-phase level tech at Hebron — findings informed org-wide evaluation against incumbent Nuclear Level technology.</div>
+    <div class="framework-desc">Commissioned <strong>Electrical Tomography</strong> 3-phase level tech at Hebron - findings informed org-wide evaluation against incumbent Nuclear Level technology.</div>
   </div>
   <div class="framework-card">
     <span class="framework-num">02</span>
     <div class="framework-title">Project Leadership</div>
-    <div class="framework-desc">Led a <strong>$1.7M</strong> exhaust-stack remediation at Hebron from scope definition through offshore execution — on time, within budget.</div>
+    <div class="framework-desc">Led a <strong>$1.7M</strong> exhaust-stack remediation at Hebron from scope definition through offshore execution - on time, within budget.</div>
   </div>
   <div class="framework-card">
     <span class="framework-num">03</span>
@@ -51,7 +51,7 @@ permalink: /professional-experience/
   <div class="framework-card">
     <span class="framework-num">07</span>
     <div class="framework-title">GHG Mitigation</div>
-    <div class="framework-desc">Quantified CO&#8322;(eq) abatement for a flare reduction opportunity — <strong>CAD 15.2M @ NPV8%</strong> on carbon credits — and initiated the concept study with EPC.</div>
+    <div class="framework-desc">Quantified CO&#8322;(eq) abatement for a flare reduction opportunity - <strong>CAD 15.2M @ NPV8%</strong> on carbon credits - and initiated the concept study with EPC.</div>
   </div>
   <div class="framework-card">
     <span class="framework-num">08</span>
@@ -63,10 +63,10 @@ permalink: /professional-experience/
 <h2>Timeline</h2>
 <div class="timeline">
   <div class="timeline-item">
-    <div class="timeline-date">Dec 2022 &mdash; Aug 2024</div>
+    <div class="timeline-date">Dec 2022 - Aug 2024</div>
     <div class="timeline-title">Process Engineer</div>
     <div class="timeline-org">ExxonMobil Canada Energy &middot; St. John's, NL</div>
-    <div class="timeline-desc">Onsite technical support for Hebron operations — process monitoring, optimization, safety, and asset modifications.</div>
+    <div class="timeline-desc">Onsite technical support for Hebron operations - process monitoring, optimization, safety, and asset modifications.</div>
     <p class="tag-row">
       <span class="badge">Management of Change (MoC)</span>
       <span class="badge">API RP14C / 14J / 520 / 521 / 526</span>
@@ -81,10 +81,10 @@ permalink: /professional-experience/
     </p>
   </div>
   <div class="timeline-item">
-    <div class="timeline-date">Jun 2019 &mdash; Nov 2022</div>
+    <div class="timeline-date">Jun 2019 - Nov 2022</div>
     <div class="timeline-title">Process Surveillance Engineer</div>
     <div class="timeline-org">ExxonMobil S&amp;T Pt. Ltd. &middot; Bengaluru, India</div>
-    <div class="timeline-desc">Remote process engineering support across global upstream assets — monitoring, safety, and optimization.</div>
+    <div class="timeline-desc">Remote process engineering support across global upstream assets - monitoring, safety, and optimization.</div>
     <p class="tag-row">
       <span class="badge">Brazed Aluminium Heat Exchangers (BAHX)</span>
       <span class="badge">Temperature Swing Adsorption (TSA)</span>

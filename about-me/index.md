@@ -7,11 +7,11 @@ permalink: /about-me/
 
 <img src="{{ site.baseurl }}/Files/Collage.png" alt="Muthukrishnan Anand" class="profile-collage" loading="lazy">
 
-<p>Growing up in India, I was drawn to engineering as a way to solve resource scarcity. That curiosity led to Chemical Engineering at NIT Trichy, and from there to five years with ExxonMobil — onsite at the Hebron and Hibernia offshore assets in Newfoundland, and before that, remote technical support across gas and NGL operations worldwide from Bengaluru.</p>
+<p>Growing up in India, I was drawn to engineering as a way to solve resource scarcity. That curiosity led to Chemical Engineering at NIT Trichy, then five years with ExxonMobil - onsite at Hebron and Hibernia in Newfoundland, and before that, remote support across gas and NGL operations from Bengaluru.</p>
 
-<p>Some of the best problems don't come with a manual. When an overpressure incident took Hebron's water injection system offline, I helped build the risk screening that got it safely restarted. When a heat exchanger kept fouling at a gas plant in Papua New Guinea, I built machine-learning models to predict it before it happened. When a control valve's failure history hinted at more risk than anyone had quantified, I turned it into an <strong>$11.7M</strong> mitigation plan. The instinct is always the same: find the real problem hiding in the data, then fix it before it becomes an outage.</p>
+<p>I went in as a naive student who barely knew what a control valve was, and came out five years later holding my own troubleshooting one on an offshore platform. Oil and gas taught me more than I expected, and honestly, I had a blast doing it.</p>
 
-<p>That's the same instinct I'm chasing now as an M.Sc. candidate at the University of Alberta under Prof. Arvind Rajendran — except the process in question is pulling carbon out of the air, and the tool is a structured adsorbent called CALF-20.</p>
+<p>That's the same instinct I'm chasing now as an M.Sc. candidate at the University of Alberta under Prof. Arvind Rajendran - except the process in question is pulling carbon out of the air, and the tool is a structured adsorbent called CALF-20.</p>
 
 <h2>Toolkit</h2>
 <p>
@@ -44,7 +44,7 @@ permalink: /about-me/
 
 <div class="pull-quote">
   <p>"Bridging the gap between field-proven operations and next-generation carbon capture technology."</p>
-  <cite>&mdash; About Me</cite>
+  <cite>- About Me</cite>
 </div>
 
 <div class="btn-row">
