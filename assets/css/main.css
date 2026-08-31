@@ -453,6 +453,21 @@ pre code { background: none; border: none; padding: 0; font-size: .875rem; }
 }
 .icon-chip img { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; display: inline-block; }
 
+/* Core expertise - larger icon over label, 3-across, restoring the
+   original site's icon treatment within the new design system */
+.expertise-grid {
+  display: flex; justify-content: center; flex-wrap: wrap;
+  gap: 2rem; margin: 2rem 0; text-align: center;
+}
+.expertise-item { flex: 1; min-width: 130px; max-width: 160px; }
+.expertise-icon {
+  width: 52px; height: 52px; margin: 0 auto .75rem; display: block;
+  object-fit: contain;
+}
+.expertise-label {
+  font-weight: 600; color: var(--text); font-size: .92rem; text-align: center;
+}
+
 /* Profile photo — single headshot, circular */
 .profile-photo {
   display: block; width: 148px; height: 148px; border-radius: 50%;
@@ -522,7 +537,7 @@ tr:hover td { background: var(--accent-glow); }
    untouched — no specificity fight, because excluded elements are
    simply never matched by this rule at all.
 ================================================================ */
-[data-theme="dark"] .page-body :where(div, span, p, li, td, tr, table, section, article):not(.card):not(.card-title):not(.card-meta):not(.exec-summary):not(.exec-summary-label):not(.framework-card):not(.framework-num):not(.framework-title):not(.framework-desc):not(.stat):not(.stat-num):not(.stat-label):not(.timeline-item):not(.timeline-date):not(.timeline-title):not(.timeline-org):not(.timeline-desc):not(.pull-quote):not(.project-card):not(.project-card-head):not(.project-icon):not(.project-title):not(.project-desc):not(.project-tags):not(.project-link):not(.badge):not(.section-divider):not(.contact-tile):not(.contact-icon):not(.contact-label):not(.contact-value):not(.btn-row):not(.callout):not(.icon-chip) {
+[data-theme="dark"] .page-body :where(div, span, p, li, td, tr, table, section, article):not(.card):not(.card-title):not(.card-meta):not(.exec-summary):not(.exec-summary-label):not(.framework-card):not(.framework-num):not(.framework-title):not(.framework-desc):not(.stat):not(.stat-num):not(.stat-label):not(.timeline-item):not(.timeline-date):not(.timeline-title):not(.timeline-org):not(.timeline-desc):not(.pull-quote):not(.project-card):not(.project-card-head):not(.project-icon):not(.project-title):not(.project-desc):not(.project-tags):not(.project-link):not(.badge):not(.section-divider):not(.contact-tile):not(.contact-icon):not(.contact-label):not(.contact-value):not(.btn-row):not(.callout):not(.icon-chip):not(.expertise-item):not(.expertise-label) {
   background-color: transparent !important;
   color: var(--text-dim) !important;
   border-color: var(--line) !important;

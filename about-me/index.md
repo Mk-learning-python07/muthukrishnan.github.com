@@ -7,11 +7,24 @@ permalink: /about-me/
 
 <img src="{{ site.baseurl }}/Files/Collage.png" alt="Muthukrishnan Anand" class="profile-collage" loading="lazy">
 
-<p>Growing up in India, I was drawn to engineering as a way to solve resource scarcity. That curiosity led to Chemical Engineering at NIT Trichy, then five years with ExxonMobil - onsite at Hebron and Hibernia in Newfoundland, and before that, remote support across gas and NGL operations from Bengaluru.</p>
+<p>Growing up in India, I was inspired by the idea that engineering could solve resource scarcity. This led me to pursue <strong>Chemical Engineering</strong> at <strong>NIT Trichy</strong>, which provided the foundation for my five-year tenure at <strong>ExxonMobil</strong>.</p>
 
-<p>I went in as a naive student who barely knew what a control valve was, and came out five years later holding my own troubleshooting one on an offshore platform. Oil and gas taught me more than I expected, and honestly, I had a blast doing it.</p>
+<p>Currently, as an <strong>M.Sc. candidate</strong> at the <strong>University of Alberta</strong>, I am investigating the optimization of structured adsorbents for carbon capture under <strong>Prof. Arvind Rajendran</strong>. My work bridges the gap between field-proven operations and the scale-up of <strong>Pressure Vacuum Swing Adsorption (PVSA)</strong> technology.</p>
 
-<p>That's the same instinct I'm chasing now as an M.Sc. candidate at the University of Alberta under Prof. Arvind Rajendran - except the process in question is pulling carbon out of the air, and the tool is a structured adsorbent called CALF-20.</p>
+<div class="expertise-grid">
+  <div class="expertise-item">
+    <img src="{{ site.baseurl }}/Files/python.png" alt="Python" class="expertise-icon">
+    <p class="expertise-label">Data Analytics</p>
+  </div>
+  <div class="expertise-item">
+    <img src="{{ site.baseurl }}/Files/aspen-hysys.png" alt="Aspen HYSYS" class="expertise-icon">
+    <p class="expertise-label">Process Modeling</p>
+  </div>
+  <div class="expertise-item">
+    <img src="{{ site.baseurl }}/Files/seeq.png" alt="SEEQ" class="expertise-icon">
+    <p class="expertise-label">Asset Surveillance</p>
+  </div>
+</div>
 
 <h2>Toolkit</h2>
 <p>
