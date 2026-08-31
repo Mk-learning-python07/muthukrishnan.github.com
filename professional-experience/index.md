@@ -67,7 +67,7 @@ permalink: /professional-experience/
     <div class="timeline-title">Process Engineer</div>
     <div class="timeline-org">ExxonMobil Canada Energy &middot; St. John's, NL</div>
     <div class="timeline-desc">Onsite technical support for Hebron operations — process monitoring, optimization, safety, and asset modifications.</div>
-    <p>
+    <p class="tag-row">
       <span class="badge">Management of Change (MoC)</span>
       <span class="badge">API RP14C / 14J / 520 / 521 / 526</span>
       <span class="badge">API MPMS</span>
@@ -85,7 +85,7 @@ permalink: /professional-experience/
     <div class="timeline-title">Process Surveillance Engineer</div>
     <div class="timeline-org">ExxonMobil S&amp;T Pt. Ltd. &middot; Bengaluru, India</div>
     <div class="timeline-desc">Remote process engineering support across global upstream assets — monitoring, safety, and optimization.</div>
-    <p>
+    <p class="tag-row">
       <span class="badge">Brazed Aluminium Heat Exchangers (BAHX)</span>
       <span class="badge">Temperature Swing Adsorption (TSA)</span>
       <span class="badge">NGL Fractionation &amp; Propane Refrigeration</span>

@@ -434,7 +434,13 @@ pre code { background: none; border: none; padding: 0; font-size: .875rem; }
 .card-meta { font-size: .78rem; color: var(--text-faint); margin-bottom: .75rem; }
 
 /* Badges */
-.badge { display: inline-block; font-size: .72rem; font-weight: 500; padding: .2rem .65rem; border-radius: 999px; background: var(--accent-glow); color: var(--accent); border: 1px solid var(--line); margin: .15rem; }
+.badge { display: inline-block; font-size: .72rem; font-weight: 500; padding: .2rem .65rem; border-radius: 999px; background: var(--accent-glow); color: var(--accent); border: 1px solid var(--line); margin: .15rem; text-align: left; }
+
+/* Tag row — justifies a wrapped list of badges so blank space is
+   distributed evenly between them (including the last line), rather
+   than left-hugging with all the slack on the right */
+.tag-row { text-align: justify; text-align-last: justify; margin-top: .75rem; }
+.tag-row::after { content: ''; display: inline-block; width: 100%; }
 
 /* Icon chip — badge with a small image, for languages/interests */
 .icon-chip {

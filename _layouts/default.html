@@ -91,15 +91,13 @@
       <div class="page-hero">
         <span class="hero-num" aria-hidden="true">{{ section_num }}</span>
         <div class="page-hero-inner">
+          <p class="hero-eyebrow">{{ site.tagline | default: "Process Engineer & Carbon Capture Researcher" }}</p>
           {% if page.title %}
-            <p class="hero-eyebrow">{{ site.title }}</p>
             <h1 class="hero-title">{{ page.title }}</h1>
-            {% if page.description %}<p class="hero-tagline">{{ page.description }}</p>{% endif %}
           {% else %}
-            <p class="hero-eyebrow">Portfolio</p>
             <h1 class="hero-title">{{ site.title }}</h1>
-            <p class="hero-tagline">{{ site.description }}</p>
           {% endif %}
+          {% if page.description %}<p class="hero-tagline">{{ page.description }}</p>{% endif %}
         </div>
       </div>
 
