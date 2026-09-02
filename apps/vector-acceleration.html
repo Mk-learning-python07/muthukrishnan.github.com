@@ -283,10 +283,31 @@ h1.hero-title em{font-style:italic; color:var(--cyan)}
 
 /* ---------- Footer ---------- */
 footer{
-  padding:60px 8vw 90px; border-top:1px solid var(--line); background:var(--ink);
-  font-family:var(--mono); font-size:11.5px; color:var(--paper-faint); line-height:1.8;
+  padding:28px clamp(20px,4vw,64px) 36px;
+  border-top:1px solid var(--line); background:var(--ink);
 }
-footer a{color:var(--cyan); text-decoration:none}
+.foot-inner{
+  max-width:1100px; margin:0 auto;
+  display:flex; flex-wrap:wrap; gap:16px 40px;
+  align-items:center; justify-content:space-between;
+}
+.foot-lic{ display:flex; align-items:center; gap:14px; flex:1; min-width:240px; }
+.cc-badge{ display:inline-flex; gap:4px; text-decoration:none; }
+.cc-mark{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:26px; height:26px; border-radius:50%;
+  border:1.5px solid var(--paper-faint); color:var(--paper);
+  font-size:11px; font-weight:700; font-family:var(--mono);
+}
+.foot-lic-txt{ font-size:11.5px; color:var(--paper-faint); line-height:1.55; }
+.foot-lic-txt b{ color:var(--paper); }
+.foot-lic-txt a{ color:var(--cyan); text-decoration:none; }
+.foot-lic-txt a:hover{ text-decoration:underline; }
+.foot-credit{ font-size:11px; color:var(--paper-faint); line-height:1.5; max-width:420px; }
+.foot-heart{ color:var(--cyan); }
+.foot-privacy{ font-size:10.5px; color:var(--paper-faint); margin-top:6px; }
+.foot-privacy a{ color:var(--paper-faint); text-decoration:none; }
+.foot-privacy a:hover{ color:var(--cyan); }
 </style>
 </head>
 <body>
@@ -515,9 +536,29 @@ footer a{color:var(--cyan); text-decoration:none}
 </section>
 
 <footer>
-  Subraveti, S. G.; Karimi, K.; Gazzani, M. &mdash; <i>Vector Acceleration Methods for Faster Convergence of Cyclic Steady State in Adsorption Process Simulations.</i> Ind. Eng. Chem. Res. 2026, 65, 9656&ndash;9669.<br>
-  <a href="https://doi.org/10.1021/acs.iecr.6c00407" target="_blank">doi.org/10.1021/acs.iecr.6c00407</a> &middot; CC-BY 4.0 &middot; Summary visualization, not affiliated with the authors.
+  <div class="foot-inner">
+    <div class="foot-lic">
+      <a rel="license" href="https://creativecommons.org/licenses/by/4.0/" target="_blank" class="cc-badge" aria-label="Creative Commons Attribution 4.0 International License">
+        <span class="cc-mark">CC</span><span class="cc-mark">BY</span>
+      </a>
+      <div class="foot-lic-txt">
+        <div><b>Vector Acceleration — Paper Visualizer</b> &copy; <span id="footYear"></span> <b>Muthukrishnan Anand</b></div>
+        <div>Licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution 4.0 International License (CC BY 4.0)</a>. You may share and adapt this work with attribution.</div>
+        <div style="margin-top:4px;font-size:10.5px;color:var(--paper-faint);">Paper: Subraveti, S. G.; Karimi, K.; Gazzani, M. &mdash; <i>Vector Acceleration Methods for Faster Convergence of Cyclic Steady State in Adsorption Process Simulations.</i> Ind. Eng. Chem. Res. 2026, 65, 9656&ndash;9669. <a href="https://doi.org/10.1021/acs.iecr.6c00407" target="_blank">doi:10.1021/acs.iecr.6c00407</a> &middot; Summary visualization, not affiliated with the authors.</div>
+      </div>
+    </div>
+    <div class="foot-credit">
+      Built with <span class="foot-heart">&#9829;</span> using <b>Claude Code</b><br>
+      <span style="font-size:10.5px;opacity:0.75;">This app runs entirely in your browser &mdash; no data is collected or shared.</span><br>
+      <span style="font-size:10px;opacity:0.6;display:block;margin-top:5px;"><b>For educational use.</b> These tools are built on established theory and methods, but outputs should always be validated against your own data and reviewed with engineering judgement before use in any design or decision-making context. The author accepts no liability for results applied beyond their intended educational purpose.</span>
+    </div>
+  </div>
 </footer>
+
+<script>
+  var fy = document.getElementById('footYear');
+  if(fy) fy.textContent = new Date().getFullYear();
+</script>
 
 <div class="node-tip" id="tip"><div class="tt-flag" id="tip-flag"></div><div class="tt-name" id="tip-name"></div><div id="tip-body"></div></div>
 
