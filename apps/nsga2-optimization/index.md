@@ -6,7 +6,7 @@ permalink: /apps/nsga2-optimization/
 ---
 
 <div class="callout">
-  <strong>Use at your own discretion.</strong> This is a personal reference compiled from hands-on exposure with pymoo's NSGA-II implementation for multi-objective optimization - the kind of Purity-vs-Recovery, Recovery-vs-Productivity trade-offs that come up directly in PVSA cycle design. It's shared as an open resource, not a validated or maintained package. Defaults, examples, and recommendations below reflect the library's documentation and my own usage - verify against your own problem before relying on them.
+  <strong>For educational use.</strong> This reference is compiled from hands-on exposure with pymoo's NSGA-II implementation. It is shared as an open resource — outputs and recommendations should always be validated against your own problem and reviewed with engineering judgement before use in any design or decision-making context. The author accepts no liability for results applied beyond this intended educational purpose.
 </div>
 
 
@@ -1268,3 +1268,16 @@ NSGA2(
 ---
 
 *Documentation compiled from the official [pymoo documentation](https://pymoo.org/algorithms/moo/nsga2.html) (v0.6.1.6), source code at [github.com/anyoptimization/pymoo](https://github.com/anyoptimization/pymoo), and Deb et al. (2002). For the latest API changes always refer to the pymoo GitHub repository.*
+
+<div style="margin-top:2.5rem;padding:1.25rem 1.5rem;background:var(--bg-alt);border:1px solid var(--line);border-radius:var(--radius-sm,8px);font-size:.82rem;color:var(--text-dim);line-height:1.6;">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:.6rem;flex-wrap:wrap;">
+    <a rel="license" href="https://creativecommons.org/licenses/by/4.0/" target="_blank" style="display:inline-flex;gap:4px;text-decoration:none;" aria-label="CC BY 4.0">
+      <span style="display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;border:1.5px solid var(--text-dim);color:var(--text);font-size:10px;font-weight:700;">CC</span>
+      <span style="display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;border:1.5px solid var(--text-dim);color:var(--text);font-size:10px;font-weight:700;">BY</span>
+    </a>
+    <strong style="color:var(--text);">NSGA-II Optimization Reference</strong> &copy; <span id="nsga2Year"></span> <strong style="color:var(--text);">Muthukrishnan Anand</strong>
+  </div>
+  Licensed under a <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" style="color:var(--accent);">Creative Commons Attribution 4.0 International License (CC BY 4.0)</a>. You may share and adapt this work with attribution. Built with <span style="color:var(--accent);">&#9829;</span> using Claude Code.
+</div>
+
+<script>var el=document.getElementById('nsga2Year');if(el)el.textContent=new Date().getFullYear();</script>
