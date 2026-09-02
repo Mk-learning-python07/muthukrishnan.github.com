@@ -6,26 +6,30 @@
 <title>Vector Acceleration for Adsorption CSS Convergence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<!-- SRI hash: run this on your machine and paste into integrity="sha384-HASH":
-     curl -s https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.27.0/plotly.min.js | openssl dgst -sha384 -binary | openssl base64 -A -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.27.0/plotly.min.js" integrity="sha384-Hl48Kq2HifOWdXEjMsKo6qxqvRLTYqIGbvlENBmkHAxZKIGCXv43H6W1jA671RzC" crossorigin="anonymous"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.27.0/plotly.min.js"></script>
 <style>
 :root{
-  --ink:#0b0f16;
-  --ink-2:#111826;
-  --ink-3:#171f2f;
-  --paper:#edeff3;
-  --paper-dim:#9aa3b5;
-  --paper-faint:#5b6478;
-  --cyan:#5eead4;
-  --cyan-dim:#2c7266;
-  --amber:#f5a623;
-  --coral:#fb6f63;
+  /* Aligned to the shared personal-ui-kit palette: same bg/text/line/accent
+     hues as the dashboard-style apps, kept as a 3-step ink scale (ink/ink-2/
+     ink-3) since this page uses solid section backgrounds rather than glass
+     panels. --indigo stays as a bespoke categorical color for the multi-class
+     diagram (it distinguishes data categories, not brand identity, so it
+     isn't part of the shared token set). */
+  --ink:#080e0c;
+  --ink-2:#0d1613;
+  --ink-3:#11201c;
+  --paper:#ddeee8;
+  --paper-dim:#93b0a6;
+  --paper-faint:#516962;
+  --cyan:#4fd6b8;
+  --cyan-dim:#1f5a4c;
+  --amber:#f0cb6a;
+  --coral:#e05a6a;
   --indigo:#8b93f8;
-  --line:#212a3b;
+  --line:#162320;
   --serif:'Fraunces', serif;
-  --sans:'IBM Plex Sans', sans-serif;
+  --sans:'Inter', system-ui, sans-serif;
   --mono:'IBM Plex Mono', monospace;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -70,7 +74,7 @@ a{color:inherit}
 /* ---------- Mobile bottom nav (replaces side dots) ---------- */
 .mobilenav{
   display:none; position:fixed; bottom:0; left:0; right:0; z-index:100;
-  background:rgba(11,15,22,0.92); backdrop-filter:blur(8px);
+  background:rgba(8,14,12,0.92); backdrop-filter:blur(8px);
   border-top:1px solid var(--line);
   justify-content:space-around; padding:10px 6px calc(10px + env(safe-area-inset-bottom));
 }
@@ -82,7 +86,7 @@ a{color:inherit}
 }
 .mobilenav .mdot .dotpip{width:6px; height:6px; border-radius:50%; background:var(--line); transition:all .25s}
 .mobilenav .mdot.active{color:var(--cyan)}
-.mobilenav .mdot.active .dotpip{background:var(--cyan); box-shadow:0 0 6px rgba(94,234,212,.7)}
+.mobilenav .mdot.active .dotpip{background:var(--cyan); box-shadow:0 0 6px rgba(79,214,184,.7)}
 
 /* ---------- Progress bar ---------- */
 .progress{
@@ -289,7 +293,7 @@ footer a{color:var(--cyan); text-decoration:none}
 <noscript>
   <div style="position:fixed; inset:0; z-index:99999; background:#0b0f16; color:#edeff3; display:flex; align-items:center; justify-content:center; padding:40px; text-align:center; font-family:sans-serif;">
     <div style="max-width:420px;">
-      <p style="color:#f5a623; font-weight:700; margin-bottom:12px;">⚑ JavaScript is disabled or blocked</p>
+      <p style="color:#f0cb6a; font-weight:700; margin-bottom:12px;">⚑ JavaScript is disabled or blocked</p>
       <p style="color:#9aa3b5; line-height:1.6; font-size:.92rem;">This page needs JavaScript to render its diagrams and charts. If you're viewing this in a preview pane (e.g. iOS Quick Look, a Mail attachment, or a Files app tap-preview), try opening it directly in a full browser instead — e.g. Share → Open in Safari.</p>
     </div>
   </div>
@@ -622,8 +626,8 @@ document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
       ctx.beginPath(); ctx.arc(x,y,5,0,7); ctx.fillStyle=color; ctx.fill();
       ctx.beginPath(); ctx.arc(x,y,9,0,7); ctx.strokeStyle=color; ctx.globalAlpha=0.35; ctx.lineWidth=1.5; ctx.stroke(); ctx.globalAlpha=1;
     }
-    dotAt(oscillatingY,'#fb6f63');
-    dotAt(acceleratedY,'#5eead4');
+    dotAt(oscillatingY,'#e05a6a');
+    dotAt(acceleratedY,'#4fd6b8');
 
     if(!reduced){ t++; requestAnimationFrame(draw); }
   }
@@ -643,7 +647,7 @@ document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
   const W=1560,H=640;
   // organic, staggered positions -- not a rigid grid
   const NODES=[
-    { id:'problem', x:100, y:200, r:54, color:'#fb6f63', dark:'#7a2b25', key:false,
+    { id:'problem', x:100, y:200, r:54, color:'#e05a6a', dark:'#7a2b25', key:false,
       title:'Problem', body:'Why this paper exists. Successive substitution has linear convergence near CSS — cycle counts explode for strongly nonlinear adsorption systems, and optimization needs thousands of runs.' ,
       kids:[
         {x:44,y:340,r:28,label:'FPI is slow',key:false,title:'FPI is slow',body:'Linear convergence near the CSS solution can mean hundreds to thousands of cycles for nonlinear isotherms.'},
@@ -664,14 +668,14 @@ document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
         {x:668,y:62,r:30,label:'Class V ★',key:true,title:'⚑ Class V — best',body:'Corrects 𝒻(Δₙ), the FPI output — already closer to CSS. Its search direction aligns better with the dominant eigenmode.'},
         {x:645,y:258,r:26,label:'Class W',key:false,title:'Class W',body:'Uses the w-direction. Often ill-conditioned — C2 fails to converge for VSA within 500 cycles.'}
       ]},
-    { id:'tests', x:825, y:400, r:54, color:'#f5a623', dark:'#6b4a10', key:false,
+    { id:'tests', x:825, y:400, r:54, color:'#f0cb6a', dark:'#6b4a10', key:false,
       title:'Test cases', body:'Three processes with distinct cycle dynamics — pressure-driven, temperature-driven, and dilute trace-gas separation.',
       kids:[
         {x:758,y:528,r:26,label:'VSA\n4-step',key:false,title:'VSA (4-step)',body:'CO₂/N₂ on zeolite 13X. 340 baseline cycles; qCO₂ loading dominates 69% of the residual.'},
         {x:918,y:520,r:26,label:'TSA\n6-step',key:false,title:'TSA (6-step)',body:'28 baseline cycles. Slow heat transfer limits oscillation during acceleration compared to VSA.'},
         {x:895,y:278,r:28,label:'VTSA\n3-step',key:true,title:'⚑ VTSA (3-step)',body:'Dilute CH₄/CO₂ trace separation, validated in both Python and Fortran — proves the method is code-agnostic.'}
       ]},
-    { id:'results', x:1070, y:155, r:60, color:'#5eead4', dark:'#215c52', key:true,
+    { id:'results', x:1070, y:155, r:60, color:'#4fd6b8', dark:'#215c52', key:true,
       title:'⚑ Results', body:'The headline numbers — and the one that matters most: a consistent ~2× average speedup across 500 sampled operating conditions, not a cherry-picked case.',
       kids:[
         {x:1000,y:44,r:28,label:'VSA:\n4× faster',key:true,title:'⚑ VSA: 4× faster',body:'Graves-Morris hits CSS in 121 cycles at 23% of baseline compute time.'},
@@ -690,10 +694,10 @@ document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
   const defs=el('defs',{});
   const mainGrad=el('linearGradient',{id:'flowline',x1:'0',y1:'0',x2:'1',y2:'0'});
-  mainGrad.appendChild(el('stop',{offset:'0%','stop-color':'#fb6f63'}));
+  mainGrad.appendChild(el('stop',{offset:'0%','stop-color':'#e05a6a'}));
   mainGrad.appendChild(el('stop',{offset:'40%','stop-color':'#8b93f8'}));
-  mainGrad.appendChild(el('stop',{offset:'75%','stop-color':'#f5a623'}));
-  mainGrad.appendChild(el('stop',{offset:'100%','stop-color':'#5eead4'}));
+  mainGrad.appendChild(el('stop',{offset:'75%','stop-color':'#f0cb6a'}));
+  mainGrad.appendChild(el('stop',{offset:'100%','stop-color':'#4fd6b8'}));
   defs.appendChild(mainGrad);
   svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
   svg.appendChild(defs);
@@ -778,17 +782,17 @@ document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
       const kg=el('g',{style:'cursor:pointer'});
       if(kid.key){
-        kg.appendChild(el('circle',{cx:kid.x,cy:kid.y,r:kid.r+6,fill:'none',stroke:'#f5a623','stroke-width':'1.5','stroke-dasharray':'4 3','stroke-opacity':'0.7'}));
+        kg.appendChild(el('circle',{cx:kid.x,cy:kid.y,r:kid.r+6,fill:'none',stroke:'#f0cb6a','stroke-width':'1.5','stroke-dasharray':'4 3','stroke-opacity':'0.7'}));
       }
-      kg.appendChild(el('circle',{cx:kid.x,cy:kid.y,r:kid.r,fill:node.dark,'fill-opacity':'0.9',stroke:kid.key?'#f5a623':node.color,'stroke-width':kid.key?'2':'1.3'}));
+      kg.appendChild(el('circle',{cx:kid.x,cy:kid.y,r:kid.r,fill:node.dark,'fill-opacity':'0.9',stroke:kid.key?'#f0cb6a':node.color,'stroke-width':kid.key?'2':'1.3'}));
       const lines=wrapLabel(kid.label);
       lines.forEach((ln,i)=>{
         const ty=kid.y + (i-(lines.length-1)/2)*11 + 1;
-        const t=el('text',{x:kid.x,y:ty,'text-anchor':'middle','dominant-baseline':'central',fill:'#edeff3','font-size':'9.5','font-family':'IBM Plex Sans, sans-serif','font-weight':'600'});
+        const t=el('text',{x:kid.x,y:ty,'text-anchor':'middle','dominant-baseline':'central',fill:'#edeff3','font-size':'9.5','font-family':'Inter, sans-serif','font-weight':'600'});
         t.textContent=ln; kg.appendChild(t);
       });
       if(kid.key){
-        const star=el('text',{x:kid.x+kid.r-3,y:kid.y-kid.r+5,'text-anchor':'middle',fill:'#f5a623','font-size':'11','font-weight':'800'});
+        const star=el('text',{x:kid.x+kid.r-3,y:kid.y-kid.r+5,'text-anchor':'middle',fill:'#f0cb6a','font-size':'11','font-weight':'800'});
         star.textContent='⚑'; kg.appendChild(star);
       }
       kg.addEventListener('mouseenter',e=>showTip(e,kid));
@@ -800,18 +804,18 @@ document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
     // main node
     const mg=el('g',{style:'cursor:pointer'});
     if(node.key){
-      mg.appendChild(el('circle',{cx:node.x,cy:node.y,r:node.r+9,fill:'none',stroke:'#f5a623','stroke-width':'2','stroke-dasharray':'6 4','stroke-opacity':'0.75'}));
+      mg.appendChild(el('circle',{cx:node.x,cy:node.y,r:node.r+9,fill:'none',stroke:'#f0cb6a','stroke-width':'2','stroke-dasharray':'6 4','stroke-opacity':'0.75'}));
     }
     mg.appendChild(el('circle',{cx:node.x+2,cy:node.y+3,r:node.r,fill:node.dark,'fill-opacity':'0.5'}));
     mg.appendChild(el('circle',{cx:node.x,cy:node.y,r:node.r,fill:node.color,stroke:'#0b0f16','stroke-width':'2.5'}));
     const mlines=wrapLabel(node.title.replace('⚑ ',''));
     mlines.forEach((ln,i)=>{
       const ty=node.y + (i-(mlines.length-1)/2)*15 + 2;
-      const t=el('text',{x:node.x,y:ty,'text-anchor':'middle','dominant-baseline':'central',fill:'#0b0f16','font-size':'13','font-family':'IBM Plex Sans, sans-serif','font-weight':'700'});
+      const t=el('text',{x:node.x,y:ty,'text-anchor':'middle','dominant-baseline':'central',fill:'#0b0f16','font-size':'13','font-family':'Inter, sans-serif','font-weight':'700'});
       t.textContent=ln; mg.appendChild(t);
     });
     if(node.key){
-      const star=el('text',{x:node.x-node.r+8,y:node.y-node.r+10,'text-anchor':'middle',fill:'#f5a623','font-size':'15','font-weight':'800'});
+      const star=el('text',{x:node.x-node.r+8,y:node.y-node.r+10,'text-anchor':'middle',fill:'#f0cb6a','font-size':'15','font-weight':'800'});
       star.textContent='⚑'; mg.appendChild(star);
     }
     mg.addEventListener('mouseenter',e=>showTip(e,node));
@@ -850,7 +854,7 @@ function drawSankey(){
   Plotly.newPlot('sankey-chart',[{
     type:'sankey', orientation:'h', arrangement:'snap',
     node:{
-      pad:24, thickness:26, line:{color:'#212a3b',width:0.8},
+      pad:24, thickness:26, line:{color:'#162320',width:0.8},
       label:[
         "Class U methods\n(𝒜1, 𝒜4, Lemaréchal, Sedogbo)",
         "Class V methods ★\n(Graves-Morris, Zienkiewicz-Lohner,\nIrons-Tuck, B1)",
@@ -859,7 +863,7 @@ function drawSankey(){
         "TSA cycle\n(6-step, CO₂/N₂)\nBaseline: 28 cycles",
         "VTSA cycle\n(3-step, CH₄ trace)\nBaseline: 9 cycles"
       ],
-      color:["#8b93f8","#7c5cff","#5b6478","#f5a623","#fb9a3c","#fb6f63"],
+      color:["#8b93f8","#7c5cff","#5b6478","#f0cb6a","#fb9a3c","#e05a6a"],
       hovertemplate:"<b>%{label}</b><extra></extra>"
     },
     link:{
@@ -875,9 +879,9 @@ function drawSankey(){
     }
   }],{
     paper_bgcolor:'rgba(0,0,0,0)', plot_bgcolor:'rgba(0,0,0,0)',
-    font:{size:12,family:"'IBM Plex Sans',sans-serif",color:'#9aa3b5'},
+    font:{size:12,family:"'Inter',sans-serif",color:'#93b0a6'},
     margin:{l:10,r:10,t:10,b:10},
-    hoverlabel:{bgcolor:'#171f2f',bordercolor:'#212a3b',font:{color:'#edeff3',size:13}}
+    hoverlabel:{bgcolor:'#11201c',bordercolor:'#162320',font:{color:'#ddeee8',size:13}}
   },{responsive:true,displayModeBar:false});
   } catch(err){
     container.innerHTML = `<p style="font-family:var(--mono); font-size:.82rem; color:var(--coral);">Chart failed to render: ${err.message}</p>`;
