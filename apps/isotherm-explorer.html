@@ -534,6 +534,9 @@
       <button type="button" class="pill-btn pill-btn-primary" id="reportBtn" title="Generate a printable analysis report">
         <span>Generate Report</span>
       </button>
+      <button type="button" class="pill-btn" id="helpBtn" title="How to use this app / guided tour">
+        <span class="icon" aria-hidden="true">?</span><span>Guide</span>
+      </button>
       <button type="button" class="pill-btn" id="themeToggle" aria-pressed="false" aria-label="Switch to light mode">
         <span class="icon" id="themeIcon" aria-hidden="true">🌙</span><span id="themeLabel">Dark</span>
       </button>
@@ -545,7 +548,7 @@
     <!-- LEFT COLUMN -->
     <div>
       <!-- Sorbent library -->
-      <div class="panel">
+      <div class="panel" id="panelLibrary">
         <div class="section-label">Sorbent Library <span class="badge">PRESETS</span></div>
         <div class="control">
           <select id="sorbentSel" aria-label="Preset material / gas pair"></select>
@@ -561,7 +564,7 @@
       </div>
 
       <!-- Conditions -->
-      <div class="panel">
+      <div class="panel" id="panelConditions">
         <div class="section-label">Conditions</div>
 
         <div class="control">
@@ -832,6 +835,225 @@
     </div>
   </footer>
 
+<!-- ── Guided tour + How-to ────────────────────────────────────────────────── -->
+<style>
+  #tourOverlay{ position:fixed; inset:0; z-index:9000; display:none; }
+  #tourOverlay.on{ display:block; }
+  #tourScrim{ position:fixed; inset:0; background:transparent; cursor:default; }
+  #tourHole{ position:fixed; left:0; top:0; width:0; height:0; border-radius:12px; opacity:0;
+    pointer-events:none; background:transparent;
+    box-shadow:0 0 0 9999px rgba(2,10,8,0.70), 0 0 0 2px var(--co2), 0 0 26px 5px color-mix(in srgb,var(--co2) 45%,transparent);
+    transition:left .18s ease-out, top .18s ease-out, width .18s ease-out, height .18s ease-out, opacity .18s; }
+  html[data-theme="light"] #tourHole{
+    box-shadow:0 0 0 9999px rgba(8,26,20,0.48), 0 0 0 2px var(--co2), 0 0 22px 4px color-mix(in srgb,var(--co2) 40%,transparent); }
+  #tourPop{ position:fixed; left:50%; top:50%; width:360px; max-width:calc(100vw - 24px);
+    background:var(--panel); border:1px solid var(--panel-border-hover); border-radius:var(--radius);
+    box-shadow:var(--shadow); padding:16px 18px 14px; backdrop-filter:blur(8px);
+    transition:left .18s ease-out, top .18s ease-out; }
+  #tourPop h4{ font-size:14px; margin-bottom:7px; color:var(--co2); }
+  #tourPop p{ font-size:12.5px; line-height:1.62; color:var(--text-dim); }
+  #tourPop code{ font-family:var(--mono); font-size:11.5px; background:var(--co2-glow); padding:1px 4px; border-radius:3px; color:var(--text); }
+  #tourPop b{ color:var(--text); }
+  .tour-foot{ display:flex; align-items:center; gap:8px; margin-top:14px; }
+  .tour-foot .sp{ flex:1; }
+  #tourCount{ font-family:var(--mono); font-size:10.5px; color:var(--text-faint); letter-spacing:.06em; }
+  .tour-btn{ font:inherit; font-size:11.5px; padding:5px 12px; border-radius:var(--radius-sm); cursor:pointer;
+    border:1px solid var(--panel-border-hover); background:var(--panel-2); color:var(--text); }
+  .tour-btn:hover{ border-color:var(--co2); }
+  .tour-btn:disabled{ opacity:.35; cursor:default; }
+  .tour-btn.primary{ background:var(--co2); border-color:var(--co2); color:#04120e; font-weight:600; }
+  html[data-theme="light"] .tour-btn.primary{ color:#fff; }
+  #tourSkip{ background:none; border:none; color:var(--text-faint); font-size:11px; cursor:pointer; text-decoration:underline; }
+
+  /* interactive canvas charts */
+  .mp-bar{ position:absolute; top:6px; right:8px; display:flex; gap:3px; opacity:.42; transition:opacity .15s; }
+  .mp-host:hover .mp-bar, .mp-bar:hover{ opacity:1; }
+  .mp-bar button{ width:24px; height:24px; font:inherit; font-size:12px; line-height:1; cursor:pointer;
+    border:1px solid var(--panel-border); background:var(--panel); color:var(--text-dim);
+    border-radius:5px; display:flex; align-items:center; justify-content:center; padding:0; }
+  .mp-bar button:hover{ border-color:var(--co2); color:var(--text); }
+  .mp-bar button.on{ border-color:var(--co2); color:var(--co2); background:var(--co2-glow); }
+  .mp-pop{ position:fixed; inset:0; z-index:9200; background:rgba(0,0,0,0.72); backdrop-filter:blur(4px);
+    display:flex; align-items:center; justify-content:center; padding:26px; }
+  .mp-pop-box{ width:min(1400px,96vw); height:min(900px,92vh); background:var(--panel);
+    border:1px solid var(--panel-border-hover); border-radius:12px; box-shadow:var(--shadow);
+    display:flex; flex-direction:column; overflow:hidden; }
+  .mp-pop-head{ display:flex; align-items:center; gap:8px; padding:10px 14px; border-bottom:1px solid var(--line);
+    font-size:12.5px; color:var(--text); }
+  .mp-pop-head .sp{ flex:1; }
+  .mp-pop-body{ flex:1; position:relative; padding:6px 10px 10px; }
+  .mp-pop-body canvas{ border-radius:6px; }
+  .mp-pop .mp-bar{ opacity:1; }
+  .imp-box{ width:min(620px,94vw); background:var(--panel); border:1px solid var(--panel-border-hover);
+    border-radius:12px; box-shadow:var(--shadow); padding:20px 22px; }
+  .imp-box h4{ font-size:14px; margin-bottom:9px; color:var(--co2); }
+  .imp-box p, .imp-box li{ font-size:12.5px; line-height:1.6; color:var(--text-dim); }
+  .imp-box ul{ padding-left:20px; margin:8px 0 4px; }
+  .imp-box b{ color:var(--text); }
+  .imp-row{ display:flex; gap:8px; align-items:center; margin-top:16px; flex-wrap:wrap; }
+  .imp-row .sp{ flex:1; }
+  .mp-tip{ position:absolute; display:none; pointer-events:none; z-index:20; white-space:nowrap;
+    font-family:var(--mono); font-size:11px; line-height:1.5; padding:6px 9px; border-radius:5px;
+    background:var(--panel); border:1px solid var(--panel-border-hover); color:var(--text);
+    box-shadow:0 2px 10px rgba(0,0,0,0.35); }
+
+  #howtoModal{ position:fixed; inset:0; z-index:9100; display:none; background:rgba(0,0,0,0.6);
+    backdrop-filter:blur(3px); padding:40px 20px; overflow:auto; }
+  #howtoModal.on{ display:block; }
+  .howto-box{ max-width:940px; margin:0 auto; background:var(--panel); border:1px solid var(--panel-border-hover);
+    border-radius:14px; box-shadow:var(--shadow); overflow:hidden; }
+  .howto-head{ display:flex; align-items:center; gap:12px; padding:16px 22px; border-bottom:1px solid var(--line); }
+  .howto-head h3{ font-size:16px; }
+  .howto-head .sp{ flex:1; }
+  .howto-nav{ display:flex; gap:4px; padding:12px 22px 0; flex-wrap:wrap; }
+  .howto-nav button{ font:inherit; font-size:11.5px; padding:5px 11px; border-radius:20px; cursor:pointer;
+    border:1px solid transparent; background:var(--panel-2); color:var(--text-dim); }
+  .howto-nav button.active{ background:var(--co2-dim); border-color:var(--co2); color:var(--text); }
+  .howto-body{ padding:16px 24px 26px; }
+  .howto-sec{ display:none; }
+  .howto-sec[data-sec="start"]{ display:block; }
+  .howto-sec h5{ font-size:13px; margin:18px 0 7px; color:var(--co2); }
+  .howto-sec h5:first-child{ margin-top:0; }
+  .howto-sec p, .howto-sec li{ font-size:12.5px; line-height:1.68; color:var(--text-dim); }
+  .howto-sec ol, .howto-sec ul{ padding-left:20px; margin:6px 0; }
+  .howto-sec li{ margin:3px 0; }
+  .howto-sec b{ color:var(--text); }
+  .howto-sec code, .howto-sec kbd{ font-family:var(--mono); font-size:11.5px; background:var(--co2-glow);
+    padding:1px 5px; border-radius:3px; color:var(--text); }
+  .howto-tbl{ width:100%; border-collapse:collapse; margin:8px 0; font-size:12px; }
+  .howto-tbl th,.howto-tbl td{ text-align:left; padding:6px 9px; border-bottom:1px solid var(--line); vertical-align:top; }
+  .howto-tbl th{ color:var(--text); font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.05em; }
+  .howto-tbl td{ color:var(--text-dim); }
+  .howto-callout{ border-left:2px solid var(--amber); background:var(--amber-dim); padding:9px 13px;
+    border-radius:0 6px 6px 0; margin:12px 0; font-size:12px; color:var(--text-dim); }
+</style>
+
+<div id="tourOverlay" role="dialog" aria-modal="true" aria-label="Guided tour">
+  <div id="tourScrim"></div>
+  <div id="tourHole"></div>
+  <div id="tourPop">
+    <h4 id="tourTitle">Welcome</h4>
+    <p id="tourBody"></p>
+    <div class="tour-foot">
+      <span id="tourCount">1 / 12</span>
+      <button type="button" id="tourSkip">Skip</button>
+      <span class="sp"></span>
+      <button type="button" class="tour-btn" id="tourPrev">&larr; Back</button>
+      <button type="button" class="tour-btn primary" id="tourNext">Next &rarr;</button>
+    </div>
+  </div>
+</div>
+
+<div id="howtoModal" role="dialog" aria-modal="true" aria-label="How to use this app">
+  <div class="howto-box">
+    <div class="howto-head">
+      <h3>How to use the Isotherm &amp; IAST Explorer</h3>
+      <span class="sp"></span>
+      <button type="button" class="tour-btn primary" id="howtoTourBtn">Take the tour</button>
+      <button type="button" class="tour-btn" id="howtoClose">Close</button>
+    </div>
+    <div class="howto-nav">
+      <button type="button" class="active" data-go="start">Getting started</button>
+      <button type="button" data-go="models">Models &amp; fitting</button>
+      <button type="button" data-go="iast">Reading the IAST cards</button>
+      <button type="button" data-go="charts">Chart controls</button>
+      <button type="button" data-go="export">Export &amp; reporting</button>
+      <button type="button" data-go="limits">Limits &amp; pitfalls</button>
+    </div>
+    <div class="howto-body">
+
+      <div class="howto-sec" data-sec="start">
+        <h5>The five-minute path</h5>
+        <ol>
+          <li>Pick a <b>sorbent / gas pair</b> from the dropdown and press <code>Load</code>. Both components arrive with published parameters and a citation.</li>
+          <li>Set the <b>temperature</b> and the <b>P min / P max</b> window to your real operating conditions.</li>
+          <li>Check the two <b>component cards</b> — model choice and parameters — then press <b>Calculate</b>.</li>
+          <li>Read the pure isotherms, then scroll to the <b>IAST panel</b> for the binary prediction.</li>
+          <li>Optionally paste experimental data to validate, then <b>Generate Report</b>.</li>
+        </ol>
+        <h5>Bringing your own system</h5>
+        <p>Press <code>Import JSON</code> and the dialog offers a <b>blank template</b> (every field, with its units and the model options spelled out) as well as a <b>filled template</b> built from the shipped library. Fill either one in and load it back through the same button. <code>Save</code> / <code>Load</code> handle a whole case (both components, conditions, validation data). The current case is also mirrored into browser storage, so a refresh does not lose work.</p>
+        <p><b>y list</b> is the set of gas-phase mole fractions of component A used for the point table; <b>q max</b> left blank auto-scales the loading axis.</p>
+      </div>
+
+      <div class="howto-sec" data-sec="models">
+        <h5>Choosing a model</h5>
+        <p>Twelve isotherm models are available per component. The panel below each card renders the live equation and the meaning of every parameter, so the model is never a black box.</p>
+        <ul>
+          <li><b>Langmuir (SSL)</b> — one site type, saturating. The only model for which extended (competitive) Langmuir is thermodynamically consistent with IAST, and only when both q<sub>s</sub> are equal.</li>
+          <li><b>Dual-site Langmuir</b> — heterogeneous surfaces, the workhorse for CO<sub>2</sub> on zeolites.</li>
+          <li><b>Freundlich / Sips</b> — empirical heterogeneity. Note the Henry limit is not finite when n &ne; 1.</li>
+          <li><b>Tóth</b> — heterogeneous with correct Henry limit; &psi; is evaluated by quadrature rather than in closed form.</li>
+          <li><b>BET, anti-Langmuir</b> — multilayer and cooperative behaviour; both have a pole you must stay below.</li>
+        </ul>
+        <h5>Temperature dependence</h5>
+        <p>Affinity constants use <code>b(T) = b&#8320; exp(-&Delta;H / RT)</code>. Pick the basis (pressure or concentration) that matches how the parameters were reported — the label switches from &Delta;H to &Delta;U on a concentration basis, because that is what the fit actually contains.</p>
+        <h5>Validation</h5>
+        <p>Paste rows of <code>P_bar, y_A, q_exp</code> into the validation box, set the data temperature, and press <b>Plot &amp; compute fit stats</b>. You get R&sup2;, RMSE and AARD against the current parameters. Rows with <code>y = 1</code> or <code>y = 0</code> test the pure isotherms; intermediate <code>y</code> tests the IAST prediction itself.</p>
+      </div>
+
+      <div class="howto-sec" data-sec="iast">
+        <h5>What each card answers</h5>
+        <table class="howto-tbl">
+          <tr><th>Card</th><th>Question</th><th>Read it like this</th></tr>
+          <tr><td>x&ndash;y equilibrium</td><td>How strongly is A enriched in the adsorbed phase?</td><td>Distance above the diagonal is the separation. The curve can never cross the diagonal.</td></tr>
+          <tr><td>&psi; construction</td><td>Where does selectivity reverse?</td><td>Crossings of the two &psi; curves are exactly the pressures where S = 1.</td></tr>
+          <tr><td>Selectivity</td><td>Is S stable across composition and pressure?</td><td>Curves that fan out mean S depends strongly on feed composition — bad news for a fixed-cycle design.</td></tr>
+          <tr><td>Heat map</td><td>What happens anywhere in the P&ndash;y plane?</td><td>Click to pin a point; the two slice cards re-cut through it.</td></tr>
+          <tr><td>Slice at fixed y</td><td>q*(P) along an isopleth</td><td>The working capacity between adsorption and regeneration pressure.</td></tr>
+          <tr><td>Slice at fixed P</td><td>q*(y) at one pressure</td><td>Sensitivity of loading to feed composition swings.</td></tr>
+          <tr><td>Loading surface</td><td>q<sub>A</sub>(P, y) as a whole</td><td>A rotatable 3-D surface; drag to spin it, hover a vertex for its exact P, y and q.</td></tr>
+        </table>
+        <h5>Diagnostics</h5>
+        <p>The badges above the cards report, per component, the <b>Henry limit</b> (finite, zero or divergent), any <b>pole</b> in the isotherm, whether q(P) is monotonic, and whether &psi; is analytic or by quadrature. The <b>P trust</b> field sets the pressure beyond which you consider the pure isotherm untrustworthy; the summary flags cases where IAST needs a hypothetical pressure p<sup>0</sup><sub>i</sub> above that limit.</p>
+        <div class="howto-callout">A flagged extrapolation does not mean the answer is wrong — it means the answer rests on isotherm behaviour you never measured. Extend the fitting range or widen the trust limit deliberately, not by accident.</div>
+      </div>
+
+      <div class="howto-sec" data-sec="charts">
+        <h5>Interacting</h5>
+        <ul>
+          <li><b>Scroll</b> over any chart to zoom, <b>drag</b> to pan. The pure-isotherm and competitive-loading charts have the same toolbar as the IAST cards.</li>
+          <li>The toolbar on each card gives <b>box zoom</b> (drag a rectangle), <b>reset</b> (back to the full range) and <b>save</b>.</li>
+          <li><b>Hover</b> anywhere on a curve or a colour field to read exact values. The crosshair follows the cursor and a dot is placed on <i>every</i> curve at that abscissa, not just the first. On the heat map and the loading surface the tooltip includes the cursor's own <b>P</b> and <b>y</b> coordinates, not just the plotted quantity.</li>
+          <li>Line charts use a vertical hover, so a single hover reads both components at the same abscissa.</li>
+          <li><b>Click the heat map</b> to pin (P, y) and drive the two slice cards.</li>
+        </ul>
+        <h5>Pop out</h5>
+        <p>The <b>⤢</b> button opens the chart full screen. Type and line weights grow with the canvas, so a pop-out is genuinely more readable rather than the same chart stretched. Zoom and pan carry over, and you can download from there.</p>
+        <h5>Chemical names</h5>
+        <p>Component names are typeset as formulas wherever they appear on a chart: <code>CO2</code> becomes CO₂, <code>CH3OH</code> becomes CH₃OH, <code>Ca(OH)2</code> and <code>CuSO4·5H2O</code> keep their counts as subscripts, and an ionic charge such as <code>SO42-</code> is set as SO₄²⁻. Sloppy input is tolerated — <code>co2</code>, <code>h2o</code> and even <code>water</code> resolve to the right formula. Anything that is not a formula (<code>Zeolite 13X</code>, <code>MOF-74</code>, <code>Methane</code>) is left exactly as you typed it.</p>
+        <h5>Styling</h5>
+        <p>All IAST charts render through a built-in canvas renderer with a single readable profile: bold padded axis labels, ticks pointing in on all four sides, no grid and no legend frame: Roboto sans, bold padded axis labels, heavy 6&nbsp;pt frame, ticks pointing <b>in</b> on all four sides, no grid, no legend frame. On screen the point sizes are scaled down from the 18&nbsp;in reference figure; on export they are used at full size.</p>
+      </div>
+
+      <div class="howto-sec" data-sec="export">
+        <h5>Images</h5>
+        <p>The <code>PNG</code> button re-renders that chart off-screen at <b>2400 px</b> with the full presentation typography and a white background, then downloads it. That is the interactive equivalent of matplotlib's <code>savefig.dpi</code> — what you get is a slide- or print-ready raster, not a screenshot of the widget.</p>
+        <h5>Data</h5>
+        <p><code>CSV</code> exports exactly the grid that was plotted, so a figure and its data always agree. <b>Export CSV</b> in the panel header dumps every card at once; <b>Export All</b> does PNG and CSV together (downloads are staggered — allow multiple files in your browser).</p>
+        <h5>Text</h5>
+        <p><b>Export params JSON</b> gives a reproducible parameter block. <b>Generate Report</b> builds a printable document with model equations, parameter tables, fit statistics and a written interpretation of every IAST card, including the caveats that apply to your particular pair.</p>
+      </div>
+
+      <div class="howto-sec" data-sec="limits">
+        <h5>What IAST cannot do</h5>
+        <ul>
+          <li><b>No composition azeotropes.</b> Because S = p<sub>2</sub><sup>0</sup>/p<sub>1</sub><sup>0</sup> depends on spreading pressure alone, a binary IAST x&ndash;y curve can never cross the diagonal. Experimental data that <i>do</i> cross (the classic C<sub>2</sub>H<sub>4</sub>&ndash;C<sub>3</sub>H<sub>8</sub> on 5A case) indicate real non-ideality; that calls for VST, not for re-fitting the pure isotherms.</li>
+          <li><b>Ideal adsorbed phase.</b> Strong lateral interactions, molecular sieving and pore-size exclusion are all outside the theory.</li>
+          <li><b>Extrapolation.</b> IAST evaluates each pure isotherm at a hypothetical pressure p<sup>0</sup><sub>i</sub> that is generally <i>higher</i> than the total pressure. At low y for a weakly held component this can be orders of magnitude beyond your data.</li>
+        </ul>
+        <h5>Numerical traps</h5>
+        <ul>
+          <li><b>Poles.</b> Anti-Langmuir diverges at P = 1/b; BET at P = P<sub>s</sub>. Keep <code>P max</code> below the pole or the solver will not converge.</li>
+          <li><b>Freundlich and Sips with n &lt; 1</b> have an infinite Henry slope; &psi; is computed by quadrature and the low-pressure end is the least reliable region.</li>
+          <li><b>Degenerate pairs.</b> If &psi;<sub>1</sub> &equiv; &psi;<sub>2</sub> the components are IAST-indistinguishable and every card collapses to the trivial answer — the app says so rather than pretending to a prediction.</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <script>
 document.getElementById('footYear').textContent=new Date().getFullYear();
 const R = 8.314;
@@ -1013,7 +1235,6 @@ const MODELS={
       if(p._fnSrc===p.expr && p._fn) return p._fn;
       const src=String(p.expr||'0').replace(/\^/g,'**');
       try{
-        if(!isSafeExpr(src)){ throw new Error('Expression contains disallowed identifiers'); }
         const fn=new Function('P','T',`with(Math){return (${src});}`);
         fn(1,298);
         p._fn=fn; p._fnSrc=p.expr; p._err=null;
@@ -1141,25 +1362,6 @@ const points=[
   {label:'delta',P:1.00,y:0.00,color:'#7048e8'}
 ];
 const GREEK_SYMS=['\u03b1','\u03b2','\u03b3','\u03b4','\u03b5','\u03b6'];
-// ── Security helpers ────────────────────────────────────────────────────────
-// Escape user-controlled strings before interpolating into innerHTML.
-// safeText()   → safe for text nodes and attribute values
-// safeAttr()   → same (alias kept for reader clarity at call sites)
-const ESC_MAP={'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};
-function safeText(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>ESC_MAP[c]); }
-const safeAttr=safeText;
-
-// ── Expression allowlist ─────────────────────────────────────────────────────
-// Tokens permitted inside Custom q(P) expressions compiled via new Function().
-// Blocks access to globals (window, document, fetch, eval, etc.) by rejecting
-// any expression that contains a disallowed identifier.
-const EXPR_ALLOW_RE=/^[\s\d\+\-\*\/\(\)\.\^eE,]+$|^([\s\d\+\-\*\/\(\)\.\^\,eE]|(Math\.(abs|acos|acosh|asin|asinh|atan|atanh|atan2|cbrt|ceil|clz32|cos|cosh|exp|expm1|floor|fround|hypot|imul|log|log10|log1p|log2|max|min|pow|random|round|sign|sin|sinh|sqrt|tan|tanh|trunc)|P|T|Infinity|NaN))+$/;
-function isSafeExpr(src){
-  // Strip string literals and comments, then test remaining tokens
-  const stripped=src.replace(/\/\/[^\n]*/g,'').replace(/'[^']*'|"[^"]*"/g,'""');
-  return !/\b(window|document|globalThis|self|frames|parent|top|location|navigator|fetch|XMLHttpRequest|eval|Function|setTimeout|setInterval|requestAnimationFrame|import|require|process|global)\b/.test(stripped);
-}
-
 const PALETTE=['#4db8ff','#4fd6b8','#f0b429','#e05a6a','#ae82f7','#5fd49e','#e07a5f','#6699ff','#72d9a0'];
 
 // ── DOM refs ───────────────────────────────────────────────────────────────
@@ -1251,11 +1453,11 @@ function buildComponentCard(cardEl,comp,which){
     <div class="lib-pick-row">
       <select class="libSel" aria-label="Use library component for ${which}" title="Pull a fitted component from the library">
         <option value="">\u2795 Use library component\u2026</option>
-        ${libComps.map(c=>`<option value="${safeAttr(c.key)}">${safeText(c.label)}</option>`).join('')}
+        ${libComps.map(c=>`<option value="${c.key}">${c.label}</option>`).join('')}
       </select>
     </div>
     <div class="row2">
-      <input type="text" class="nameInp" value="${safeAttr(comp.name)}" placeholder="Component name" aria-label="Comp ${which} name">
+      <input type="text" class="nameInp" value="${comp.name}" placeholder="Component name" aria-label="Comp ${which} name">
       <select class="modelSel" aria-label="Comp ${which} model">
         ${Object.keys(MODELS).map(k=>`<option value="${k}">${MODELS[k].label}</option>`).join('')}
       </select>
@@ -1374,7 +1576,7 @@ function buildPointTable(){
   points.forEach((pt,i)=>{
     const tr=document.createElement('tr');
     tr.innerHTML=`
-      <td><input type="text" data-i="${i}" data-f="label" value="${safeAttr(pt.label)}"></td>
+      <td><input type="text" data-i="${i}" data-f="label" value="${pt.label}"></td>
       <td><input type="number" data-i="${i}" data-f="P" value="${pt.P}" min="0.0001" step="0.01"></td>
       <td><input type="number" data-i="${i}" data-f="y" value="${pt.y}" min="0" max="1" step="0.01"></td>
       <td><input type="color" class="swatch-input" data-i="${i}" data-f="color" value="${pt.color}"></td>
@@ -1752,8 +1954,8 @@ function render(){
     const yLbl=binaryComp==='both'
       ?'Adsorbed amount (mol kg\u207b\u00b9)'
       :binaryComp==='B'
-        ?`${safeText(compB.name)} in mixture (mol kg\u207b\u00b9)`
-        :`${safeText(compA.name)} in mixture (mol kg\u207b\u00b9)`;
+        ?`${compB.name} in mixture (mol kg\u207b\u00b9)`
+        :`${compA.name} in mixture (mol kg\u207b\u00b9)`;
 
     // pre-compute raw IAST loadings for every curve (axis-native pressure grid)
     const _loEff=Math.max(Pmin,Pmax/1e4,1e-6);
@@ -1830,9 +2032,9 @@ function render(){
       const bx=f.ML+10, by=f.pB-54;
       s+=`<rect x="${bx-2}" y="${by-2}" width="110" height="44" fill="${f.plotBg}" stroke="${f.frameClr}" stroke-width="1" rx="2"/>`;
       s+=`<line x1="${bx+4}" y1="${by+12}" x2="${bx+22}" y2="${by+12}" stroke="${f.frameClr}" stroke-width="2"/>`;
-      s+=`<text x="${bx+26}" y="${by+16}" font-size="13" fill="${f.labelClr}" ${CHART_FONT}>${safeText(compA.name)}</text>`;
+      s+=`<text x="${bx+26}" y="${by+16}" font-size="13" fill="${f.labelClr}" ${CHART_FONT}>${compA.name}</text>`;
       s+=`<line x1="${bx+4}" y1="${by+32}" x2="${bx+22}" y2="${by+32}" stroke="${f.frameClr}" stroke-width="1.3" stroke-dasharray="4,2" opacity="0.65"/>`;
-      s+=`<text x="${bx+26}" y="${by+36}" font-size="13" fill="${f.labelClr}" ${CHART_FONT}>${safeText(compB.name)}</text>`;
+      s+=`<text x="${bx+26}" y="${by+36}" font-size="13" fill="${f.labelClr}" ${CHART_FONT}>${compB.name}</text>`;
     }
 
     // hover crosshair overlays
@@ -1886,7 +2088,7 @@ function render(){
         return `<tr><td style="color:${col};padding:1px 6px 1px 0;font-weight:600;">y=${yv.toFixed(2)}</td>${cell}</tr>`;
       }).join('');
       const hdr=showA&&showB
-        ?`<tr style="font-size:9px;opacity:0.6;"><td></td><td style="text-align:right;padding-right:4px;">${safeText(compA.name)}</td><td style="text-align:right;">${safeText(compB.name)}</td></tr>`
+        ?`<tr style="font-size:9px;opacity:0.6;"><td></td><td style="text-align:right;padding-right:4px;">${compA.name}</td><td style="text-align:right;">${compB.name}</td></tr>`
         :'';
       const isDark=theme==='dark';
       return {html:`<div style="background:${isDark?'rgba(10,20,16,0.95)':'rgba(255,255,255,0.97)'};border:1px solid ${isDark?'#3a5a50':'#b0c8be'};border-radius:5px;padding:8px 10px;font-size:11.5px;color:${isDark?'#c8d8d2':'#1a1a1a'};white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.3);">
@@ -2091,7 +2293,7 @@ function plotXY(T,holder,noteEl){
   for(let i=0;i<=N;i++){const yA=i/N;let xA;
     if(yA<=0)xA=0;else if(yA>=1)xA=1;else{const r=iastSolve([compA,compB],[yA,1-yA],Pmax,T);xA=r.x[0];}
     ys.push(yA);xs.push(isFinite(xA)?xA:NaN);}
-  const f=drawLinFrameCard(0,1,0,1,`Gas y_${safeText(compA.name)}`,`Adsorbed x_${safeText(compA.name)}`,{nX:5,nY:5});
+  const f=drawLinFrameCard(0,1,0,1,`Gas y_${compA.name}`,`Adsorbed x_${compA.name}`,{nX:5,nY:5});
   let s=f.s;
   s+=`<line x1="${f.xP(0)}" y1="${f.yP(0)}" x2="${f.xP(1)}" y2="${f.yP(1)}" stroke="${theme==='dark'?'#3a5a50':'#c0d0c8'}" stroke-width="1.1" stroke-dasharray="4,4"/>`;
   // Optional extended (competitive) Langmuir overlay — only meaningful when both
@@ -2140,8 +2342,8 @@ function plotXY(T,holder,noteEl){
     const yA=Math.max(0,Math.min(1,f.xInv(sx)));
     let xA=yA<=0?0:yA>=1?1:iastSolve([compA,compB],[yA,1-yA],Pmax,T).x[0];
     broadcastHover(Pmax,yA,'xy');
-    if(!isFinite(xA))return {html:ttWrap(`y_${safeText(compA.name)} = ${yA.toFixed(3)}<br>x = (no solution)`),overlay:''};
-    return {html:ttWrap(`y_${safeText(compA.name)} = ${yA.toFixed(3)}<br>x_${safeText(compA.name)} = ${xA.toFixed(3)}`),
+    if(!isFinite(xA))return {html:ttWrap(`y_${compA.name} = ${yA.toFixed(3)}<br>x = (no solution)`),overlay:''};
+    return {html:ttWrap(`y_${compA.name} = ${yA.toFixed(3)}<br>x_${compA.name} = ${xA.toFixed(3)}`),
       overlay:crosshair(f,f.xP(yA),f.yP(xA),PALETTE[0])};
   });
 }
@@ -2175,11 +2377,11 @@ function plotPsi(T,holder,noteEl){
       s+=`<line x1="${px}" y1="${yPsi}" x2="${px}" y2="${f.MT+f.pH}" stroke="${o.c}" stroke-width="1.2" stroke-dasharray="4,3"/>`;
       s+=`<circle cx="${px}" cy="${yPsi}" r="4" fill="${o.c}" stroke="${theme==='dark'?'#0a0f0e':'#fff'}" stroke-width="1.3"/>`;});
   }
-  s+=legBox([{label:`ψ ${safeText(compA.name)}`,color:PALETTE[0]},{label:`ψ ${safeText(compB.name)}`,color:PALETTE[3]},{label:'equal-ψ',color:theme==='dark'?'#e0b020':'#b07800',dash:'6,3'}],f.ML+14,f.MT+16,f.frameClr);
+  s+=legBox([{label:`ψ ${compA.name}`,color:PALETTE[0]},{label:`ψ ${compB.name}`,color:PALETTE[3]},{label:'equal-ψ',color:theme==='dark'?'#e0b020':'#b07800',dash:'6,3'}],f.ML+14,f.MT+16,f.frameClr);
   holder.innerHTML=s+'</svg>';
   if(solOK){
     let warn=(p0A>Pmax||p0B>Pmax)?` <span style="color:var(--amber)">⚠ p_i⁰ extrapolated beyond P range</span>`:'';
-    noteEl.innerHTML=`P=${Ptot.toFixed(3)} bar, y=0.5 · ψ*=${psiStar.toFixed(2)} · p⁰(${safeText(compA.name)})=${p0A.toFixed(3)}, p⁰(${safeText(compB.name)})=${p0B.toFixed(3)} bar.${warn}`;
+    noteEl.innerHTML=`P=${Ptot.toFixed(3)} bar, y=0.5 · ψ*=${psiStar.toFixed(2)} · p⁰(${compA.name})=${p0A.toFixed(3)}, p⁰(${compB.name})=${p0B.toFixed(3)} bar.${warn}`;
   } else {
     noteEl.innerHTML=`<span style="color:var(--amber)">No IAST solution at P=${Ptot.toFixed(3)} bar, y=0.5</span> — a component saturates (e.g. BET/Anti-Langmuir limit) in this range. ψ curves shown for reference.`;
   }
@@ -2204,7 +2406,7 @@ function plotPsi(T,holder,noteEl){
     let ov=`<line x1="${f.xP(P)}" y1="${f.MT}" x2="${f.xP(P)}" y2="${f.MT+f.pH}" stroke="${f.frameClr}" stroke-width="0.8" stroke-dasharray="3,3" opacity="0.5"/>`;
     if(isFinite(a))ov+=`<circle cx="${f.xP(P)}" cy="${f.yP(a)}" r="3.5" fill="${PALETTE[0]}"/>`;
     if(isFinite(b))ov+=`<circle cx="${f.xP(P)}" cy="${f.yP(b)}" r="3.5" fill="${PALETTE[3]}"/>`;
-    return {html:ttWrap(`p⁰ = ${P.toFixed(3)} bar<br><span style="color:${PALETTE[0]}">ψ ${safeText(compA.name)} = ${av}</span><br><span style="color:${PALETTE[3]}">ψ ${safeText(compB.name)} = ${bv}</span>`),overlay:ov};
+    return {html:ttWrap(`p⁰ = ${P.toFixed(3)} bar<br><span style="color:${PALETTE[0]}">ψ ${compA.name} = ${av}</span><br><span style="color:${PALETTE[3]}">ψ ${compB.name} = ${bv}</span>`),overlay:ov};
   });
 }
 
@@ -2216,7 +2418,7 @@ function plotSel(T,holder,noteEl){
   const N=50;const series=Ps.map(P=>{const arr=[];for(let i=1;i<N;i++){const yA=i/N;arr.push([yA,selectivityAt(P,yA,T)]);}return {P,arr};});
   let sMax=0;series.forEach(se=>se.arr.forEach(([,s])=>{if(isFinite(s))sMax=Math.max(sMax,s);}));
   sMax=sMax>0?sMax*1.1:10;
-  const f=drawLinFrameCard(0,1,0,sMax,`Gas y_${safeText(compA.name)}`,`S(${safeText(compA.name)}/${safeText(compB.name)})`,{nX:5,nY:6});
+  const f=drawLinFrameCard(0,1,0,sMax,`Gas y_${compA.name}`,`S(${compA.name}/${compB.name})`,{nX:5,nY:6});
   let s=f.s;
   const y1=f.yP(1);if(1<=sMax)s+=`<line x1="${f.ML}" y1="${y1}" x2="${f.ML+f.pW}" y2="${y1}" stroke="${theme==='dark'?'#e0b020':'#b07800'}" stroke-width="1" stroke-dasharray="5,4"/>`;
   series.forEach((se,si)=>{const c=PALETTE[si%PALETTE.length];let d='',st=false;
@@ -2243,7 +2445,7 @@ function plotSel(T,holder,noteEl){
     broadcastHover(Pmax,yA,'sel');
     let ov=`<line x1="${f.xP(yA)}" y1="${f.MT}" x2="${f.xP(yA)}" y2="${f.MT+f.pH}" stroke="${f.frameClr}" stroke-width="0.8" stroke-dasharray="3,3" opacity="0.5"/>`;
     series.forEach((se,si)=>{if(isFinite(vals[si])&&vals[si]<=sMax)ov+=`<circle cx="${f.xP(yA)}" cy="${f.yP(vals[si])}" r="3" fill="${PALETTE[si%PALETTE.length]}"/>`;});
-    return {html:ttWrap(`y_${safeText(compA.name)}=${yA.toFixed(3)}<br>${body}`),overlay:ov};
+    return {html:ttWrap(`y_${compA.name}=${yA.toFixed(3)}<br>${body}`),overlay:ov};
   });
 }
 
@@ -2268,7 +2470,7 @@ function plotHeat(T,holder,noteEl){
         if(isS&&v>0){const l=Math.log10(v);logSmin=Math.min(logSmin,l);logSmax=Math.max(logSmax,l);if(v>1)anyHi=true;if(v<1)anyLo=true;}}}
     grid.push(row);}
   const hasRev=isS&&anyLo&&anyHi, absMax=Math.max(Math.abs(logSmin),Math.abs(logSmax))||1;
-  const f=drawLinFrameCard(Pmin,Pmax,0,1,'P (bar)',`Gas y_${safeText(compA.name)}`,{nX:6,nY:5,rightPad:64});
+  const f=drawLinFrameCard(Pmin,Pmax,0,1,'P (bar)',`Gas y_${compA.name}`,{nX:6,nY:5,rightPad:64});
   let s=f.s;
   const cellW=f.pW/nX,cellH=f.pH/nY;
   // viridis for sequential (q1,q2,x1); red-white-blue diverging for S about 1
@@ -2319,7 +2521,7 @@ function plotHeat(T,holder,noteEl){
     const v=fieldAt(P,yA);
     broadcastHover(P,yA,'heat');
     const vLbl=isS?('S = '+(isFinite(v)?v.toFixed(2):'—')):(label.split(' ')[0]+' = '+(isFinite(v)?v.toFixed(3):'—'));
-    return {html:ttWrap(`P=${P.toFixed(3)} bar<br>y_${safeText(compA.name)}=${yA.toFixed(3)}<br>${vLbl}`),
+    return {html:ttWrap(`P=${P.toFixed(3)} bar<br>y_${compA.name}=${yA.toFixed(3)}<br>${vLbl}`),
       overlay:`<circle cx="${sx}" cy="${sy}" r="4" fill="none" stroke="${f.frameClr}" stroke-width="1.4"/>`};
   });
   // click-to-pin
@@ -2434,8 +2636,8 @@ function plotSurf(T,holder,noteEl){
     // axis titles (follow the rotating base edges)
     const midP=proj(0.5,0,0),midY=proj(0,0.5,0),topQ=proj(0,0,1);
     s+=`<text x="${midP[0]}" y="${midP[1]+20}" text-anchor="middle" font-size="13" fill="${labelClr}" ${CHART_FONT}>P (bar)</text>`;
-    s+=`<text x="${midY[0]}" y="${midY[1]+20}" text-anchor="middle" font-size="13" fill="${labelClr}" ${CHART_FONT}>y_${safeText(compA.name)}</text>`;
-    s+=`<text x="${topQ[0]-6}" y="${topQ[1]-8}" text-anchor="end" font-size="13" fill="${labelClr}" ${CHART_FONT}>q_${safeText(compA.name)}</text>`;
+    s+=`<text x="${midY[0]}" y="${midY[1]+20}" text-anchor="middle" font-size="13" fill="${labelClr}" ${CHART_FONT}>y_${compA.name}</text>`;
+    s+=`<text x="${topQ[0]-6}" y="${topQ[1]-8}" text-anchor="end" font-size="13" fill="${labelClr}" ${CHART_FONT}>q_${compA.name}</text>`;
     // colorbar (fixed, right side)
     const cbW=13,cbH=Math.min(180,availH*0.8),cbX=W-padR+20,cbY=padT+(availH-cbH)/2;
     for(let k=0;k<=40;k++){const t=k/40,yy=cbY+cbH*(1-t);s+=`<rect x="${cbX}" y="${yy.toFixed(1)}" width="${cbW}" height="${(cbH/40+0.6).toFixed(1)}" fill="${col(t)}"/>`;}
@@ -2453,7 +2655,7 @@ function plotSurf(T,holder,noteEl){
     svg.addEventListener('dblclick',()=>{holder._surfSpin=!holder._surfSpin;});
   }
   paint();
-  noteEl.innerHTML=`IAST loading of ${safeText(compA.name)} over the P–y surface (peak ${qMax.toFixed(2)} mol/kg). <span style="opacity:0.75">Drag to rotate · double-click to pause/resume spin.</span>`;
+  noteEl.innerHTML=`IAST loading of ${compA.name} over the P–y surface (peak ${qMax.toFixed(2)} mol/kg). <span style="opacity:0.75">Drag to rotate · double-click to pause/resume spin.</span>`;
 
   // window-level drag listeners attached ONCE; they read/write holder state so
   // they always control whatever the current surface is (survives re-renders).
@@ -2501,9 +2703,9 @@ function plotSliceP(T,holder,noteEl){
   const path=arr=>arr.map((p,i)=>(i?'L':'M')+f.xP(p.P).toFixed(1)+','+f.yP(Math.min(p.q,f.yMax||qm)).toFixed(1)).join(' ');
   s+=`<path d="${path(A)}" fill="none" stroke="${PALETTE[0]}" stroke-width="2"/>`;
   s+=`<path d="${path(B)}" fill="none" stroke="${PALETTE[3]}" stroke-width="2" stroke-dasharray="6,3"/>`;
-  s+=legBox([{label:`q₁ ${safeText(compA.name)}`,color:PALETTE[0]},{label:`q₂ ${safeText(compB.name)}`,color:PALETTE[3],dash:'6,3'}],f.ML+14,f.MT+16,f.frameClr);
+  s+=legBox([{label:`q₁ ${compA.name}`,color:PALETTE[0]},{label:`q₂ ${compB.name}`,color:PALETTE[3],dash:'6,3'}],f.ML+14,f.MT+16,f.frameClr);
   holder.innerHTML=s+'</svg>';
-  noteEl.innerHTML=`Loadings vs total pressure at fixed y<sub>${safeText(compA.name)}</sub> = <b>${y.toFixed(3)}</b>${IAST_PIN?' (pinned)':' — click heatmap to pin'}.`;
+  noteEl.innerHTML=`Loadings vs total pressure at fixed y<sub>${compA.name}</sub> = <b>${y.toFixed(3)}</b>${IAST_PIN?' (pinned)':' — click heatmap to pin'}.`;
   IAST_CSV.sliceP={name:'slice_qP_fixed_y',rows};
   registerLink('sliceP',holder,(P,yy)=>{ if(P<Pmin||P>Pmax)return'';
     const [qa]=safeIASTsolve(P,y,T); if(!isFinite(qa))return'';
@@ -2522,12 +2724,12 @@ function plotSliceY(T,holder,noteEl){
   let qm=0; const A=[],B=[];
   for(let i=0;i<=N;i++){const y=i/N; const [qa,qb]=safeIASTsolve(P,y,T);
     A.push({y,q:qa}); B.push({y,q:qb}); qm=Math.max(qm,qa,qb); rows.push([y.toFixed(4),qa.toFixed(4),qb.toFixed(4)]);}
-  const f=drawLinFrameCard(0,1,0,niceCeil(qm)||1,`Gas y_${safeText(compA.name)}`,'q* (mol kg⁻¹)',{nX:5,nY:5});
+  const f=drawLinFrameCard(0,1,0,niceCeil(qm)||1,`Gas y_${compA.name}`,'q* (mol kg⁻¹)',{nX:5,nY:5});
   let s=f.s;
   const path=arr=>arr.map((p,i)=>(i?'L':'M')+f.xP(p.y).toFixed(1)+','+f.yP(Math.min(p.q,qm)).toFixed(1)).join(' ');
   s+=`<path d="${path(A)}" fill="none" stroke="${PALETTE[0]}" stroke-width="2"/>`;
   s+=`<path d="${path(B)}" fill="none" stroke="${PALETTE[3]}" stroke-width="2" stroke-dasharray="6,3"/>`;
-  s+=legBox([{label:`q₁ ${safeText(compA.name)}`,color:PALETTE[0]},{label:`q₂ ${safeText(compB.name)}`,color:PALETTE[3],dash:'6,3'}],f.ML+14,f.MT+16,f.frameClr);
+  s+=legBox([{label:`q₁ ${compA.name}`,color:PALETTE[0]},{label:`q₂ ${compB.name}`,color:PALETTE[3],dash:'6,3'}],f.ML+14,f.MT+16,f.frameClr);
   holder.innerHTML=s+'</svg>';
   noteEl.innerHTML=`Loadings vs gas composition at fixed P = <b>${P.toFixed(3)} bar</b>${IAST_PIN?' (pinned)':' — click heatmap to pin'}.`;
   IAST_CSV.sliceY={name:'slice_qy_fixed_P',rows};
@@ -2787,7 +2989,7 @@ function buildReport(){
   const fitTxt=(fitStatsEl.textContent||'').trim();
   const Pmid=Math.min(Math.max(1,Pmin),Pmax);
   let selHead='';
-  try{const S=selectivityAt(Pmid,0.5,T); if(isFinite(S))selHead=`S(${safeText(compA.name)}/${safeText(compB.name)}) = ${S.toFixed(1)} at ${Pmid.toFixed(2)} bar, y=0.5`;}catch(e){}
+  try{const S=selectivityAt(Pmid,0.5,T); if(isFinite(S))selHead=`S(${compA.name}/${compB.name}) = ${S.toFixed(1)} at ${Pmid.toFixed(2)} bar, y=0.5`;}catch(e){}
   const IN=reportInsights(T);
   const cite=(function(){try{
     const key=(document.getElementById('sorbentSel')||{}).value;
@@ -2857,7 +3059,7 @@ function buildReport(){
     <div class="rc-btnbar rc-noprint"><button class="rc-btn" onclick="window.print()">Print / Save as PDF</button><button class="rc-btn sec" onclick="window.close()">Close</button></div>
     <div class="rc-titlewrap">
       <div class="rc-eyebrow">Adsorption Equilibrium Analysis Report</div>
-      <h1>${safeText(compA.name)} / ${safeText(compB.name)} — Binary IAST${caseName&&!/^iast/i.test(caseName)?` · ${caseName}`:''}</h1>
+      <h1>${compA.name} / ${compB.name} — Binary IAST${caseName&&!/^iast/i.test(caseName)?` · ${caseName}`:''}</h1>
       <div class="rc-sub">Competitive adsorption predicted by Ideal Adsorbed Solution Theory (Myers–Prausnitz) · ${T} K · ${Pmin}–${Pmax} bar · generated ${now}</div>
     </div>
 
@@ -2867,8 +3069,8 @@ function buildReport(){
     <div class="rc-meta">
       <div><span>Temperature</span><b>${T} K</b></div>
       <div><span>Pressure range</span><b>${Pmin} – ${Pmax} bar</b></div>
-      <div><span>Component A (1)</span><b>${safeText(compA.name)}</b></div>
-      <div><span>Component B (2)</span><b>${safeText(compB.name)}</b></div>
+      <div><span>Component A (1)</span><b>${compA.name}</b></div>
+      <div><span>Component B (2)</span><b>${compB.name}</b></div>
       <div><span>Solver</span><b>Newton–Raphson (ln p)</b></div>
       <div><span>Framework</span><b>Myers–Prausnitz IAST</b></div>
     </div>
@@ -2888,7 +3090,7 @@ function buildReport(){
     ${cite?`<p style="font-size:11px;color:#5c7168;margin-top:8px;"><b>Parameter source:</b> ${cite.text||cite.short||''}${cite.doi?` (doi:${cite.doi})`:''}</p>`:''}
 
     <h2>Pure-Component Isotherms — the Input Data</h2>
-    ${wideFig('chartHolderUnary','Pure-component isotherms q°(P)',`Single-component adsorption isotherms of ${safeText(compA.name)} and ${safeText(compB.name)} at ${T} K over ${Pmin}–${Pmax} bar — the only experimental input to the IAST prediction.`,insightBullets(IN.pure))}
+    ${wideFig('chartHolderUnary','Pure-component isotherms q°(P)',`Single-component adsorption isotherms of ${compA.name} and ${compB.name} at ${T} K over ${Pmin}–${Pmax} bar — the only experimental input to the IAST prediction.`,insightBullets(IN.pure))}
 
     <h2>Competitive Loading</h2>
     ${wideFig('chartHolderBinary','Competitive loading (IAST) vs pressure',`IAST-predicted mixture loadings q<sub>i</sub>*(P) at the listed gas-phase compositions; the shortfall from each pure isotherm is the capacity lost to co-adsorption.`,`<div class="rc-insight">Competitive loadings q<sub>i</sub>*(P) at the listed gas compositions. Each curve is a full IAST solve; the gap between a component's pure and competitive loading is the capacity it loses to co-adsorption of the partner. This is the practical read of the theory: what the bed actually holds under a real feed, not in single-gas idealisation.</div>`)}
@@ -2896,13 +3098,13 @@ function buildReport(){
 
     <h2>IAST Analysis — Figure by Figure</h2>
     <div class="rc-charts">
-      ${gridFig('x–y equilibrium','xy',`Adsorbed- vs gas-phase mole fraction of ${safeText(compA.name)} at ${(+pmaxEl.value).toFixed(2)} bar.`,IN.xy)}
+      ${gridFig('x–y equilibrium','xy',`Adsorbed- vs gas-phase mole fraction of ${compA.name} at ${(+pmaxEl.value).toFixed(2)} bar.`,IN.xy)}
       ${gridFig('ψ-construction (spreading pressure)','psi',`Spreading-pressure integrals ψ<sub>i</sub>(p) and the equal-ψ construction that sets the hypothetical pressures p<sub>i</sub>⁰.`,IN.psi)}
-      ${gridFig('Selectivity vs composition','sel',`IAST selectivity S<sub>${safeText(compA.name)}/${safeText(compB.name)}</sub> across gas composition at several total pressures.`,IN.sel)}
+      ${gridFig('Selectivity vs composition','sel',`IAST selectivity S<sub>${compA.name}/${compB.name}</sub> across gas composition at several total pressures.`,IN.sel)}
       ${gridFig('Heatmap (P × y)','heat',`Map of the selected quantity over the pressure–composition operating window.`,IN.heat)}
       ${gridFig('Slice q*(P) at fixed y₁','sliceP',`Mixture loadings vs total pressure at a fixed gas composition (pinned slice).`,IN.slices)}
       ${gridFig('Slice q*(y₁) at fixed P','sliceY',`Mixture loadings vs gas composition at a fixed total pressure (pinned slice).`,'Companion cut to the q*(P) slice — together they bound the working capacity between two operating states.')}
-      ${wideFig('ih_surf','3-D loading surface',`Full IAST loading surface q<sub>${safeText(compA.name)}</sub>*(P, y); the two slice figures are orthogonal cuts through it.`,insightBullets(IN.surf))}
+      ${wideFig('ih_surf','3-D loading surface',`Full IAST loading surface q<sub>${compA.name}</sub>*(P, y); the two slice figures are orthogonal cuts through it.`,insightBullets(IN.surf))}
     </div>
 
     <h2>Interpretation, Consistency &amp; Caveats</h2>
@@ -3191,7 +3393,7 @@ function populateSorbentDropdown(){
   sorbentSel.innerHTML=
     '<option value="__custom__">\u270f\ufe0f Custom case (build your own)</option>'+
     '<option value="">\u2014 preset material / gas pair \u2014</option>'+
-    Object.keys(SORBENT_LIBRARY).map(k=>`<option value="${safeAttr(k)}">${safeText(SORBENT_LIBRARY[k].label)}</option>`).join('');
+    Object.keys(SORBENT_LIBRARY).map(k=>`<option value="${k}">${SORBENT_LIBRARY[k].label}</option>`).join('');
   if(cur&&(cur==='__custom__'||SORBENT_LIBRARY[cur]))sorbentSel.value=cur;
   updateSorbentCredit();
 }
@@ -3613,6 +3815,1579 @@ computeFitStats(); render(); markClean();
 // Restore persisted settings (pressure range, T, trust, heatmap qty, theme) and
 // re-render if anything was loaded. Wrapped so a bad/empty store never blocks boot.
 try{ if(loadLS()){ computeFitStats(); render(); if(typeof renderIastPlot==='function')renderIastPlot(); markClean(); } }catch(e){}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MiniPlot — a self-contained, zero-dependency canvas plotting layer with
+   Bokeh-style interaction (wheel zoom, drag pan, box zoom, reset, hover
+   tooltip + crosshair, high-resolution PNG save).
+   No CDN, no network: the file stays standalone.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* One readable style everywhere. Export uses the SAME layout rendered at a
+   higher device scale, so what you see is exactly what you download, only
+   sharper. Sizes are logical px at a 560 px reference width and grow gently
+   with the card so a pop-out is not a wall of tiny type.                    */
+const ST0 = {
+  fontFamily : "'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
+  labelSize  : 12.5, labelWeight : '600', labelPad : 6,
+  titleSize  : 13,   titleWeight : '600', titlePad : 8,
+  axesLw     : 1.2,
+  tickLabel  : 11,  tickSize : 5, tickWidth : 1.05, tickPad : 5,
+  lineWidth  : 2.3, markerSize : 6.5, markerEdge : 1.3,
+  legendSize : 11,
+  refW       : 560, exportScale : 5
+};
+const mpUi = (W, H) => Math.max(0.95, Math.min(3.2, Math.min(W, (H || W) * 1.55) / ST0.refW));
+
+function mpPalette(print){
+  if(print) return { bg:'#ffffff', fg:'#000000', edge:'#000000', guide:'#777777',
+    series:['#0a6e54','#8a5f00','#2b4a9b','#c0334a','#6d3f77','#1d6b7d'] };
+  const d = theme === 'dark';
+  return { bg: d?'#0a0f0e':'#ffffff', fg: d?'#c8d8d2':'#000000',
+    edge: d?'#c8d8d2':'#000000', guide: d?'#5a8070':'#8aa89e',
+    series:[d?'#4fd6b8':'#0a6e54', d?'#f0cb6a':'#8a5f00', d?'#7aa2f7':'#2b4a9b',
+            d?'#e05a6a':'#c0334a', d?'#b48ead':'#6d3f77', d?'#88c0d0':'#1d6b7d'] };
+}
+function viridis(t){
+  t = t < 0 ? 0 : t > 1 ? 1 : t;
+  const st = [[68,1,84],[72,40,120],[62,74,137],[49,104,142],[38,130,142],
+              [31,158,137],[53,183,121],[109,205,89],[180,222,44],[253,231,37]];
+  const g = t * (st.length - 1), i = Math.min(st.length - 2, Math.floor(g)), f = g - i;
+  const a = st[i], b = st[i + 1];
+  return [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f, a[2] + (b[2] - a[2]) * f];
+}
+function mpTicks(lo, hi, want){
+  const span = hi - lo; if(!(span > 0)) return [lo];
+  const raw = span / (want || 6), m = Math.pow(10, Math.floor(Math.log10(raw)));
+  const n = raw / m, step = (n < 1.5 ? 1 : n < 3 ? 2 : n < 7 ? 5 : 10) * m;
+  const out = []; for(let v = Math.ceil(lo / step) * step; v <= hi + step * 1e-9; v += step) out.push(v);
+  return out;
+}
+function mpFmt(v, span){
+  if(v === 0) return '0';
+  const a = Math.abs(v);
+  if(a >= 1e5 || a < 1e-3) return v.toExponential(1);
+  const dp = span >= 50 ? 0 : span >= 5 ? 1 : span >= 0.5 ? 2 : 3;
+  return v.toFixed(dp);
+}
+
+/* ── core renderer ───────────────────────────────────────────────────────── */
+/* spec = { title, xlabel, ylabel, xr, yr, aspect,
+            lines:[{x,y,color,label,dash,extra:{k:[...]}}],
+            guides:[{x,y,dash,label}],
+            image:{z,x0,dw,y0,dh,low,high,cbTitle,label},
+            unitX, unitY, fmt:{} }                                          */
+/* ── tiny math-text renderer ──────────────────────────────────────────────
+   Markup: _{...} subscript, ^{...} superscript, _c / ^c for a single char.
+   Used for every axis title, legend entry and colour-bar title so that
+   y_CO2, q*, p0 and S_CO2/N2 read the way they are written in the equations. */
+function mpHtml(str){
+  return String(str == null ? '' : str)
+    .replace(/_\{([^}]*)\}/g, '<sub>$1</sub>').replace(/\^\{([^}]*)\}/g, '<sup>$1</sup>')
+    .replace(/_([^\s{])/g, '<sub>$1</sub>').replace(/\^([^\s{])/g, '<sup>$1</sup>');
+}
+function mpParse(str){
+  const out = [];
+  let buf = '';
+  for(let i = 0; i < str.length; i++){
+    const ch = str[i];
+    if(ch === '_' || ch === '^'){
+      const kind = ch === '_' ? 'sub' : 'sup';
+      let txt = '';
+      if(str[i + 1] === '{'){
+        const e = str.indexOf('}', i + 2);
+        if(e < 0){ buf += ch; continue; }
+        txt = str.slice(i + 2, e); i = e;
+      } else if(i + 1 < str.length){ txt = str[i + 1]; i++; }
+      else { buf += ch; continue; }
+      if(buf){ out.push({ t: buf, k: 'base' }); buf = ''; }
+      out.push({ t: txt, k: kind });
+    } else buf += ch;
+  }
+  if(buf) out.push({ t: buf, k: 'base' });
+  return out;
+}
+/* ── chemical formula formatter ───────────────────────────────────────────
+   Turns whatever the user typed as a component name into a properly set
+   formula: CO2 -> CO₂, H2O -> H₂O, CH3OH -> CH₃OH, Ca(OH)2 -> Ca(OH)₂,
+   SO4 2- -> SO₄²⁻, CuSO4·5H2O -> CuSO₄·5H₂O, n-C4H10 -> n-C₄H₁₀.
+   Output uses unicode sub/superscripts, so the result is safe to nest inside
+   the _{...} groups of the label markup and inside HTML tooltips alike.
+   Anything that is not a formula (a trade name, "Methane", "Zeolite 13X")
+   is returned untouched.                                                    */
+const CHEM_ELEMENTS = new Set(('H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V Cr Mn Fe Co Ni Cu Zn ' +
+  'Ga Ge As Se Br Kr Rb Sr Y Zr Nb Mo Tc Ru Rh Pd Ag Cd In Sn Sb Te I Xe Cs Ba La Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho ' +
+  'Er Tm Yb Lu Hf Ta W Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn Fr Ra Ac Th Pa U Np Pu Am Cm Bk Cf Es Fm Md No Lr Rf ' +
+  'Db Sg Bh Hs Mt Ds Rg Cn Nh Fl Mc Lv Ts Og D T').split(' '));
+
+/* common gases and light hydrocarbons, so sloppy input still comes out right */
+const CHEM_ALIASES = {
+  co2: 'CO2', co: 'CO', n2: 'N2', o2: 'O2', h2: 'H2', h2o: 'H2O', ch4: 'CH4',
+  nh3: 'NH3', h2s: 'H2S', so2: 'SO2', so3: 'SO3', no: 'NO', no2: 'NO2', n2o: 'N2O',
+  nox: 'NOx', ar: 'Ar', he: 'He', ne: 'Ne', kr: 'Kr', xe: 'Xe', rn: 'Rn',
+  c2h2: 'C2H2', c2h4: 'C2H4', c2h6: 'C2H6', c3h6: 'C3H6', c3h8: 'C3H8',
+  c4h10: 'C4H10', 'n-c4h10': 'n-C4H10', 'i-c4h10': 'i-C4H10', 'iso-c4h10': 'i-C4H10',
+  c5h12: 'C5H12', c6h6: 'C6H6', c6h14: 'C6H14', c7h8: 'C7H8', c8h10: 'C8H10',
+  ch3oh: 'CH3OH', c2h5oh: 'C2H5OH', hcooh: 'HCOOH', ch3cooh: 'CH3COOH',
+  hcl: 'HCl', hf: 'HF', hbr: 'HBr', hcn: 'HCN', cos: 'COS', cs2: 'CS2',
+  sf6: 'SF6', cf4: 'CF4', nf3: 'NF3', ozone: 'O3', o3: 'O3', d2: 'D2', hd: 'HD',
+  air: 'air', water: 'H2O', steam: 'H2O'
+};
+const CHEM_SUB = '\u2080\u2081\u2082\u2083\u2084\u2085\u2086\u2087\u2088\u2089';
+const CHEM_SUP = { '0': '\u2070', '1': '\u00b9', '2': '\u00b2', '3': '\u00b3', '4': '\u2074',
+  '5': '\u2075', '6': '\u2076', '7': '\u2077', '8': '\u2078', '9': '\u2079',
+  '+': '\u207a', '-': '\u207b' };
+const toSub = d => d.replace(/\d/g, c => CHEM_SUB[+c]);
+const toSup = t => t.replace(/[0-9+\-]/g, c => CHEM_SUP[c] || c);
+
+function chem(raw){
+  let name = String(raw == null ? '' : raw).trim();
+  if(!name) return '';
+  if(name.indexOf('/') > 0) return name.split('/').map(chem).join('/');
+  const alias = CHEM_ALIASES[name.toLowerCase()];
+  if(alias) name = alias;
+  if(/[\u2080-\u2089]/.test(name)) return name;         /* already formatted */
+
+  /* optional leading descriptor: n-, i-, iso-, sec-, tert-, cis-, trans-, o-, m-, p- */
+  let pre = '';
+  const mPre = name.match(/^((?:n|i|iso|s|sec|t|tert|neo|cis|trans|o|m|p)-)/i);
+  if(mPre){ pre = mPre[1]; name = name.slice(pre.length); }
+
+  /* trailing ionic charge: 2-, +, ^3+ */
+  let charge = '';
+  const mCh = name.match(/(\^?)(\d*)([+-])$/);
+  if(mCh && name.length > mCh[0].length){
+    const digits = mCh[1] === '^' ? mCh[2]          /* explicit: SO4^2- */
+      : (mCh[2].length > 1 ? mCh[2].slice(-1) : '');/* SO42- -> count 4, charge 2- */
+    charge = toSup(digits + mCh[3]);
+    name = name.slice(0, name.length - mCh[0].length) + mCh[2].slice(0, mCh[2].length - digits.length);
+  }
+
+  /* tokenise; bail out (returning the original) if anything is not chemistry */
+  const out = [];
+  let i = 0, sawElement = false;
+  const isDigit = c => c >= '0' && c <= '9';
+  while(i < name.length){
+    const c = name[i];
+    if(c === '(' || c === ')' || c === '[' || c === ']'){ out.push(c); i++; continue; }
+    if(c === '\u00b7' || c === '.' || c === '*'){ out.push('\u00b7'); i++; continue; }
+    if(isDigit(c)){
+      let d = ''; while(i < name.length && isDigit(name[i])) d += name[i++];
+      const prev = out.length ? out[out.length - 1] : '';
+      /* a stoichiometric coefficient (start of string, or after a dot) stays
+         full size; everything else is a subscript count */
+      const coeff = out.length === 0 || prev === '\u00b7';
+      out.push(coeff ? d : toSub(d));
+      continue;
+    }
+    if(/[A-Za-z]/.test(c)){
+      /* symbols must already be written as symbols (Na, not na or NA), so a
+         stray word like "y" or "no" is never mistaken for an element */
+      let sym = null;
+      const two = name.slice(i, i + 2);
+      if(/[A-Z]/.test(c)){
+        if(two.length === 2 && /[a-z]/.test(two[1]) && CHEM_ELEMENTS.has(two)) sym = two;
+        else if(CHEM_ELEMENTS.has(c)) sym = c;
+      }
+      if(!sym) return String(raw);                       /* not a formula */
+      out.push(sym); sawElement = true; i += sym.length;
+      continue;
+    }
+    return String(raw);                                   /* stray character */
+  }
+  if(!sawElement) return String(raw);
+  return pre + out.join('') + charge;
+}
+
+function mpTextWidth(ctx, str, fontOf, sz){
+  const runs = mpParse(str);
+  let w = 0;
+  runs.forEach(r => {
+    ctx.font = fontOf(r.k === 'base' ? sz : sz * 0.72);
+    w += ctx.measureText(r.t).width;
+  });
+  return w;
+}
+function mpText(ctx, str, x, y, align, fontOf, sz){
+  const runs = mpParse(str);
+  const w = mpTextWidth(ctx, str, fontOf, sz);
+  let cx = align === 'center' ? x - w / 2 : align === 'right' ? x - w : x;
+  runs.forEach(r => {
+    const small = r.k !== 'base';
+    ctx.font = fontOf(small ? sz * 0.72 : sz);
+    const dy = r.k === 'sub' ? sz * 0.22 : r.k === 'sup' ? -sz * 0.38 : 0;
+    ctx.textAlign = 'left';
+    ctx.fillText(r.t, cx, y + dy);
+    cx += ctx.measureText(r.t).width;
+  });
+  return w;
+}
+
+function mpDraw(ctx, W, H, spec, view, opts){
+  opts = opts || {};
+  const print = !!opts.print, C = mpPalette(print), ST = ST0, s = mpUi(W, H);
+  const hasImg = !!spec.image;
+  const FONT = (w, sz) => (w ? w + ' ' : '') + (sz * s).toFixed(2) + 'px ' + ST.fontFamily;
+  const [x0, x1] = view.xr, [y0, y1] = view.yr;
+  const LG = !!spec.xLog && x0 > 0 && x1 > 0;
+  const fx = LG ? (v => Math.log10(Math.max(v, 1e-300))) : (v => v);
+  const ifx = LG ? (u => Math.pow(10, u)) : (u => u);
+  const fx0 = fx(x0), fx1 = fx(x1);
+
+  ctx.save();
+  ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
+  ctx.textBaseline = 'alphabetic';
+
+  /* ── pass 1: measure, then derive margins from real text extents ──────── */
+  const nTx = W < 340 ? 4 : W < 620 ? 5 : 7;
+  let tx, txLab;
+  if(LG){
+    tx = [];
+    const e0 = Math.floor(fx0), e1 = Math.ceil(fx1), dec = e1 - e0;
+    const mult = dec <= 2 ? [1, 2, 5] : dec <= 5 ? [1, 3] : [1];
+    for(let e = e0; e <= e1; e++) mult.forEach(m => {
+      const v = m * Math.pow(10, e);
+      if(v >= x0 * 0.999 && v <= x1 * 1.001) tx.push(v);
+    });
+    tx.sort((a, b) => a - b);
+    txLab = tx.map(v => (v >= 0.01 && v < 1e4) ? String(+v.toPrecision(3)) : v.toExponential(0));
+  } else {
+    tx = mpTicks(x0, x1, nTx);
+    txLab = tx.map(v => mpFmt(v, x1 - x0));
+  }
+  const ty = mpTicks(y0, y1, H < 260 ? 4 : 6);
+  const tyLab = ty.map(v => mpFmt(v, y1 - y0));
+
+  ctx.font = FONT('', ST.tickLabel);
+  const wY = tyLab.reduce((m, t) => Math.max(m, ctx.measureText(t).width), 0);
+  const wXlast = txLab.length ? ctx.measureText(txLab[txLab.length - 1]).width : 0;
+  const tickH = ST.tickLabel * s;
+  const labH = ST.labelSize * s * 1.2;
+  const pad = 4 * s;
+
+  let cbW = 0, cbGap = 0, wCb = 0, cbTitleH = 0;
+  if(hasImg){
+    cbW = 12 * s; cbGap = 10 * s;
+    ctx.font = FONT('', ST.tickLabel * 0.92);
+    wCb = mpTicks(spec.image.low, spec.image.high, 5)
+      .reduce((m, v) => Math.max(m, ctx.measureText(mpFmt(v, spec.image.high - spec.image.low)).width), 0);
+    cbTitleH = spec.image.cbTitle ? ST.legendSize * s * 2.0 : 0;
+  }
+
+  const showTitle = !!(spec.title && (print || opts.big));
+  const ML = labH + ST.labelPad * s + wY + ST.tickPad * s + pad;
+  const MB = tickH + ST.tickPad * s + ST.labelPad * s + labH + pad;
+  const MT = (showTitle ? ST.titleSize * s * 1.45 + ST.titlePad * s : 10 * s) + pad;
+  const MR = hasImg ? (cbGap + cbW + 6 * s + wCb + cbTitleH + pad)
+                    : Math.max(10 * s, wXlast / 2 + pad);
+  const pw = Math.max(20, W - ML - MR), ph = Math.max(20, H - MT - MB);
+
+  const X = v => ML + (fx(v) - fx0) / ((fx1 - fx0) || 1) * pw;
+  const Y = v => MT + ph - (v - y0) / ((y1 - y0) || 1) * ph;
+  const Xi = px => ifx(fx0 + (px - ML) / pw * (fx1 - fx0));
+  const Yi = py => y0 + (MT + ph - py) / ph * (y1 - y0);
+
+  /* ── image field ─────────────────────────────────────────────────────── */
+  if(hasImg){
+    const im = spec.image, nY = im.z.length, nX = im.z[0].length;
+    const dsc = (ctx.getTransform ? (ctx.getTransform().a || 1) : 1);
+    const pxw = Math.max(1, Math.round(pw * dsc)), pxh = Math.max(1, Math.round(ph * dsc));
+    const id = ctx.createImageData(pxw, pxh), D = id.data;
+    const rng = (im.high - im.low) || 1;
+    for(let py = 0; py < pxh; py++){
+      const yv = Yi(MT + (py + 0.5) / dsc);
+      const j = Math.round((yv - im.y0) / im.dh * (nY - 1));
+      for(let px = 0; px < pxw; px++){
+        const xv = Xi(ML + (px + 0.5) / dsc);
+        const i = Math.round((xv - im.x0) / im.dw * (nX - 1));
+        const o = (py * pxw + px) * 4;
+        if(j < 0 || j >= nY || i < 0 || i >= nX){ D[o + 3] = 0; continue; }
+        const v = im.z[j][i];
+        if(!isFinite(v)){ D[o + 3] = 0; continue; }
+        const c = viridis((v - im.low) / rng);
+        D[o] = c[0]; D[o + 1] = c[1]; D[o + 2] = c[2]; D[o + 3] = 255;
+      }
+    }
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.putImageData(id, Math.round(ML * dsc), Math.round(MT * dsc));
+    ctx.restore();
+  }
+
+  /* ── data (clipped to the frame) ──────────────────────────────────────── */
+  ctx.save();
+  ctx.beginPath(); ctx.rect(ML, MT, pw, ph); ctx.clip();
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  const LW = ST.lineWidth * s;
+
+  (spec.guides || []).forEach(g => {
+    ctx.strokeStyle = C.guide; ctx.lineWidth = LW * 0.7;
+    ctx.setLineDash(g.dash === 'dotted' ? [1.5 * LW, 2 * LW] : [3.5 * LW, 2.5 * LW]);
+    ctx.beginPath();
+    for(let i = 0; i < g.x.length; i++){
+      const px = X(g.x[i]), py = Y(g.y[i]);
+      i ? ctx.lineTo(px, py) : ctx.moveTo(px, py);
+    }
+    ctx.stroke(); ctx.setLineDash([]);
+  });
+
+  (spec.lines || []).forEach((L, k) => {
+    const col = L.color || C.series[k % C.series.length];
+    if(!L.noLine){
+      ctx.strokeStyle = col; ctx.lineWidth = LW;
+      ctx.setLineDash(L.dash === 'dashed' ? [3.2 * LW, 2.2 * LW] : []);
+      ctx.beginPath();
+      let up = false;
+      for(let i = 0; i < L.x.length; i++){
+        if(!isFinite(L.x[i]) || !isFinite(L.y[i])){ up = false; continue; }
+        const px = X(L.x[i]), py = Y(L.y[i]);
+        if(up) ctx.lineTo(px, py); else { ctx.moveTo(px, py); up = true; }
+      }
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+    if(L.markers){
+      ctx.fillStyle = col; ctx.strokeStyle = print ? '#ffffff' : C.bg;
+      ctx.lineWidth = ST.markerEdge * s;
+      for(let i = 0; i < L.x.length; i++){
+        if(!isFinite(L.y[i])) continue;
+        ctx.beginPath(); ctx.arc(X(L.x[i]), Y(L.y[i]), ST.markerSize * s / 2, 0, 6.2832);
+        ctx.fill(); ctx.stroke();
+      }
+    }
+  });
+
+  if(opts.hover && !print){
+    const hx = X(opts.hover.x), hy = Y(opts.hover.y);
+    ctx.strokeStyle = C.fg; ctx.globalAlpha = 0.5;
+    ctx.lineWidth = ST.tickWidth * s;
+    ctx.setLineDash([3 * s, 3 * s]);
+    ctx.beginPath();
+    ctx.moveTo(hx, MT); ctx.lineTo(hx, MT + ph);
+    ctx.moveTo(ML, hy); ctx.lineTo(ML + pw, hy);
+    ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+    (opts.hover.dots || []).forEach(d => {
+      ctx.fillStyle = d.c;
+      ctx.beginPath(); ctx.arc(X(d.x), Y(d.y), ST.markerSize * s * 0.42, 0, 6.2832); ctx.fill();
+      ctx.strokeStyle = C.bg; ctx.lineWidth = ST.markerEdge * s; ctx.stroke();
+    });
+  }
+  if(opts.band){
+    const b = opts.band;
+    ctx.fillStyle = 'rgba(120,180,160,0.18)';
+    ctx.strokeStyle = C.fg; ctx.lineWidth = ST.tickWidth * s;
+    ctx.setLineDash([4 * s, 4 * s]);
+    ctx.fillRect(b.x, b.y, b.w, b.h); ctx.strokeRect(b.x, b.y, b.w, b.h);
+    ctx.setLineDash([]);
+  }
+  ctx.restore();
+
+  /* ── frame, ticks (in, four sides), labels ────────────────────────────── */
+  ctx.strokeStyle = C.edge; ctx.lineWidth = ST.axesLw * s;
+  ctx.strokeRect(ML, MT, pw, ph);
+
+  const tl = ST.tickSize * s;
+  ctx.lineWidth = ST.tickWidth * s;
+  ctx.font = FONT('', ST.tickLabel);
+  ctx.fillStyle = C.fg;
+
+  ctx.textAlign = 'center';
+  tx.forEach((v, i) => {
+    const px = X(v);
+    if(px < ML - 0.5 || px > ML + pw + 0.5) return;
+    ctx.beginPath();
+    ctx.moveTo(px, MT + ph); ctx.lineTo(px, MT + ph - tl);
+    ctx.moveTo(px, MT); ctx.lineTo(px, MT + tl);
+    ctx.stroke();
+    ctx.fillText(txLab[i], px, MT + ph + ST.tickPad * s + tickH * 0.78);
+  });
+
+  ctx.textAlign = 'right';
+  ty.forEach((v, i) => {
+    const py = Y(v);
+    if(py < MT - 0.5 || py > MT + ph + 0.5) return;
+    ctx.beginPath();
+    ctx.moveTo(ML, py); ctx.lineTo(ML + tl, py);
+    ctx.moveTo(ML + pw, py); ctx.lineTo(ML + pw - tl, py);
+    ctx.stroke();
+    ctx.fillText(tyLab[i], ML - ST.tickPad * s, py + tickH * 0.35);
+  });
+
+  /* axis titles — math-set, and shrunk to fit the axis they belong to */
+  const fontOf = w => (sz => FONT(w, sz / s));
+  const fitSz = (text, maxW, base, w) => {
+    let sz = base * s, f = fontOf(w);
+    while(mpTextWidth(ctx, text, f, sz) > maxW && sz > base * s * 0.6) sz -= base * s * 0.05;
+    return sz;
+  };
+  if(spec.xlabel){
+    const f = fontOf(ST.labelWeight);
+    mpText(ctx, spec.xlabel, ML + pw / 2, H - pad - ST.labelSize * s * 0.28, 'center',
+           f, fitSz(spec.xlabel, pw, ST.labelSize, ST.labelWeight));
+  }
+  if(spec.ylabel){
+    const f = fontOf(ST.labelWeight);
+    ctx.save();
+    ctx.translate(pad + ST.labelSize * s * 0.92, MT + ph / 2);
+    ctx.rotate(-Math.PI / 2);
+    mpText(ctx, spec.ylabel, 0, 0, 'center', f, fitSz(spec.ylabel, ph, ST.labelSize, ST.labelWeight));
+    ctx.restore();
+  }
+  if(showTitle){
+    const f = fontOf(ST.titleWeight);
+    mpText(ctx, spec.title, ML + pw / 2, MT - ST.titlePad * s * 0.5, 'center',
+           f, fitSz(spec.title, pw, ST.titleSize, ST.titleWeight));
+  }
+
+  /* ── colour bar ───────────────────────────────────────────────────────── */
+  if(hasImg){
+    const im = spec.image, cbX = ML + pw + cbGap, cbY = MT, cbH = ph;
+    for(let i = 0; i < cbH; i++){
+      const c = viridis(1 - i / cbH);
+      ctx.fillStyle = 'rgb(' + (c[0] | 0) + ',' + (c[1] | 0) + ',' + (c[2] | 0) + ')';
+      ctx.fillRect(cbX, cbY + i, cbW, 1.25);
+    }
+    ctx.strokeStyle = C.edge; ctx.lineWidth = ST.axesLw * s;
+    ctx.strokeRect(cbX, cbY, cbW, cbH);
+    ctx.font = FONT('', ST.tickLabel * 0.92);
+    ctx.fillStyle = C.fg; ctx.textAlign = 'left';
+    ctx.lineWidth = ST.tickWidth * s;
+    mpTicks(im.low, im.high, 5).forEach(v => {
+      const py = cbY + cbH * (1 - (v - im.low) / ((im.high - im.low) || 1));
+      if(py < cbY - 1 || py > cbY + cbH + 1) return;
+      ctx.beginPath();
+      ctx.moveTo(cbX + cbW, py); ctx.lineTo(cbX + cbW - tl * 0.8, py);
+      ctx.stroke();
+      ctx.fillText(mpFmt(v, im.high - im.low), cbX + cbW + 5 * s, py + tickH * 0.32);
+    });
+    if(im.cbTitle){
+      ctx.save();
+      ctx.translate(cbX + cbW + 6 * s + wCb + cbTitleH * 0.5, cbY + cbH / 2);
+      ctx.rotate(Math.PI / 2);
+      mpText(ctx, im.cbTitle, 0, 0, 'center', fontOf(ST.labelWeight),
+             fitSz(im.cbTitle, cbH, ST.legendSize, ST.labelWeight));
+      ctx.restore();
+    }
+  }
+
+  /* ── legend (no frame) ────────────────────────────────────────────────── */
+  const leg = (spec.lines || []).filter(l => l.label)
+    .map((l, k) => ({ t: l.label, c: l.color || C.series[k % C.series.length], d: l.dash, m: !!l.noLine }))
+    .concat((spec.guides || []).filter(g => g.label).map(g => ({ t: g.label, c: C.guide, d: g.dash || 'dashed' })));
+  if(leg.length){
+    const fs = ST.legendSize * s, hl = 2.2 * fs, gap = 0.7 * fs, row = fs * 1.55;
+    const legFont = sz => FONT('', sz / s);
+    let wMax = 0; leg.forEach(l => wMax = Math.max(wMax, mpTextWidth(ctx, l.t, legFont, fs)));
+    const bw = hl + gap + wMax, bh = leg.length * row;
+    /* adaptive placement: score the four corners by how much data they cover */
+    const m = 10 * s;
+    const cands = [
+      { k: 'top_right',    x: ML + pw - bw - m, y: MT + m },
+      { k: 'top_left',     x: ML + m,           y: MT + m },
+      { k: 'bottom_right', x: ML + pw - bw - m, y: MT + ph - bh - m },
+      { k: 'bottom_left',  x: ML + m,           y: MT + ph - bh - m }
+    ];
+    const samples = [];
+    (spec.lines || []).forEach(L => {
+      const st = Math.max(1, Math.floor(L.x.length / 90));
+      for(let i = 0; i < L.x.length; i += st){
+        if(!isFinite(L.x[i]) || !isFinite(L.y[i])) continue;
+        samples.push([X(L.x[i]), Y(L.y[i])]);
+      }
+    });
+    const hit = c => {
+      const x2 = c.x + bw + 6 * s, y2 = c.y + bh + 6 * s;
+      let n = 0;
+      for(let i = 0; i < samples.length; i++){
+        const q = samples[i];
+        if(q[0] >= c.x - 6 * s && q[0] <= x2 && q[1] >= c.y - 6 * s && q[1] <= y2) n++;
+      }
+      return n;
+    };
+    const pref = spec.legendLoc || 'top_right';
+    let best = cands[0], bestN = Infinity;
+    cands.forEach(c => {
+      let n = hit(c);
+      if(c.k === pref) n -= 0.5;                    /* tie-break toward the hint */
+      if(n < bestN){ bestN = n; best = c; }
+    });
+    let lx = Math.max(ML + 4 * s, best.x), ly = Math.max(MT + 4 * s, best.y);
+    ctx.globalAlpha = print ? 0.9 : 0.75;
+    ctx.fillStyle = C.bg;
+    ctx.fillRect(lx - 5 * s, ly - 5 * s, bw + 10 * s, bh + 10 * s);
+    ctx.globalAlpha = 1;
+    leg.forEach((l, i) => {
+      const yy = ly + row * i + row * 0.5;
+      if(l.m){
+        ctx.fillStyle = l.c;
+        ctx.beginPath(); ctx.arc(lx + hl / 2, yy, ST.markerSize * s / 2, 0, 6.2832); ctx.fill();
+      } else {
+        ctx.strokeStyle = l.c; ctx.lineWidth = LW;
+        ctx.setLineDash(l.d === 'dashed' ? [3.2 * LW, 2.2 * LW] : l.d === 'dotted' ? [1.5 * LW, 2 * LW] : []);
+        ctx.beginPath(); ctx.moveTo(lx, yy); ctx.lineTo(lx + hl, yy); ctx.stroke();
+        ctx.setLineDash([]);
+      }
+      ctx.fillStyle = C.fg;
+      mpText(ctx, l.t, lx + hl + gap, yy + fs * 0.35, 'left', legFont, fs);
+    });
+  }
+
+  ctx.restore();
+  return { ML, MT, pw, ph, X, Y, Xi, Yi, fx, ifx, LG };
+}
+
+/* ── true 3-D surface (rotatable, hoverable) ─────────────────────────────── */
+/* spec.surface3d = {z, x0, dw, y0, dh, low, high, xlabel, ylabel, zlabel, cbTitle} */
+function mp3D(ctx, W, H, spec, rot, opts){
+  opts = opts || {};
+  const print = !!opts.print, C = mpPalette(print), ST = ST0, s = mpUi(W, H);
+  const S = spec.surface3d, Z = S.z, nY = Z.length, nX = Z[0].length;
+  const FONT = (w, sz) => (w ? w + ' ' : '') + (sz * s).toFixed(2) + 'px ' + ST.fontFamily;
+  const rng = (S.high - S.low) || 1;
+
+  ctx.save();
+  ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
+  ctx.textBaseline = 'alphabetic';
+
+  /* colour-bar reservation, matching the 2-D cards */
+  const cbW = 12 * s, cbGap = 10 * s;
+  ctx.font = FONT('', ST.tickLabel * 0.92);
+  const cbTk = mpTicks(S.low, S.high, 5);
+  const wCb = cbTk.reduce((m, v) => Math.max(m, ctx.measureText(mpFmt(v, rng)).width), 0);
+  const cbTitleH = S.cbTitle ? ST.legendSize * s * 2.0 : 0;
+  const MR = cbGap + cbW + 6 * s + wCb + cbTitleH + 4 * s;
+  const pad = 10 * s;
+  const bw = W - MR - pad * 2, bh = H - pad * 2 - ST.labelSize * s * 1.4;
+  const cx = pad + bw / 2, cy = pad + bh / 2 + ST.labelSize * s * 0.2;
+  const R = Math.min(bw * 0.92, bh * 1.15) * 0.52 * (rot.zoom || 1);
+
+  const ca = Math.cos(rot.az), sa = Math.sin(rot.az);
+  const ce = Math.cos(rot.el), se = Math.sin(rot.el);
+  /* u,v in [0,1] over (P, y); w in [0,1] over q */
+  const proj = (u, v, w) => {
+    const x = u - 0.5, y = v - 0.5, z = (w - 0.5) * 0.75;
+    const xr = x * ca - y * sa, yr = x * sa + y * ca;
+    return [cx + xr * R, cy - z * R * ce + yr * R * se, yr * ce - z * R * 0.0001 + z * se];
+  };
+  const depth = (u, v) => ((u - 0.5) * sa + (v - 0.5) * ca);
+
+  const P0 = proj(0, 0, 0), P1 = proj(1, 0, 0), P2 = proj(1, 1, 0), P3 = proj(0, 1, 0);
+  /* which corner faces the viewer? (larger rotated-y is nearer) */
+  const yrOf = (u, v) => (u - 0.5) * sa + (v - 0.5) * ca;
+  const frontU = yrOf(1, 0.5) > yrOf(0, 0.5) ? 1 : 0;
+  const frontV = yrOf(0.5, 1) > yrOf(0.5, 0) ? 1 : 0;
+  const backU = 1 - frontU, backV = 1 - frontV;
+  const offU = frontU ? 0.075 : -0.075, offV = frontV ? 0.075 : -0.075;
+  const PZ = proj(backU, backV, 1), PZ0 = proj(backU, backV, 0);
+
+  /* floor + grid, drawn first */
+  ctx.beginPath();
+  ctx.moveTo(P0[0], P0[1]); ctx.lineTo(P1[0], P1[1]);
+  ctx.lineTo(P2[0], P2[1]); ctx.lineTo(P3[0], P3[1]); ctx.closePath();
+  ctx.fillStyle = print ? 'rgba(0,0,0,0.03)' : (theme === 'dark' ? 'rgba(200,216,210,0.05)' : 'rgba(0,0,0,0.04)');
+  ctx.fill();
+  ctx.strokeStyle = C.edge; ctx.globalAlpha = 0.35; ctx.lineWidth = ST.tickWidth * s;
+  for(let g = 0; g <= 5; g++){
+    const t = g / 5;
+    let a = proj(t, 0, 0), b = proj(t, 1, 0);
+    ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+    a = proj(0, t, 0); b = proj(1, t, 0);
+    ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+
+  /* vertical (q) axis sits at the far corner and is drawn first, so the
+     surface occludes it naturally instead of floating on top */
+  ctx.strokeStyle = C.edge; ctx.lineWidth = ST.axesLw * s;
+  ctx.beginPath(); ctx.moveTo(PZ0[0], PZ0[1]); ctx.lineTo(PZ[0], PZ[1]); ctx.stroke();
+  ctx.font = FONT('', ST.tickLabel); ctx.fillStyle = C.fg; ctx.textAlign = 'right';
+  ctx.lineWidth = ST.tickWidth * s;
+  for(let g = 0; g <= 4; g++){
+    const t = g / 4, a = proj(backU, backV, t), b = [a[0] - 7 * s, a[1]];
+    ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+    ctx.fillText(mpFmt(S.low + rng * t, rng), b[0] - 2 * s, b[1] + ST.tickLabel * s * 0.34);
+  }
+  {
+    const mZ = proj(backU, backV, 1.12);
+    mpText(ctx, S.zlabel || '', mZ[0], mZ[1], 'center', sz => FONT(ST.labelWeight, sz / s), ST.labelSize * s);
+  }
+
+  /* surface quads, painter's algorithm */
+  const quads = [];
+  for(let j = 0; j < nY - 1; j++) for(let i = 0; i < nX - 1; i++){
+    const u0 = i / (nX - 1), u1 = (i + 1) / (nX - 1);
+    const v0 = j / (nY - 1), v1 = (j + 1) / (nY - 1);
+    const z00 = Z[j][i], z10 = Z[j][i + 1], z11 = Z[j + 1][i + 1], z01 = Z[j + 1][i];
+    if(![z00, z10, z11, z01].every(isFinite)) continue;
+    const wa = ((z00 + z10 + z11 + z01) / 4 - S.low) / rng;
+    const shade = 0.72 + 0.28 / (1 + (Math.abs(z10 - z00) + Math.abs(z01 - z00)) * 6 / rng);
+    quads.push({
+      d: depth((u0 + u1) / 2, (v0 + v1) / 2), w: wa, sh: shade,
+      p: [proj(u0, v0, (z00 - S.low) / rng), proj(u1, v0, (z10 - S.low) / rng),
+          proj(u1, v1, (z11 - S.low) / rng), proj(u0, v1, (z01 - S.low) / rng)]
+    });
+  }
+  quads.sort((a, b) => a.d - b.d);
+  const edgeCol = print ? 'rgba(255,255,255,0.35)' : (theme === 'dark' ? 'rgba(0,0,0,0.25)' : 'rgba(255,255,255,0.35)');
+  quads.forEach(q => {
+    const c = viridis(q.w);
+    ctx.fillStyle = 'rgb(' + Math.round(c[0] * q.sh) + ',' + Math.round(c[1] * q.sh) + ',' + Math.round(c[2] * q.sh) + ')';
+    ctx.strokeStyle = edgeCol; ctx.lineWidth = 0.35 * s;
+    ctx.beginPath();
+    ctx.moveTo(q.p[0][0], q.p[0][1]);
+    for(let k = 1; k < 4; k++) ctx.lineTo(q.p[k][0], q.p[k][1]);
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+  });
+
+  /* base edges + P and y ticks, on the two edges facing the viewer */
+  ctx.strokeStyle = C.edge; ctx.lineWidth = ST.axesLw * s;
+  const edge = (p, q) => { ctx.beginPath(); ctx.moveTo(p[0], p[1]); ctx.lineTo(q[0], q[1]); ctx.stroke(); };
+  edge(proj(0, frontV, 0), proj(1, frontV, 0));
+  edge(proj(frontU, 0, 0), proj(frontU, 1, 0));
+
+  ctx.font = FONT('', ST.tickLabel);
+  ctx.fillStyle = C.fg; ctx.textAlign = 'center';
+  ctx.lineWidth = ST.tickWidth * s;
+  for(let g = 0; g <= 4; g++){
+    const t = g / 4;
+    const a1 = proj(t, frontV, 0), b1 = proj(t, frontV + offV, 0);
+    ctx.beginPath(); ctx.moveTo(a1[0], a1[1]); ctx.lineTo(b1[0], b1[1]); ctx.stroke();
+    ctx.fillText(mpFmt(S.x0 + S.dw * t, S.dw), b1[0], b1[1] + ST.tickLabel * s * 0.95);
+    const a2 = proj(frontU, t, 0), b2 = proj(frontU + offU, t, 0);
+    ctx.beginPath(); ctx.moveTo(a2[0], a2[1]); ctx.lineTo(b2[0], b2[1]); ctx.stroke();
+    ctx.fillText(mpFmt(S.y0 + S.dh * t, S.dh), b2[0], b2[1] + ST.tickLabel * s * 0.95);
+  }
+
+  const f3 = sz => FONT(ST.labelWeight, sz / s);
+  const mP = proj(0.5, frontV + offV * 4.6, 0), mY = proj(frontU + offU * 4.6, 0.5, 0);
+  mpText(ctx, S.xlabel || '', mP[0], mP[1] + ST.labelSize * s * 0.4, 'center', f3, ST.labelSize * s);
+  mpText(ctx, S.ylabel || '', mY[0], mY[1] + ST.labelSize * s * 0.4, 'center', f3, ST.labelSize * s);
+
+  /* hover marker on the picked vertex */
+  if(opts.hover3 && !print){
+    const h = opts.hover3, pt = proj(h.u, h.v, (h.q - S.low) / rng);
+    ctx.strokeStyle = print ? '#000' : (theme === 'dark' ? '#ffffff' : '#000000');
+    ctx.lineWidth = ST.tickWidth * s * 1.6;
+    ctx.beginPath(); ctx.arc(pt[0], pt[1], ST.markerSize * s * 0.7, 0, 6.2832); ctx.stroke();
+    const foot = proj(h.u, h.v, 0);
+    ctx.globalAlpha = 0.6; ctx.setLineDash([3 * s, 3 * s]);
+    ctx.beginPath(); ctx.moveTo(pt[0], pt[1]); ctx.lineTo(foot[0], foot[1]); ctx.stroke();
+    ctx.setLineDash([]); ctx.globalAlpha = 1;
+  }
+
+  /* colour bar, identical styling to the 2-D cards */
+  const cbX = W - MR + cbGap, cbY = pad + 4 * s, cbH = H - pad * 2 - ST.labelSize * s * 1.2;
+  for(let i = 0; i < cbH; i++){
+    const c = viridis(1 - i / cbH);
+    ctx.fillStyle = 'rgb(' + (c[0] | 0) + ',' + (c[1] | 0) + ',' + (c[2] | 0) + ')';
+    ctx.fillRect(cbX, cbY + i, cbW, 1.25);
+  }
+  ctx.strokeStyle = C.edge; ctx.lineWidth = ST.axesLw * s;
+  ctx.strokeRect(cbX, cbY, cbW, cbH);
+  ctx.font = FONT('', ST.tickLabel * 0.92);
+  ctx.fillStyle = C.fg; ctx.textAlign = 'left'; ctx.lineWidth = ST.tickWidth * s;
+  cbTk.forEach(v => {
+    const py = cbY + cbH * (1 - (v - S.low) / rng);
+    if(py < cbY - 1 || py > cbY + cbH + 1) return;
+    ctx.beginPath(); ctx.moveTo(cbX + cbW, py); ctx.lineTo(cbX + cbW - ST.tickSize * s * 0.8, py); ctx.stroke();
+    ctx.fillText(mpFmt(v, rng), cbX + cbW + 5 * s, py + ST.tickLabel * s * 0.32);
+  });
+  if(S.cbTitle){
+    ctx.save();
+    ctx.translate(cbX + cbW + 6 * s + wCb + cbTitleH * 0.5, cbY + cbH / 2);
+    ctx.rotate(Math.PI / 2);
+    mpText(ctx, S.cbTitle, 0, 0, 'center', sz => FONT(ST.labelWeight, sz / s), ST.legendSize * s);
+    ctx.restore();
+  }
+  ctx.restore();
+
+  return {
+    proj, R, cx, cy,
+    pick(px, py){
+      let best = null, bd = 26 * 26;
+      const step = Math.max(1, Math.round(nX / 60));
+      for(let j = 0; j < nY; j += step) for(let i = 0; i < nX; i += step){
+        const q = Z[j][i]; if(!isFinite(q)) continue;
+        const u = i / (nX - 1), v = j / (nY - 1);
+        const pt = proj(u, v, (q - S.low) / rng);
+        const d = (pt[0] - px) * (pt[0] - px) + (pt[1] - py) * (pt[1] - py);
+        if(d < bd){ bd = d; best = { u, v, q, i, j, P: S.x0 + S.dw * u, y: S.y0 + S.dh * v }; }
+      }
+      return best;
+    }
+  };
+}
+
+/* ── interactive widget ──────────────────────────────────────────────────── */
+const MP = {};   // holder id -> instance
+
+function mpMount(holder, spec){
+  const id = holder.id;
+  const old = MP[id];
+  const keep = old && old.spec && old.specKey === spec.specKey ? old.view : null;
+
+  holder.innerHTML = '';
+  holder.style.position = 'relative';
+  holder.classList.add('mp-host');
+  const W = Math.max(280, holder.clientWidth || 440);
+  const H = spec.height || Math.round(W * (spec.aspect || 0.78));
+
+  const cv = document.createElement('canvas');
+  const dpr = Math.min(3, window.devicePixelRatio || 1) * 1.5;
+  cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+  cv.style.cssText = 'width:100%;height:' + H + 'px;display:block;cursor:crosshair;border-radius:6px;';
+  holder.appendChild(cv);
+
+  const tip = document.createElement('div');
+  tip.className = 'mp-tip';
+  holder.appendChild(tip);
+
+  const bar = document.createElement('div');
+  bar.className = 'mp-bar';
+  bar.innerHTML =
+    '<button type="button" data-a="pan"  title="Pan (drag)">\u271c</button>' +
+    '<button type="button" data-a="box"  title="Box zoom">\u25a3</button>' +
+    '<button type="button" data-a="zin"  title="Zoom in">+</button>' +
+    '<button type="button" data-a="zout" title="Zoom out">\u2212</button>' +
+    '<button type="button" data-a="reset" title="Reset view">\u21ba</button>' +
+    '<button type="button" data-a="max"  title="Pop out full screen">\u2922</button>' +
+    '<button type="button" data-a="save" title="Save high-resolution PNG">\u2b07</button>';
+  holder.appendChild(bar);
+
+  const inst = {
+    holder, spec, cv, tip, bar, W, H, dpr,
+    specKey: spec.specKey,
+    home: { xr: spec.xr.slice(), yr: spec.yr.slice() },
+    view: keep || { xr: spec.xr.slice(), yr: spec.yr.slice() },
+    mode: 'pan', hover: null, band: null, geom: null
+  };
+  MP[id] = inst;
+
+  inst.rot = (old && old.rot && old.specKey === spec.specKey) ? old.rot : { az: Math.PI * 0.32, el: 0.52, zoom: 1 };
+  inst.paint = function(){
+    const c = cv.getContext('2d');
+    c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    c.clearRect(0, 0, W, H);
+    if(inst.spec.surface3d){
+      inst.g3 = mp3D(c, W, H, inst.spec, inst.rot, { hover3: inst.hover3, big: !!inst.big });
+      inst.geom = null;
+    } else {
+      inst.geom = mpDraw(c, W, H, inst.spec, inst.view, { hover: inst.hover, band: inst.band, big: !!inst.big });
+    }
+  };
+  inst.paint();
+
+  const loc = ev => {
+    const r = cv.getBoundingClientRect();
+    return { px: (ev.clientX - r.left) * (W / r.width), py: (ev.clientY - r.top) * (H / r.height),
+             cx: ev.clientX - r.left, cy: ev.clientY - r.top };
+  };
+  const inside = p => inst.spec.surface3d ? true :
+    (inst.geom && p.px >= inst.geom.ML && p.px <= inst.geom.ML + inst.geom.pw &&
+     p.py >= inst.geom.MT && p.py <= inst.geom.MT + inst.geom.ph);
+
+  bar.addEventListener('click', ev => {
+    const b = ev.target.closest('button'); if(!b) return;
+    const a = b.dataset.a;
+    if(a === 'pan' || a === 'box'){
+      inst.mode = a;
+      bar.querySelectorAll('button').forEach(x => x.classList.toggle('on', x.dataset.a === a));
+      cv.style.cursor = a === 'box' ? 'crosshair' : 'grab';
+    }
+    if(a === 'zin' || a === 'zout') mpZoom(inst, a === 'zin' ? 0.8 : 1.25, null);
+    if(a === 'reset'){
+      if(inst.spec.surface3d) inst.rot = { az: Math.PI * 0.32, el: 0.52, zoom: 1 };
+      else inst.view = { xr: inst.home.xr.slice(), yr: inst.home.yr.slice() };
+      inst.paint();
+    }
+    if(a === 'max') mpPopout(id);
+    if(a === 'save') mpExport(id);
+  });
+
+  cv.addEventListener('wheel', ev => {
+    if(!inst.geom) return;
+    ev.preventDefault();
+    const p = loc(ev);
+    mpZoom(inst, ev.deltaY > 0 ? 1.15 : 0.87, inside(p) ? p : null);
+  }, { passive: false });
+
+  let drag = null;
+  cv.addEventListener('mousedown', ev => {
+    const p = loc(ev); if(!inside(p)) return;
+    ev.preventDefault();
+    drag = { p, view: { xr: inst.view.xr.slice(), yr: inst.view.yr.slice() },
+             rot: Object.assign({}, inst.rot), mode: inst.spec.surface3d ? 'rot' : inst.mode };
+    if(inst.mode === 'pan') cv.style.cursor = 'grabbing';
+  });
+  window.addEventListener('mousemove', ev => {
+    if(!drag) return;
+    const p = loc(ev), g = inst.geom;
+    if(drag.mode === 'rot'){
+      inst.rot.az = drag.rot.az + (p.px - drag.p.px) * 0.012;
+      inst.rot.el = Math.max(0.06, Math.min(1.35, drag.rot.el + (p.py - drag.p.py) * 0.006));
+      inst.paint(); return;
+    }
+    if(drag.mode === 'box'){
+      inst.band = { x: Math.min(drag.p.px, p.px), y: Math.min(drag.p.py, p.py),
+                    w: Math.abs(p.px - drag.p.px), h: Math.abs(p.py - drag.p.py) };
+      inst.paint(); return;
+    }
+    const fxn = g.fx, ifxn = g.ifx;
+    const ux0 = fxn(drag.view.xr[0]), ux1 = fxn(drag.view.xr[1]);
+    const du = (p.px - drag.p.px) / g.pw * (ux1 - ux0);
+    const dy = (p.py - drag.p.py) / g.ph * (drag.view.yr[1] - drag.view.yr[0]);
+    inst.view = { xr: [ifxn(ux0 - du), ifxn(ux1 - du)],
+                  yr: [drag.view.yr[0] + dy, drag.view.yr[1] + dy] };
+    inst.paint();
+  });
+  window.addEventListener('mouseup', () => {
+    if(!drag) return;
+    if(drag.mode === 'box' && inst.band && inst.band.w > 6 && inst.band.h > 6){
+      const g = inst.geom, b = inst.band;
+      inst.view = { xr: [g.Xi(b.x), g.Xi(b.x + b.w)], yr: [g.Yi(b.y + b.h), g.Yi(b.y)] };
+    }
+    inst.band = null; drag = null;
+    cv.style.cursor = inst.mode === 'box' ? 'crosshair' : 'grab';
+    inst.paint();
+  });
+
+  cv.addEventListener('mousemove', ev => {
+    if(drag) return;
+    const p = loc(ev);
+    if(!inside(p)){ if(inst.hover){ inst.hover = null; tip.style.display = 'none'; inst.paint(); } return; }
+    if(inst.spec.surface3d){
+      const hit = inst.g3 && inst.g3.pick(p.px, p.py);
+      inst.hover3 = hit || null;
+      inst.paint();
+      if(!hit){ tip.style.display = 'none'; return; }
+      const S = inst.spec.surface3d;
+      tip.innerHTML = '<b>' + mpHtml(S.xTip || 'P') + '</b> ' + hit.P.toFixed(4) +
+                      '<br><b>' + mpHtml(S.yTip || 'y') + '</b> ' + hit.y.toFixed(4) +
+                      '<br><b>' + mpHtml(S.zTip || 'q') + '</b> ' + hit.q.toFixed(4);
+      tip.style.display = 'block';
+      const tw0 = tip.offsetWidth, th0 = tip.offsetHeight;
+      let lx0 = p.cx + 16, ly0 = p.cy - th0 - 10;
+      if(lx0 + tw0 > holder.clientWidth) lx0 = p.cx - tw0 - 16;
+      if(ly0 < 0) ly0 = p.cy + 16;
+      tip.style.left = Math.max(2, lx0) + 'px'; tip.style.top = Math.max(2, ly0) + 'px';
+      return;
+    }
+    const g = inst.geom, xv = g.Xi(p.px), yv = g.Yi(p.py);
+    const r = mpProbe(inst.spec, xv, yv);
+    inst.hover = { x: r.hx !== undefined ? r.hx : xv, y: yv, dots: r.dots };
+    inst.paint();
+    tip.innerHTML = r.html;
+    tip.style.display = 'block';
+    const tw = tip.offsetWidth, th = tip.offsetHeight;
+    let lx = p.cx + 16, ly = p.cy - th - 10;
+    if(lx + tw > holder.clientWidth) lx = p.cx - tw - 16;
+    if(ly < 0) ly = p.cy + 16;
+    tip.style.left = Math.max(2, lx) + 'px'; tip.style.top = Math.max(2, ly) + 'px';
+    if(inst.spec.onHover) inst.spec.onHover(xv, yv);
+  });
+  cv.addEventListener('mouseleave', () => { inst.hover = null; inst.hover3 = null; tip.style.display = 'none'; inst.paint(); });
+  if(spec.onClick) cv.addEventListener('click', ev => {
+    const p = loc(ev); if(!inside(p)) return;
+    spec.onClick(inst.geom.Xi(p.px), inst.geom.Yi(p.py));
+  });
+  cv.style.cursor = 'grab';
+  bar.querySelector('[data-a="pan"]').classList.add('on');
+  return inst;
+}
+
+function mpZoom(inst, k, at){
+  const v = inst.view, g = inst.geom;
+  if(inst.spec.surface3d){ inst.rot.zoom = Math.max(0.4, Math.min(3, inst.rot.zoom / k)); inst.paint(); return; }
+  const fxn = g.fx, ifxn = g.ifx;
+  const u0 = fxn(v.xr[0]), u1 = fxn(v.xr[1]);
+  const uc = at ? fxn(g.Xi(at.px)) : (u0 + u1) / 2;
+  const cy = at ? g.Yi(at.py) : (v.yr[0] + v.yr[1]) / 2;
+  inst.view = { xr: [ifxn(uc + (u0 - uc) * k), ifxn(uc + (u1 - uc) * k)],
+                yr: [cy + (v.yr[0] - cy) * k, cy + (v.yr[1] - cy) * k] };
+  inst.paint();
+}
+
+/* tooltip content: nearest-x readout for line plots, sampled value for images */
+function mpProbe(spec, xv, yv){
+  const C = mpPalette(false);
+  const f = (v, n) => isFinite(v) ? v.toFixed(n === undefined ? 4 : n) : '\u2014';
+  if(spec.image){
+    const im = spec.image, nY = im.z.length, nX = im.z[0].length;
+    const j = Math.round((yv - im.y0) / im.dh * (nY - 1)), i = Math.round((xv - im.x0) / im.dw * (nX - 1));
+    const v = (j >= 0 && j < nY && i >= 0 && i < nX) ? im.z[j][i] : NaN;
+    return { html: '<b>' + mpHtml(spec.xTip || spec.xlabel) + '</b> ' + f(xv) + '<br><b>' +
+                   mpHtml(spec.yTip || spec.ylabel) + '</b> ' + f(yv) + '<br><b>' +
+                   mpHtml(im.label || 'value') + '</b> ' + f(v), dots: [] };
+  }
+  const L0 = (spec.lines || [])[0]; if(!L0) return { html: '', dots: [] };
+  let k = 0, best = Infinity;
+  for(let i = 0; i < L0.x.length; i++){ const d = Math.abs(L0.x[i] - xv); if(d < best){ best = d; k = i; } }
+  const rows = [], dots = [];
+  rows.push('<b>' + mpHtml(spec.xTip || spec.xlabel) + '</b> ' + f(L0.x[k]));
+  (spec.lines || []).forEach((L, n) => {
+    const c = L.color || C.series[n % C.series.length];
+    rows.push('<span style="color:' + c + '">\u25cf</span> ' + mpHtml(L.label || 'y') + ' = ' + f(L.y[k]));
+    if(isFinite(L.y[k])) dots.push({ x: L.x[k], y: L.y[k], c });
+  });
+  Object.keys(L0.extra || {}).forEach(kk => {
+    const v = L0.extra[kk][k];
+    if(v !== undefined) rows.push('<span style="opacity:.7">' + kk + '</span> = ' + f(v, 3));
+  });
+  return { html: rows.join('<br>'), dots, hx: L0.x[k], hy: isFinite(L0.y[k]) ? L0.y[k] : yv };
+}
+
+/* pop-out: full-screen canvas with the presentation typography applied */
+function mpPopout(holderId){
+  const src = MP[holderId]; if(!src) return;
+  const ov = document.createElement('div');
+  ov.className = 'mp-pop';
+  ov.innerHTML = '<div class="mp-pop-box"><div class="mp-pop-head">' +
+    '<span>' + (src.spec.title || '') + '</span><span class="sp"></span>' +
+    '<button type="button" class="tour-btn" data-a="png">Download PNG</button>' +
+    '<button type="button" class="tour-btn" data-a="close">Close</button></div>' +
+    '<div class="mp-pop-body" id="mp_popout"></div></div>';
+  document.body.appendChild(ov);
+  const close = () => { delete MP['mp_popout']; document.body.removeChild(ov); document.removeEventListener('keydown', esc); };
+  const esc = e => { if(e.key === 'Escape') close(); };
+  document.addEventListener('keydown', esc);
+  ov.addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if(e.target === ov || (b && b.dataset.a === 'close')) return close();
+    if(b && b.dataset.a === 'png') mpExport('mp_popout', sanName(caseNameEl.value) + '_' + (src.spec.file || holderId) + '.png');
+  });
+  const host = ov.querySelector('#mp_popout');
+  requestAnimationFrame(() => {
+    const spec = Object.assign({}, src.spec, { height: host.clientHeight, aspect: src.spec.aspect });
+    const inst = mpMount(host, spec);
+    inst.big = true;
+    inst.view = { xr: src.view.xr.slice(), yr: src.view.yr.slice() };
+    if(src.rot) inst.rot = Object.assign({}, src.rot);
+    inst.paint();
+  });
+}
+
+/* high-resolution export: identical drawing routine at 2400 px, print palette */
+function mpExport(holderId, filename){
+  const inst = MP[holderId]; if(!inst) return false;
+  const k = ST0.exportScale, W = inst.W, H = inst.H;
+  const cv = document.createElement('canvas');
+  cv.width = Math.round(W * k); cv.height = Math.round(H * k);
+  const c = cv.getContext('2d');
+  c.setTransform(k, 0, 0, k, 0, 0);
+  c.imageSmoothingEnabled = false;
+  if(inst.spec.surface3d) mp3D(c, W, H, inst.spec, inst.rot, { print: true, big: true });
+  else mpDraw(c, W, H, inst.spec, inst.view, { print: true, big: true });
+  const name = filename || (sanName(caseNameEl.value) + '_' + (inst.spec.file || holderId) + '.png');
+  cv.toBlob(b => {
+    const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(b), download: name });
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  }, 'image/png');
+  return true;
+}
+
+/* route existing PNG buttons through the canvas exporter */
+const _svgPngFromHolder = pngFromHolder;
+pngFromHolder = function(holderId, label){
+  if(MP[holderId]) { mpExport(holderId, sanName(caseNameEl.value) + '_' + label + '.png'); return; }
+  _svgPngFromHolder(holderId, label);
+};
+
+/* ═══════════════════════ IAST CARDS ══════════════════════════════════════ */
+
+function plotXY(T, holder, noteEl){
+  const N = 120, Pmax = parseFloat(pmaxEl.value) || 1.5, C = mpPalette(false);
+  const ys = [], xs = [], SS = [];
+  for(let i = 0; i <= N; i++){
+    const y = i / N; let x;
+    if(y <= 0) x = 0; else if(y >= 1) x = 1;
+    else { try{ x = iastSolve([compA, compB], [y, 1 - y], Pmax, T).x[0]; }catch(e){ x = NaN; } }
+    ys.push(y); xs.push(isFinite(x) ? x : NaN);
+    SS.push((y > 0 && y < 1 && isFinite(x)) ? (x / y) / ((1 - x) / (1 - y)) : NaN);
+  }
+  const lines = [{ x: ys, y: xs, color: C.series[0], label: 'IAST @ P = ' + Pmax.toFixed(2) + ' bar', extra: { S: SS } }];
+  const elOn = (document.getElementById('elToggle') || {}).checked;
+  const bothLang = compA.model === 'SSL' && compB.model === 'SSL';
+  let elDev = 0;
+  if(elOn && bothLang){
+    const bA = affBar(compA.params.b0, compA.params.dH, compA.params._basis || 'bar', T, 1);
+    const bB = affBar(compB.params.b0, compB.params.dH, compB.params._basis || 'bar', T, 1);
+    const xe = [];
+    for(let i = 0; i <= N; i++){
+      const y = ys[i], p1 = Pmax * y, p2 = Pmax * (1 - y);
+      const q1 = compA.params.qs * bA * p1 / (1 + bA * p1 + bB * p2);
+      const q2 = compB.params.qs * bB * p2 / (1 + bA * p1 + bB * p2);
+      const v = (q1 + q2) > 0 ? q1 / (q1 + q2) : 0;
+      xe.push(v); if(isFinite(xs[i])) elDev = Math.max(elDev, Math.abs(v - xs[i]));
+    }
+    lines.push({ x: ys, y: xe, color: C.series[1], dash: 'dashed', label: 'ext. Langmuir' });
+  }
+  mpMount(holder, {
+    specKey: 'xy', file: 'IAST_xy', aspect: 0.8, height: 300, title: 'x\u2013y equilibrium  (P = ' + Pmax.toFixed(2) + ' bar)',
+    xlabel: 'y_{' + chem(compA.name) + '}  (gas phase)', ylabel: 'x_{' + chem(compA.name) + '}  (adsorbed phase)',
+    xTip: 'y_{' + chem(compA.name) + '}', yTip: 'x_{' + chem(compA.name) + '}', xr: [0, 1], yr: [0, 1],
+    guides: [{ x: [0, 1], y: [0, 1], dash: 'dashed', label: 'y = x' }],
+    lines, legendLoc: 'bottom_right'
+  });
+  let note = 'Adsorbed vs gas mole fraction. Bowing above y=x \u2192 ' + compA.name + ' preferentially adsorbed.';
+  try{
+    const A = analyzeIAST(T);
+    if(elOn && !bothLang) note = '<span style="color:var(--amber)">Extended-Langmuir overlay needs <b>both components on single-site Langmuir</b></span> (currently ' + MODELS[compA.model].label + ' / ' + MODELS[compB.model].label + ').';
+    else if(A.degenerate) note = '\u03c8\u2081\u2248\u03c8\u2082 \u2014 <b>IAST-indistinguishable</b>: the curve sits on the diagonal.';
+    else if(A.rev.some(ps => Math.abs(ps - Pmax) / Pmax < 0.03)) note = 'At this P \u2248 p*, the curve <b>degenerates onto the diagonal</b> (S=1 \u2200y). Binary IAST has no composition azeotropes.';
+    else if(elOn && bothLang) note = 'Extended Langmuir overlay shown (max \u0394x = ' + elDev.toFixed(3) + '). ' + (elDev < 1e-3 ? 'Equal q\u209b \u2192 coincides with IAST exactly.' : 'Unequal q\u209b \u2192 deviates from thermodynamically-consistent IAST.');
+  }catch(e){}
+  noteEl.innerHTML = note;
+  IAST_CSV.xy = { name: 'xy_diagram', rows: [['y_' + compA.name, 'x_' + compA.name, 'S'],
+    ...ys.map((y, i) => [y.toFixed(5), (isFinite(xs[i]) ? xs[i] : NaN).toFixed(5), (isFinite(SS[i]) ? SS[i] : NaN).toFixed(5)])] };
+}
+
+function plotPsi(T, holder, noteEl){
+  const Pmin = Math.max(1e-4, parseFloat(pminEl.value)), Pmax = parseFloat(pmaxEl.value) || 1.5;
+  const N = 200, C = mpPalette(false), P = [], pa = [], pb = [];
+  for(let i = 0; i <= N; i++){
+    const p = Pmin + (Pmax - Pmin) * i / N; P.push(p);
+    let a = NaN, b = NaN;
+    try{ a = MODELS[compA.model].psi(Math.max(p, 1e-12), T, compA.params); }catch(e){}
+    try{ b = MODELS[compB.model].psi(Math.max(p, 1e-12), T, compB.params); }catch(e){}
+    pa.push(a); pb.push(b);
+  }
+  const fin = pa.concat(pb).filter(isFinite);
+  const yMax = niceCeil(fin.length ? Math.max.apply(null, fin) : 1) || 1;
+  mpMount(holder, {
+    specKey: 'psi', file: 'IAST_psi', aspect: 0.8, height: 300, title: 'Spreading pressure',
+    xlabel: 'p^{0} (bar)', ylabel: '\u03c8 = \u03c0A/RT  (mol kg^{-1})', xTip: 'p^{0}', yTip: '\u03c8',
+    xr: [Pmin, Pmax], yr: [0, yMax],
+    lines: [{ x: P, y: pa, color: C.series[0], label: '\u03c8_{' + chem(compA.name) + '}' },
+            { x: P, y: pb, color: C.series[1], label: '\u03c8_{' + chem(compB.name) + '}' }],
+    legendLoc: 'top_left'
+  });
+  let note = 'Where the two \u03c8 curves cross, p\u2081\u2070 = p\u2082\u2070 \u21d2 S = 1 (selectivity reversal).';
+  try{ const A = analyzeIAST(T);
+    if(A.degenerate) note = '\u03c8\u2081 \u2261 \u03c8\u2082 over the whole range \u2014 the pair is IAST-indistinguishable.';
+    else if(A.rev.length) note = 'Reversal pressure' + (A.rev.length > 1 ? 's' : '') + ': ' + A.rev.map(v => v.toPrecision(3) + ' bar').join(', ') + '.';
+  }catch(e){}
+  noteEl.innerHTML = note;
+  IAST_CSV.psi = { name: 'spreading_pressure', rows: [['p0_bar', 'psi_' + compA.name, 'psi_' + compB.name],
+    ...P.map((p, i) => [p.toFixed(5), (isFinite(pa[i]) ? pa[i] : NaN).toFixed(5), (isFinite(pb[i]) ? pb[i] : NaN).toFixed(5)])] };
+}
+
+function plotSel(T, holder, noteEl){
+  const Pmin = Math.max(1e-4, parseFloat(pminEl.value)), Pmax = parseFloat(pmaxEl.value) || 1.5;
+  const Ps = []; for(let i = 0; i < 4; i++) Ps.push(Pmin + (Pmax - Pmin) * i / 3);
+  const N = 100, C = mpPalette(false), lines = [], table = [];
+  let sMax = 0;
+  Ps.forEach((P, k) => {
+    const ys = [], S = [];
+    for(let i = 1; i < N; i++){
+      const y = i / N; let v; try{ v = selectivityAt(P, y, T); }catch(e){ v = NaN; }
+      ys.push(y); S.push(v); if(isFinite(v)) sMax = Math.max(sMax, v);
+    }
+    table.push(S);
+    lines.push({ x: ys, y: S, color: C.series[k % C.series.length],
+                 label: 'P = ' + (P < 0.1 ? P.toExponential(1) : P.toFixed(2)) + ' bar' });
+  });
+  sMax = sMax > 0 ? sMax * 1.1 : 10;
+  mpMount(holder, {
+    specKey: 'sel', file: 'IAST_selectivity', aspect: 0.8, height: 300, title: 'Selectivity',
+    xlabel: 'y_{' + chem(compA.name) + '}  (gas phase)', ylabel: 'S_{' + chem(compA.name) + '/' + chem(compB.name) + '}',
+    xTip: 'y_{' + chem(compA.name) + '}', yTip: 'S', xr: [0, 1], yr: [0, sMax],
+    guides: sMax >= 1 ? [{ x: [0, 1], y: [1, 1], dash: 'dotted', label: 'S = 1' }] : [],
+    lines, legendLoc: 'top_right'
+  });
+  noteEl.innerHTML = 'Selectivity across composition at four pressures. Crossing S = 1 marks a reversal. <span style="opacity:.7">Box-zoom the dilute corner to resolve it.</span>';
+  const rows = [['y_' + compA.name, ...Ps.map(p => 'S@P=' + p.toFixed(3))]];
+  for(let i = 1; i < N; i++) rows.push([(i / N).toFixed(4), ...table.map(a => isFinite(a[i - 1]) ? a[i - 1].toFixed(4) : '')]);
+  IAST_CSV.sel = { name: 'selectivity_slices', rows };
+}
+
+function mpField(T, qty, nX, nY){
+  const Pmin = Math.max(1e-4, parseFloat(pminEl.value)), Pmax = parseFloat(pmaxEl.value) || 1.5;
+  const at = (P, y) => {
+    if(qty === 'S'){ try{ return selectivityAt(P, y, T); }catch(e){ return NaN; } }
+    if(qty === 'x1'){ try{ return iastSolve([compA, compB], [y, 1 - y], P, T).x[0]; }catch(e){ return NaN; } }
+    const r = safeIASTsolve(P, y, T);
+    return qty === 'q2' ? r[1] : r[0];
+  };
+  const Z = []; let lo = Infinity, hi = -Infinity;
+  for(let j = 0; j < nY; j++){
+    const row = [], y = j / (nY - 1);
+    for(let i = 0; i < nX; i++){
+      const P = Pmin + (Pmax - Pmin) * i / (nX - 1);
+      let v = at(P, y); v = isFinite(v) ? v : NaN;
+      row.push(v);
+      if(isFinite(v)){ lo = Math.min(lo, v); hi = Math.max(hi, v); }
+    }
+    Z.push(row);
+  }
+  if(!isFinite(lo)){ lo = 0; hi = 1; }
+  if(hi === lo) hi = lo + 1e-9;
+  return { Z, lo, hi, Pmin, Pmax, nX, nY };
+}
+
+function mpFieldCsv(F, qty){
+  const rows = [['P_bar', 'y_' + compA.name, qty]];
+  for(let j = 0; j < F.nY; j++) for(let i = 0; i < F.nX; i++)
+    rows.push([(F.Pmin + (F.Pmax - F.Pmin) * i / (F.nX - 1)).toFixed(5),
+               (j / (F.nY - 1)).toFixed(4),
+               isFinite(F.Z[j][i]) ? F.Z[j][i].toFixed(5) : '']);
+  return rows;
+}
+
+function plotHeat(T, holder, noteEl){
+  const qtySel = document.getElementById('heatQty');
+  const qty = qtySel ? qtySel.value : 'S';
+  const LBL = { S: 'S_{' + chem(compA.name) + '/' + chem(compB.name) + '}',
+                q1: 'q^{*}_{' + chem(compA.name) + '}  (mol kg^{-1})',
+                q2: 'q^{*}_{' + chem(compB.name) + '}  (mol kg^{-1})',
+                x1: 'x_{' + chem(compA.name) + '}' }[qty] || qty;
+  const F = mpField(T, qty, 110, 90);
+  mpMount(holder, {
+    specKey: 'heat_' + qty, file: 'IAST_heatmap', aspect: 0.8, height: 300, title: LBL,
+    xlabel: 'P (bar)', ylabel: 'y_{' + chem(compA.name) + '}',
+    xTip: 'P (bar)', yTip: 'y_{' + chem(compA.name) + '}',
+    xr: [F.Pmin, F.Pmax], yr: [0, 1],
+    image: { z: F.Z, x0: F.Pmin, dw: F.Pmax - F.Pmin, y0: 0, dh: 1,
+             low: F.lo, high: F.hi, cbTitle: LBL, label: LBL },
+    onClick: (P, y) => {
+      IAST_PIN = { P, y: Math.max(0, Math.min(1, y)) };
+      const Tn = parseFloat(tempEl.value);
+      ['sliceP', 'sliceY'].forEach(k => {
+        const hh = document.getElementById('ih_' + k), nn = document.getElementById('note_' + k);
+        if(hh){ try{ (k === 'sliceP' ? plotSliceP : plotSliceY)(Tn, hh, nn); }catch(e){} }
+      });
+    }
+  });
+  noteEl.innerHTML = LBL + ' over the whole P\u2013y plane. <span style="opacity:.7">Hover reads P, y and value \u00b7 click to pin the slices.</span>';
+  IAST_CSV.heat = { name: 'heatmap_' + qty, rows: mpFieldCsv(F, qty) };
+}
+
+/* true 3-D loading surface: rotatable, and every vertex reports P, y and q */
+function plotSurf(T, holder, noteEl){
+  const F = mpField(T, 'q1', 64, 56);
+  let qMax = 0; F.Z.forEach(r => r.forEach(v => { if(isFinite(v)) qMax = Math.max(qMax, v); }));
+  mpMount(holder, {
+    specKey: 'surf', file: 'IAST_surface', aspect: 0.66, height: 360,
+    title: 'q^{*}_{' + chem(compA.name) + '}  (P, y) surface',
+    xr: [F.Pmin, F.Pmax], yr: [0, 1],
+    surface3d: {
+      z: F.Z, x0: F.Pmin, dw: F.Pmax - F.Pmin, y0: 0, dh: 1,
+      low: 0, high: qMax || 1,
+      xlabel: 'P (bar)', ylabel: 'y_{' + chem(compA.name) + '}', zlabel: 'q^{*} (mol kg^{-1})',
+      cbTitle: 'q^{*}_{' + chem(compA.name) + '}  (mol kg^{-1})',
+      xTip: 'P (bar)', yTip: 'y_{' + chem(compA.name) + '}', zTip: 'q^{*}_{' + chem(compA.name) + '}'
+    }
+  });
+  noteEl.innerHTML = 'IAST loading surface of ' + compA.name + ', peak ' + qMax.toFixed(2) + ' mol/kg. <span style="opacity:.7">Drag to rotate \u00b7 scroll to zoom \u00b7 hover a vertex for its exact (P, y, q).</span>';
+  IAST_CSV.surf = { name: 'loading_surface', rows: mpFieldCsv(F, 'q_' + compA.name) };
+}
+
+function plotSliceP(T, holder, noteEl){
+  const Pmin = Math.max(1e-4, parseFloat(pminEl.value)), Pmax = parseFloat(pmaxEl.value) || 1.5;
+  const y = IAST_PIN ? IAST_PIN.y : 0.5, N = 150, C = mpPalette(false);
+  const P = [], A = [], B = [], Tot = [], rows = [['P_bar', 'q1_' + compA.name, 'q2_' + compB.name]];
+  let qm = 0;
+  for(let i = 0; i <= N; i++){
+    const p = Pmin + (Pmax - Pmin) * i / N, r = safeIASTsolve(p, y, T);
+    P.push(p); A.push(r[0]); B.push(r[1]); Tot.push(r[0] + r[1]);
+    if(isFinite(r[0])) qm = Math.max(qm, r[0]); if(isFinite(r[1])) qm = Math.max(qm, r[1]);
+    rows.push([p.toFixed(5), (isFinite(r[0]) ? r[0] : NaN).toFixed(4), (isFinite(r[1]) ? r[1] : NaN).toFixed(4)]);
+  }
+  mpMount(holder, {
+    specKey: 'sliceP', file: 'IAST_slice_qP', aspect: 0.8, height: 300, title: 'Loading vs pressure',
+    xlabel: 'P (bar)', ylabel: 'q^{*}  (mol kg^{-1})', xTip: 'P (bar)', yTip: 'q^{*}',
+    xr: [Pmin, Pmax], yr: [0, niceCeil(qm) || 1],
+    lines: [{ x: P, y: A, color: C.series[0], label: 'q^{*}_{' + chem(compA.name) + '}', extra: { 'q total': Tot } },
+            { x: P, y: B, color: C.series[1], label: 'q^{*}_{' + chem(compB.name) + '}' }],
+    legendLoc: 'top_left'
+  });
+  noteEl.innerHTML = 'q*(P) at fixed y_' + compA.name + ' = ' + y.toFixed(3) + '. <span style="opacity:.7">Click the heat map to move this composition.</span>';
+  IAST_CSV.sliceP = { name: 'slice_qP', rows };
+}
+
+function plotSliceY(T, holder, noteEl){
+  const Pmax = parseFloat(pmaxEl.value) || 1.5;
+  const P = IAST_PIN ? IAST_PIN.P : Pmax, N = 150, C = mpPalette(false);
+  const Y = [], A = [], B = [], Tot = [], rows = [['y_' + compA.name, 'q1_' + compA.name, 'q2_' + compB.name]];
+  let qm = 0;
+  for(let i = 0; i <= N; i++){
+    const y = i / N, r = safeIASTsolve(P, y, T);
+    Y.push(y); A.push(r[0]); B.push(r[1]); Tot.push(r[0] + r[1]);
+    if(isFinite(r[0])) qm = Math.max(qm, r[0]); if(isFinite(r[1])) qm = Math.max(qm, r[1]);
+    rows.push([y.toFixed(4), (isFinite(r[0]) ? r[0] : NaN).toFixed(4), (isFinite(r[1]) ? r[1] : NaN).toFixed(4)]);
+  }
+  mpMount(holder, {
+    specKey: 'sliceY', file: 'IAST_slice_qy', aspect: 0.8, height: 300, title: 'Loading vs composition',
+    xlabel: 'y_{' + chem(compA.name) + '}', ylabel: 'q^{*}  (mol kg^{-1})', xTip: 'y_{' + chem(compA.name) + '}', yTip: 'q^{*}',
+    xr: [0, 1], yr: [0, niceCeil(qm) || 1],
+    lines: [{ x: Y, y: A, color: C.series[0], label: 'q^{*}_{' + chem(compA.name) + '}', extra: { 'q total': Tot } },
+            { x: Y, y: B, color: C.series[1], label: 'q^{*}_{' + chem(compB.name) + '}' }],
+    legendLoc: 'top_center'
+  });
+  noteEl.innerHTML = 'q*(y) at fixed P = ' + P.toFixed(3) + ' bar.';
+  IAST_CSV.sliceY = { name: 'slice_qy', rows };
+}
+
+/* IAST_PLOTS captured the old SVG functions at definition time — repoint it */
+try{
+  const _FN = { xy: plotXY, psi: plotPsi, sel: plotSel, heat: plotHeat,
+                sliceP: plotSliceP, sliceY: plotSliceY, surf: plotSurf };
+  IAST_PLOTS.forEach(p => { if(_FN[p.key]) p.fn = _FN[p.key]; });
+}catch(e){}
+
+/* re-render on resize (canvas is not responsive on its own) */
+let _mpRz;
+window.addEventListener('resize', () => {
+  clearTimeout(_mpRz);
+  _mpRz = setTimeout(mpRepaintAll, 260);
+});
+
+/* export-all routes IAST cards through the canvas exporter */
+exportAllAssets = function(){
+  let n = 0;
+  [['chartHolderUnary', 'pure_isotherms'], ['chartHolderBinary', 'competitive_loading'],
+   ['ih_xy', 'IAST_xy'], ['ih_psi', 'IAST_psi'], ['ih_sel', 'IAST_selectivity'],
+   ['ih_heat', 'IAST_heatmap'], ['ih_sliceP', 'IAST_slice_qP'],
+   ['ih_sliceY', 'IAST_slice_qy'], ['ih_surf', 'IAST_surface']].forEach(([id, lbl]) => {
+    if(MP[id]){ setTimeout(() => mpExport(id, sanName(caseNameEl.value) + '_' + lbl + '.png'), n * 400); n++; }
+  });
+  Object.keys(IAST_CSV).forEach(k => { setTimeout(() => exportCsvFor(k), n * 300); n++; });
+  if(n === 0) alert('Nothing to export yet \u2014 press Calculate first.');
+};
+(function(){ const b = document.getElementById('exportAllBtn');
+  if(b){ const c = b.cloneNode(true); b.parentNode.replaceChild(c, b);
+    c.addEventListener('click', () => exportAllAssets()); } })();
+
+/* theme switch must repaint the canvases */
+const _applyThemeBase = applyTheme;
+applyTheme = function(t){ _applyThemeBase(t); mpRepaintAll(); };
+
+/* ═══════════════════════ GUIDED TOUR + HOW-TO ═════════════════════════════ */
+const TOUR_STEPS = [
+  { sel: '.masthead', title: 'Welcome',
+    body: 'Two halves: <b>fit pure-component isotherms</b> on the left, then <b>predict competitive adsorption</b> with IAST on the right. About a minute.' },
+  { sel: '#panelLibrary', title: '1 \u00b7 Pick a system',
+    body: 'Choose a literature material/gas pair, then press <b>Load</b> — both components arrive with published parameters and a citation. <b>Import JSON</b> brings in your own library; <b>Export template</b> writes out the schema it expects.' },
+  { sel: '#panelConditions', title: '2 \u00b7 Set the conditions',
+    body: 'Temperature feeds every affinity constant through its \u0394H, so moving the slider changes the whole prediction. <b>Pressure range</b> sets the x-axis of every chart and decides how far IAST has to extrapolate your isotherms. <b>y</b> lists the gas compositions used for the curve family and the point table.' },
+  { sel: '.comp-grid', title: '3 \u00b7 Choose the two models',
+    body: 'Component A and B each get their own isotherm model and parameter set — they do not have to match. The equation printed under each card is the one actually being evaluated, and the badge tells you whether \u03c8 is analytic or done by quadrature.' },
+  { sel: '#calcBtn', title: '4 \u00b7 Calculate',
+    body: 'Nothing recomputes until you press this. The chip beside it tells you whether what you see is current.' },
+  { sel: '#chartHolderUnary', title: '5 \u00b7 Pure isotherms',
+    body: 'The single-component curves \u2014 the only input IAST has. If these are wrong, everything downstream is wrong.' },
+  { sel: '#expData', title: '6 \u00b7 Validate',
+    body: 'Paste rows as <code>P, y, q</code>. You get R\u00b2, RMSE and AARD against the current parameters.' },
+  { sel: '#ih_xy', title: '7 \u00b7 IAST cards',
+    body: 'Seven views of the binary prediction. These and the two charts above share one renderer, so every plot in the app looks and behaves the same: <b>scroll</b> to zoom, <b>drag</b> to pan, and the toolbar in the corner adds box-zoom, reset a pop-out full-screen view and a high-resolution save.' },
+  { sel: '#ih_heat', title: '8 \u00b7 Heat map \u2192 slices',
+    body: 'Covers the whole P\u2013y plane; the drop-down switches between S, q\u2081*, q\u2082* and x\u2081. <b>Click anywhere on it</b> to pin a point \u2014 the slice cards re-cut through it.' },
+  { sel: '#ih_surf', title: '9 \u00b7 Loading surface',
+    body: 'A real 3-D surface: <b>drag to rotate</b>, scroll to zoom. Hovering snaps to the nearest vertex and reports its exact <b>P</b>, <b>y</b> and <b>q</b> — the thing a plain rotating projection could never tell you.' },
+  { sel: '#exportAllBtn', title: '10 \u00b7 Export',
+    body: 'Charts export at <b>5\u00d7 device resolution</b> \u2014 the same layout you see, just sharp enough for a slide or a paper. CSV holds exactly the plotted grid.' },
+  { sel: '#reportBtn', title: 'Finally',
+    body: 'Builds a printable report with equations, parameters, fit statistics and an interpretation of each card. Reopen this tour any time from <b>Guide</b>.' }
+];
+
+let _tourIdx = 0, _tourRAF = null, _tourEl = null, _tourAlive = false;
+const TE = () => ({
+  ov: document.getElementById('tourOverlay'), hole: document.getElementById('tourHole'),
+  pop: document.getElementById('tourPop'), t: document.getElementById('tourTitle'),
+  b: document.getElementById('tourBody'), c: document.getElementById('tourCount'),
+  prev: document.getElementById('tourPrev'), next: document.getElementById('tourNext')
+});
+
+function tourPlace(){
+  const E = TE();
+  if(!_tourAlive) return;
+  const el = _tourEl;
+  if(!el || !el.getBoundingClientRect){
+    E.hole.style.opacity = '0';
+    E.pop.style.left = Math.max(14, (window.innerWidth - E.pop.offsetWidth) / 2) + 'px';
+    E.pop.style.top = Math.max(14, (window.innerHeight - E.pop.offsetHeight) / 2) + 'px';
+    return;
+  }
+  const r = el.getBoundingClientRect(), pad = 8;
+  if(r.width === 0 && r.height === 0){ E.hole.style.opacity = '0'; return; }
+  E.hole.style.opacity = '1';
+  E.hole.style.left = Math.round(r.left - pad) + 'px';
+  E.hole.style.top = Math.round(r.top - pad) + 'px';
+  E.hole.style.width = Math.round(r.width + pad * 2) + 'px';
+  E.hole.style.height = Math.round(r.height + pad * 2) + 'px';
+  const pw = E.pop.offsetWidth || 360, ph = E.pop.offsetHeight || 190;
+  let left = r.left + r.width / 2 - pw / 2;
+  left = Math.max(12, Math.min(window.innerWidth - pw - 12, left));
+  let top = r.bottom + 14;
+  if(top + ph > window.innerHeight - 12){
+    top = r.top - ph - 14;
+    if(top < 12) top = Math.min(window.innerHeight - ph - 12, Math.max(12, r.bottom + 14));
+  }
+  E.pop.style.left = Math.round(left) + 'px';
+  E.pop.style.top = Math.round(top) + 'px';
+}
+function tourTrack(ms){
+  const t0 = performance.now();
+  cancelAnimationFrame(_tourRAF);
+  const step = () => {
+    tourPlace();
+    if(performance.now() - t0 < ms) _tourRAF = requestAnimationFrame(step);
+  };
+  _tourRAF = requestAnimationFrame(step);
+}
+function tourShow(i){
+  const E = TE();
+  _tourAlive = true;
+  _tourIdx = Math.max(0, Math.min(TOUR_STEPS.length - 1, i));
+  const st = TOUR_STEPS[_tourIdx];
+  _tourEl = document.querySelector(st.sel);
+  E.ov.classList.add('on');
+  E.t.innerHTML = st.title; E.b.innerHTML = st.body;
+  E.c.textContent = (_tourIdx + 1) + ' / ' + TOUR_STEPS.length;
+  E.prev.disabled = _tourIdx === 0;
+  E.next.textContent = _tourIdx === TOUR_STEPS.length - 1 ? 'Done' : 'Next \u2192';
+  if(_tourEl){
+    const r = _tourEl.getBoundingClientRect();
+    const off = r.top < 80 || r.bottom > window.innerHeight - 120;
+    if(off) _tourEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    tourTrack(off ? 1100 : 260);
+  } else {
+    tourPlace();
+  }
+}
+function tourEnd(){
+  _tourAlive = false;
+  cancelAnimationFrame(_tourRAF);
+  TE().ov.classList.remove('on');
+  try{ localStorage.setItem('iast_tour_seen', '1'); }catch(e){}
+}
+function tourStart(){ tourShow(0); }
+function tourNext(){ if(_tourIdx === TOUR_STEPS.length - 1) tourEnd(); else tourShow(_tourIdx + 1); }
+
+document.getElementById('tourNext').addEventListener('click', tourNext);
+document.getElementById('tourPrev').addEventListener('click', () => tourShow(_tourIdx - 1));
+document.getElementById('tourSkip').addEventListener('click', tourEnd);
+document.getElementById('tourScrim').addEventListener('click', tourEnd);
+window.addEventListener('keydown', e => {
+  if(!_tourAlive) return;
+  if(e.key === 'Escape') tourEnd();
+  else if(e.key === 'ArrowRight' || e.key === 'Enter') tourNext();
+  else if(e.key === 'ArrowLeft') tourShow(_tourIdx - 1);
+});
+['scroll', 'resize'].forEach(ev =>
+  window.addEventListener(ev, () => { if(_tourAlive) tourPlace(); }, true));
+
+/* how-to modal */
+const howtoModal = document.getElementById('howtoModal');
+document.getElementById('helpBtn').addEventListener('click', () => howtoModal.classList.add('on'));
+document.getElementById('howtoClose').addEventListener('click', () => howtoModal.classList.remove('on'));
+howtoModal.addEventListener('click', e => { if(e.target === howtoModal) howtoModal.classList.remove('on'); });
+document.getElementById('howtoTourBtn').addEventListener('click', () => { howtoModal.classList.remove('on'); tourStart(); });
+document.querySelectorAll('.howto-nav button').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('.howto-nav button').forEach(x => x.classList.remove('active'));
+  b.classList.add('active');
+  document.querySelectorAll('.howto-sec').forEach(s => s.style.display = s.dataset.sec === b.dataset.go ? 'block' : 'none');
+}));
+
+try{ if(!localStorage.getItem('iast_tour_seen')) setTimeout(tourStart, 1000); }catch(e){}
+
+/* first paint of the new plot layer — the startup pass ran before these
+   overrides existed, so both the main charts and the IAST cards are redrawn */
+function mpRepaintAll(){
+  try{ render(); }catch(e){}
+  try{ renderIastPlot(); }catch(e){}
+}
+mpRepaintAll();
+setTimeout(mpRepaintAll, 60);
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   The pure-component and competitive charts now use the same renderer, the
+   same typography and the same interaction as the IAST cards.
+   ═══════════════════════════════════════════════════════════════════════════ */
+render = function(){
+  const T = parseFloat(tempEl.value);
+  const PminRaw = parseFloat(pminEl.value);
+  let Pmin = isFinite(PminRaw) ? Math.max(0, PminRaw) : 0;
+  const Pmax = Math.max((Pmin || 0.01) * 1.01, parseFloat(pmaxEl.value) || 1.5);
+  const useLog = (typeof isoLogAxis !== 'undefined' && isoLogAxis);
+  if(useLog) Pmin = Math.max(Pmin, Pmax / 1e4, 1e-6);
+  const qmaxRaw = (qmaxEl.value || '').trim().toLowerCase();
+  const autoY = (qmaxRaw === '' || qmaxRaw === 'auto' || !(parseFloat(qmaxRaw) > 0));
+  const manualQmax = Math.max(0.1, parseFloat(qmaxEl.value));
+  tempVal.textContent = T + ' K';
+  const N = 160, C = mpPalette(false);
+  const Pgrid = [];
+  for(let i = 0; i <= N; i++){
+    const t = i / N;
+    Pgrid.push(useLog ? Math.pow(10, Math.log10(Pmin) + t * (Math.log10(Pmax) - Math.log10(Pmin)))
+                      : Pmin + t * (Pmax - Pmin));
+  }
+
+  /* ── pure components ─────────────────────────────────────────────────── */
+  {
+    const lines = [];
+    let mx = 0;
+    [[compA, 0], [compB, 1]].forEach(([c, idx]) => {
+      const q = Pgrid.map(P => {
+        let v; try{ v = MODELS[c.model].q(P, T, c.params); }catch(e){ v = NaN; }
+        if(isFinite(v) && v > mx) mx = v;
+        return isFinite(v) && v >= 0 ? v : NaN;
+      });
+      lines.push({ x: Pgrid, y: q, color: C.series[idx], label: 'q_{' + chem(c.name) + '}' });
+    });
+    const pure = expPoints.filter(d => d.y === 1 || d.y === 0);
+    if(pure.length){
+      lines.push({ x: pure.map(d => d.P), y: pure.map(d => (d.y === 1 ? d.qA : (d.qB != null ? d.qB : d.qA))),
+                   color: C.fg, label: 'data', markers: true, noLine: true });
+    }
+    const Qmax = autoY ? (niceCeil(mx * 1.08) || 1) : manualQmax;
+    mpMount(chartHolderUnary, {
+      specKey: 'unary' + (useLog ? 'L' : ''), file: 'pure_isotherms',
+      aspect: 0.62, height: Math.max(300, Math.round((chartHolderUnary.clientWidth || 640) * 0.55)),
+      title: 'Pure-component isotherms  (T = ' + T + ' K)',
+      xlabel: 'P (bar)', ylabel: 'q  (mol kg^{-1})', xTip: 'P (bar)', yTip: 'q',
+      xLog: useLog, xr: [Pmin, Pmax], yr: [0, Qmax],
+      lines, legendLoc: 'top_left'
+    });
+  }
+
+  /* ── competitive (IAST) loading ──────────────────────────────────────── */
+  {
+    const showA = binaryComp === 'A' || binaryComp === 'both';
+    const showB = binaryComp === 'B' || binaryComp === 'both';
+    const yLbl = binaryComp === 'both' ? 'q^{*}  (mol kg^{-1})'
+      : binaryComp === 'B' ? 'q^{*}_{' + chem(compB.name) + '}  (mol kg^{-1})'
+                           : 'q^{*}_{' + chem(compA.name) + '}  (mol kg^{-1})';
+    const yList = ylistEl.value.split(',').map(v => parseFloat(v.trim()))
+      .filter(v => !isNaN(v) && v >= 0 && v <= 1).sort((a, b) => b - a);
+    const lines = [];
+    let mx = 0;
+    yList.forEach((yv, idx) => {
+      const qa = [], qb = [];
+      Pgrid.forEach(P => {
+        const r = safeIASTsolve(P, yv, T);
+        qa.push(isFinite(r[0]) ? r[0] : NaN);
+        qb.push(isFinite(r[1]) ? r[1] : NaN);
+        if(showA && isFinite(r[0])) mx = Math.max(mx, r[0]);
+        if(showB && isFinite(r[1])) mx = Math.max(mx, r[1]);
+      });
+      const col = C.series[idx % C.series.length];
+      if(showA) lines.push({ x: Pgrid, y: qa, color: col,
+        label: 'y = ' + yv.toFixed(2) + (showB ? ' \u00b7 ' + chem(compA.name) : '') });
+      if(showB) lines.push({ x: Pgrid, y: qb, color: col, dash: showA ? 'dashed' : 'solid',
+        label: showA ? 'y = ' + yv.toFixed(2) + ' \u00b7 ' + chem(compB.name) : 'y = ' + yv.toFixed(2) });
+    });
+    if(showPointsEl.checked) points.forEach(pt => {
+      const r = safeIASTsolve(pt.P, pt.y, T);
+      const q = (showB && !showA) ? r[1] : r[0];
+      if(isFinite(q)) mx = Math.max(mx, q);
+    });
+    const opPts = showPointsEl.checked ? points.map(pt => {
+      const r = safeIASTsolve(pt.P, pt.y, T);
+      return { P: pt.P, q: (showB && !showA) ? r[1] : r[0] };
+    }).filter(d => isFinite(d.q)) : [];
+    if(opPts.length) lines.push({ x: opPts.map(d => d.P), y: opPts.map(d => d.q),
+      color: C.series[3], label: 'operating', markers: true, noLine: true });
+    const dataPts = expPoints.filter(d => d.P >= Pmin && d.P <= Pmax && d.y > 0 && d.y < 1);
+    if(dataPts.length){
+      const yq = dataPts.map(d => (showB && !showA && d.qB != null) ? d.qB : d.qA).filter(v => v != null);
+      yq.forEach(v => { if(isFinite(v)) mx = Math.max(mx, v); });
+      lines.push({ x: dataPts.map(d => d.P), y: dataPts.map(d => (showB && !showA && d.qB != null) ? d.qB : d.qA),
+                   color: C.fg, label: 'data', markers: true, noLine: true });
+    }
+    const Qmax = autoY ? (niceCeil(mx * 1.08) || 1) : manualQmax;
+    mpMount(chartHolderBinary, {
+      specKey: 'binary' + binaryComp + (useLog ? 'L' : ''), file: 'competitive_loading',
+      aspect: 0.62, height: Math.max(300, Math.round((chartHolderBinary.clientWidth || 640) * 0.55)),
+      title: 'Competitive loading (IAST, T = ' + T + ' K)',
+      xlabel: 'P (bar)', ylabel: yLbl, xTip: 'P (bar)', yTip: 'q^{*}',
+      xLog: useLog, xr: [Pmin, Pmax], yr: [0, Qmax],
+      lines, legendLoc: 'top_left'
+    });
+  }
+
+  points.forEach((pt, i) => {
+    const r = safeIASTsolve(pt.P, pt.y, T);
+    const cA = document.getElementById('ptqA-' + i), cB = document.getElementById('ptqB-' + i);
+    if(cA) cA.textContent = isFinite(r[0]) ? r[0].toFixed(3) : '\u2014';
+    if(cB) cB.textContent = isFinite(r[1]) ? r[1].toFixed(3) : '\u2014';
+  });
+};
+
+/* ═══════════════════ Import: hand the user a blank template first ════════ */
+const LIB_BLANK = {
+  _README: {
+    what: 'Sorbent library for the Isotherm & IAST Explorer. Copy the my_material_co2_n2 block once per material and fill in the numbers from your source.',
+    affinity_basis: 'one of bar | kPa | concL | concM3 - the units the b0/d0 constants were fitted in',
+    energy_basis: 'one of dH_J_per_mol | dU_kJ_per_mol_neg  (the second is the usual paper convention, -dU quoted as a positive number)',
+    models: {
+      SSL: 'single-site Langmuir: q = qs*b*P/(1+b*P), needs {qs, b0, dU}',
+      DSL: 'dual-site Langmuir: sum of two SSL terms, needs {qsb, b0, dU_b, qsd, d0, dU_d}'
+    },
+    units: { qs: 'mol/kg', b0: 'per bar (or per the chosen affinity basis)', dU: 'kJ/mol, positive' },
+    expData: 'optional validation rows, one per line: P_bar, y_A, q_measured',
+    remove_this_key_before_importing: '_README is ignored on import, you can leave it in place'
+  },
+  my_material_co2_n2: {
+    label: 'My material (CO2 / N2)',
+    gasA: 'CO2',
+    gasB: 'N2',
+    affinity_basis: 'bar',
+    energy_basis: 'dU_kJ_per_mol_neg',
+    verified: false,
+    citation: 'Author et al., Journal, year, DOI',
+    componentA: { model: 'DSL', qsb: null, b0: null, dU_b: null, qsd: null, d0: null, dU_d: null },
+    componentB: { model: 'SSL', qs: null, b0: null, dU: null },
+    expData: '',
+    expTemp: 298
+  }
+};
+
+(function importUX(){
+  const btn = document.getElementById('loadLibBtn');
+  const file = document.getElementById('loadLibFile');
+  if(!btn || !file) return;
+  const clean = btn.cloneNode(true);
+  btn.parentNode.replaceChild(clean, btn);
+
+  const dl = (obj, name) => {
+    const a = Object.assign(document.createElement('a'), {
+      href: URL.createObjectURL(new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' })),
+      download: name });
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  };
+
+  clean.addEventListener('click', () => {
+    const ov = document.createElement('div');
+    ov.className = 'mp-pop';
+    ov.innerHTML =
+      '<div class="imp-box">' +
+        '<h4>Import a sorbent library</h4>' +
+        '<p>The file is JSON: one block per material, each with two components and their isotherm parameters. If you have not built one yet, start from the blank template \u2014 it carries the field names, the unit conventions and a worked skeleton.</p>' +
+        '<ul>' +
+          '<li><b>Blank template</b> \u2014 one empty material with every field and its units explained.</li>' +
+          '<li><b>Filled template</b> \u2014 the built-in library exported in the same schema, useful as a reference for realistic values.</li>' +
+        '</ul>' +
+        '<div class="imp-row">' +
+          '<button type="button" class="tour-btn" data-a="blank">Download blank template</button>' +
+          '<button type="button" class="tour-btn" data-a="filled">Download filled template</button>' +
+          '<span class="sp"></span>' +
+          '<button type="button" class="tour-btn primary" data-a="pick">Choose JSON file\u2026</button>' +
+          '<button type="button" class="tour-btn" data-a="close">Cancel</button>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(ov);
+    const close = () => { document.body.removeChild(ov); document.removeEventListener('keydown', esc); };
+    const esc = e => { if(e.key === 'Escape') close(); };
+    document.addEventListener('keydown', esc);
+    ov.addEventListener('click', e => {
+      if(e.target === ov) return close();
+      const b = e.target.closest('button'); if(!b) return;
+      if(b.dataset.a === 'blank') dl(LIB_BLANK, 'sorbent_library_template_blank.json');
+      if(b.dataset.a === 'filled') document.getElementById('exportLibBtn').click();
+      if(b.dataset.a === 'pick'){ close(); file.click(); }
+      if(b.dataset.a === 'close') close();
+    });
+  });
+})();
+
 </script>
 </body>
 </html>
