@@ -29,7 +29,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,900;1,400&display=swap" rel="stylesheet">
   <!-- SRI hash: run this on your machine and paste the output into integrity="sha384-HASH":
        curl -s https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css | openssl dgst -sha384 -binary | openssl base64 -A -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha384-iw3OoTErCYJJB9mCa8LNS2hbsQ7M3C0EpIsO/H5+EGAkPGc6rk+V8i04oW/K5xq0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
   <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QEPCGSFX9V"></script>
@@ -113,15 +113,27 @@
   <!-- ── Footer ── -->
   <footer class="site-footer">
     <div class="footer-inner">
-      <div class="footer-social">
-        {% if site.linkedin %}<a href="{{ site.linkedin }}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="social-link"><i class="fab fa-linkedin-in" aria-hidden="true"></i></a>{% endif %}
-        {% if site.email    %}<a href="mailto:{{ site.email }}" aria-label="Email" class="social-link"><i class="fas fa-envelope" aria-hidden="true"></i></a>{% endif %}
-        {% if site.github   %}<a href="{{ site.github }}" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="social-link"><i class="fab fa-github" aria-hidden="true"></i></a>{% endif %}
+      <div class="footer-top">
+        <div class="foot-lic">
+          <a rel="license" href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" class="cc-badge" aria-label="Creative Commons Attribution 4.0">
+            <span class="cc-mark">CC</span><span class="cc-mark">BY</span>
+          </a>
+          <div class="foot-lic-txt">
+            <div><strong>Muthukrishnan Anand</strong> &copy; {{ site.time | date: '%Y' }}</div>
+            <div>Licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">Creative Commons Attribution 4.0 International License (CC BY 4.0)</a>. You may share and adapt this work with attribution.</div>
+          </div>
+        </div>
+        <div class="footer-social">
+          {% if site.linkedin %}<a href="{{ site.linkedin }}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="social-link"><i class="fab fa-linkedin-in" aria-hidden="true"></i></a>{% endif %}
+          {% if site.email    %}<a href="mailto:{{ site.email }}" aria-label="Email" class="social-link"><i class="fas fa-envelope" aria-hidden="true"></i></a>{% endif %}
+          {% if site.github   %}<a href="{{ site.github }}" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="social-link"><i class="fab fa-github" aria-hidden="true"></i></a>{% endif %}
+        </div>
       </div>
       <p class="footer-copy">
-        &copy; {{ site.time | date: '%Y' }} Muthukrishnan Anand &ensp;&middot;&ensp;
         <a href="{{ site.baseurl }}/privacy-policy">Privacy policy</a> &ensp;&middot;&ensp;
-        Built with <i class="fas fa-heart" aria-hidden="true" style="color:var(--accent);font-size:.7em;"></i> using <a href="https://jekyllrb.com" target="_blank" rel="noopener noreferrer">Jekyll</a> and <a href="https://claude.com" target="_blank" rel="noopener noreferrer">Claude</a>
+        Built with <i class="fas fa-heart" aria-hidden="true" style="color:var(--accent);font-size:.7em;"></i> using
+        <a href="https://jekyllrb.com" target="_blank" rel="noopener noreferrer">Jekyll</a>
+        and <a href="https://claude.com" target="_blank" rel="noopener noreferrer">Claude</a>
       </p>
     </div>
   </footer>
