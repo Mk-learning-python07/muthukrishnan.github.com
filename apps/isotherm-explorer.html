@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Interactive adsorption isotherm and Ideal Adsorbed Solution Theory (IAST) explorer: fit 12 isotherm models, predict binary competitive adsorption, and analyze selectivity with linked, publication-quality charts.">
+<meta name="description" content="Interactive adsorption isotherm and Ideal Adsorbed Solution Theory (IAST) explorer: evaluate 12 isotherm models from published or user-supplied parameters, predict binary competitive adsorption, and analyse selectivity with linked, publication-quality charts.">
 <meta name="color-scheme" content="dark light">
 <meta name="theme-color" content="#080e0c" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
@@ -739,7 +739,7 @@
         </div>
         <textarea id="expData" rows="4" placeholder="0.10, 1.00, 0.65&#10;0.50, 1.00, 2.20&#10;1.00, 0.15, 1.80&#10;1.00, 0.00, 0.11"></textarea>
         <div class="btn-row" style="margin-top:8px;">
-          <button type="button" class="btn" id="plotDataBtn">Plot &amp; compute fit stats</button>
+          <button type="button" class="btn" id="plotDataBtn">Plot &amp; compare with data</button>
           <button type="button" class="btn" id="clearDataBtn">Clear</button>
         </div>
         <div id="fitStats" class="fit-stats"></div>
@@ -951,7 +951,7 @@
     </div>
     <div class="howto-nav">
       <button type="button" class="active" data-go="start">Getting started</button>
-      <button type="button" data-go="models">Models &amp; fitting</button>
+      <button type="button" data-go="models">Models &amp; parameters</button>
       <button type="button" data-go="iast">Reading the IAST cards</button>
       <button type="button" data-go="charts">Chart controls</button>
       <button type="button" data-go="export">Export &amp; reporting</button>
@@ -960,22 +960,23 @@
     <div class="howto-body">
 
       <div class="howto-sec" data-sec="start">
+        <p style="margin-bottom:10px;">This is an <b>IAST prediction tool, not a regression tool</b>. It never fits parameters to your data: you supply them — from the built-in library, from a JSON file, or by typing them in — and the app evaluates the isotherms, predicts the binary mixture and, if you paste measurements, tells you how far the prediction sits from them.</p>
         <h5>The five-minute path</h5>
         <ol>
           <li>Pick a <b>sorbent / gas pair</b> from the dropdown and press <code>Load</code>. Both components arrive with published parameters and a citation.</li>
           <li>Set the <b>temperature</b> and the <b>P min / P max</b> window to your real operating conditions.</li>
           <li>Check the two <b>component cards</b> — model choice and parameters — then press <b>Calculate</b>.</li>
           <li>Read the pure isotherms, then scroll to the <b>IAST panel</b> for the binary prediction.</li>
-          <li>Optionally paste experimental data to validate, then <b>Generate Report</b>.</li>
+          <li>Optionally paste measured data to see how the prediction compares, then press <b>Report</b>.</li>
         </ol>
         <h5>Bringing your own system</h5>
-        <p>Press <code>Import JSON</code> and the dialog offers a <b>blank template</b> (every field, with its units and the model options spelled out) as well as a <b>filled template</b> built from the shipped library. Fill either one in and load it back through the same button. <code>Save</code> / <code>Load</code> handle a whole case (both components, conditions, validation data). The current case is also mirrored into browser storage, so a refresh does not lose work.</p>
-        <p><b>y list</b> is the set of gas-phase mole fractions of component A used for the point table; <b>q max</b> left blank auto-scales the loading axis.</p>
+        <p>Press <code>Import JSON</code> and the dialog offers a <b>blank template</b> (every field, with its units and the model options spelled out) as well as a <b>filled template</b> built from the shipped library. Fill either one in and load it back through the same button. The dialog also has <b>Choose JSON file…</b> for a library you already have. <code>Save</code> / <code>Load</code> write and read a whole case as JSON — both components with their models and parameters, the conditions and the validation data. Browser storage keeps only the lightweight settings (temperature, pressure window, y list, trust limit, heat-map quantity, axis mode, theme, case name and which library entry was chosen), so a refresh restores your working conditions, but a hand-edited parameter set should be saved to a file.</p>
+        <p><b>y list</b> is the set of gas-phase mole fractions of component A drawn as the curve family on the competitive-loading chart and written to its CSV. <b>q max</b> left blank auto-scales the loading axis; type a number to pin it.</p>
       </div>
 
       <div class="howto-sec" data-sec="models">
         <h5>Choosing a model</h5>
-        <p>Twelve isotherm models are available per component. The panel below each card renders the live equation and the meaning of every parameter, so the model is never a black box.</p>
+        <p>Twelve models are available per component, and the two components need not use the same one: linear (Henry), single-site and dual-site Langmuir, anti-Langmuir, quadratic, single-site Langmuir–Freundlich, Tóth, Freundlich, BET, type V, heterogeneous Sips, and a free-form custom expression. The panel below each card renders the live equation and the meaning of every parameter, so the model is never a black box.</p>
         <ul>
           <li><b>Langmuir (SSL)</b> — one site type, saturating. The only model for which extended (competitive) Langmuir is thermodynamically consistent with IAST, and only when both q<sub>s</sub> are equal.</li>
           <li><b>Dual-site Langmuir</b> — heterogeneous surfaces, the workhorse for CO<sub>2</sub> on zeolites.</li>
@@ -985,8 +986,8 @@
         </ul>
         <h5>Temperature dependence</h5>
         <p>Affinity constants use <code>b(T) = b&#8320; exp(-&Delta;H / RT)</code>. Pick the basis (pressure or concentration) that matches how the parameters were reported — the label switches from &Delta;H to &Delta;U on a concentration basis, because that is what the fit actually contains.</p>
-        <h5>Validation</h5>
-        <p>Paste rows of <code>P_bar, y_A, q_exp</code> into the validation box, set the data temperature, and press <b>Plot &amp; compute fit stats</b>. You get R&sup2;, RMSE and AARD against the current parameters. Rows with <code>y = 1</code> or <code>y = 0</code> test the pure isotherms; intermediate <code>y</code> tests the IAST prediction itself.</p>
+        <h5>Comparing against measurements</h5>
+        <p>Paste rows of <code>P_bar, y_A, q_exp</code> into the validation box, set the data temperature, and press <b>Plot &amp; compare with data</b> (<b>Clear</b> removes the overlay). Nothing is fitted: the points are overlaid on the prediction produced by the parameters currently in the two cards, and R&sup2;, RMSE and AARD quantify the gap. If the agreement is poor, adjust the parameters or the model yourself — the app will not do it for you. Rows with <code>y = 1</code> or <code>y = 0</code> test the pure-component parameters you entered; intermediate <code>y</code> tests the IAST prediction itself, since IAST has no adjustable binary parameter.</p>
       </div>
 
       <div class="howto-sec" data-sec="iast">
@@ -994,42 +995,43 @@
         <table class="howto-tbl">
           <tr><th>Card</th><th>Question</th><th>Read it like this</th></tr>
           <tr><td>x&ndash;y equilibrium</td><td>How strongly is A enriched in the adsorbed phase?</td><td>Distance above the diagonal is the separation. The curve can never cross the diagonal.</td></tr>
-          <tr><td>&psi; construction</td><td>Where does selectivity reverse?</td><td>Crossings of the two &psi; curves are exactly the pressures where S = 1.</td></tr>
-          <tr><td>Selectivity</td><td>Is S stable across composition and pressure?</td><td>Curves that fan out mean S depends strongly on feed composition — bad news for a fixed-cycle design.</td></tr>
-          <tr><td>Heat map</td><td>What happens anywhere in the P&ndash;y plane?</td><td>Click to pin a point; the two slice cards re-cut through it.</td></tr>
-          <tr><td>Slice at fixed y</td><td>q*(P) along an isopleth</td><td>The working capacity between adsorption and regeneration pressure.</td></tr>
-          <tr><td>Slice at fixed P</td><td>q*(y) at one pressure</td><td>Sensitivity of loading to feed composition swings.</td></tr>
-          <tr><td>Loading surface</td><td>q<sub>A</sub>(P, y) as a whole</td><td>A rotatable 3-D surface; drag to spin it, hover a vertex for its exact P, y and q.</td></tr>
+          <tr><td>&psi;-construction</td><td>Where does selectivity reverse?</td><td>Crossings of the two &psi; curves are exactly the pressures where S = 1.</td></tr>
+          <tr><td>Selectivity vs composition</td><td>Is S stable across composition and pressure?</td><td>Curves that fan out mean S depends strongly on feed composition — bad news for a fixed-cycle design.</td></tr>
+          <tr><td>Heatmap (P &times; y)</td><td>What happens anywhere in the P&ndash;y plane?</td><td>The drop-down switches between selectivity S₁₂, q₁*, q₂* and x₁. Click to pin a point; the two slice cards re-cut through it.</td></tr>
+          <tr><td>Slice q*(P) at fixed y₁</td><td>q*(P) along an isopleth</td><td>The working capacity between adsorption and regeneration pressure.</td></tr>
+          <tr><td>Slice q*(y₁) at fixed P</td><td>q*(y) at one pressure</td><td>Sensitivity of loading to feed composition swings.</td></tr>
+          <tr><td>3-D loading surface</td><td>q<sub>A</sub>(P, y) as a whole</td><td>A rotatable 3-D surface; drag to spin it, hover a vertex for its exact P, y and q.</td></tr>
         </table>
         <h5>Diagnostics</h5>
-        <p>The badges above the cards report, per component, the <b>Henry limit</b> (finite, zero or divergent), any <b>pole</b> in the isotherm, whether q(P) is monotonic, and whether &psi; is analytic or by quadrature. The <b>P trust</b> field sets the pressure beyond which you consider the pure isotherm untrustworthy; the summary flags cases where IAST needs a hypothetical pressure p<sup>0</sup><sub>i</sub> above that limit.</p>
+        <p>The summary above the cards reports the <b>Henry selectivity</b> H₁/H₂, any pressure where the ψ curves cross (a <b>selectivity reversal</b>), the worst extrapolation ratio pᵢ⁰/P over the sweep, and per component the <b>Henry limit</b> (finite, zero or divergent), any <b>pole</b> in the isotherm, whether q(P) is monotonic, and whether &psi; is analytic or by quadrature. The <b>P trust</b> field sets the pressure beyond which you consider the pure isotherm untrustworthy; the summary flags cases where IAST needs a hypothetical pressure p<sup>0</sup><sub>i</sub> above that limit.</p>
         <div class="howto-callout">A flagged extrapolation does not mean the answer is wrong — it means the answer rests on isotherm behaviour you never measured. Extend the fitting range or widen the trust limit deliberately, not by accident.</div>
       </div>
 
       <div class="howto-sec" data-sec="charts">
         <h5>Interacting</h5>
         <ul>
-          <li><b>Scroll</b> over any chart to zoom, <b>drag</b> to pan. The pure-isotherm and competitive-loading charts have the same toolbar as the IAST cards.</li>
-          <li>The toolbar on each card gives <b>box zoom</b> (drag a rectangle), <b>reset</b> (back to the full range) and <b>save</b>.</li>
-          <li><b>Hover</b> anywhere on a curve or a colour field to read exact values. The crosshair follows the cursor and a dot is placed on <i>every</i> curve at that abscissa, not just the first. On the heat map and the loading surface the tooltip includes the cursor's own <b>P</b> and <b>y</b> coordinates, not just the plotted quantity.</li>
-          <li>Line charts use a vertical hover, so a single hover reads both components at the same abscissa.</li>
-          <li><b>Click the heat map</b> to pin (P, y) and drive the two slice cards.</li>
+          <li><b>Scroll</b> to zoom, <b>drag</b> to pan. Every chart behaves the same way — the two charts at the top of the page and the seven IAST cards share one renderer.</li>
+          <li>The toolbar in the corner of a chart holds <b>pan</b>, <b>box zoom</b> (then drag a rectangle), <b>zoom in</b>, <b>zoom out</b>, <b>reset</b> to the full range, <b>pop out</b> and <b>save as PNG</b>.</li>
+          <li><b>Hover</b> a curve to read exact values: the crosshair follows the cursor, the readout snaps to the nearest abscissa, and a dot is placed on <i>every</i> series there, so one hover reads both components at once.</li>
+          <li>On the heat map the tooltip gives the cursor's own <b>P</b> and <b>y</b> alongside the plotted quantity, and <b>clicking</b> pins that (P, y) to drive the two slice cards.</li>
+          <li>The 3-D surface works differently: <b>drag rotates</b> it, scroll zooms, reset returns to the default view, and hovering snaps to the nearest vertex to report its exact P, y and q.</li>
+          <li>Anything that changes a chart's extent — q max, the pressure window, a different case — rescales the axes; a zoom you set by hand survives an ordinary repaint such as a theme switch.</li>
         </ul>
         <h5>Pop out</h5>
         <p>The <b>⤢</b> button opens the chart full screen. Type and line weights grow with the canvas, so a pop-out is genuinely more readable rather than the same chart stretched. Zoom and pan carry over, and you can download from there.</p>
         <h5>Chemical names</h5>
         <p>Component names are typeset as formulas wherever they appear on a chart: <code>CO2</code> becomes CO₂, <code>CH3OH</code> becomes CH₃OH, <code>Ca(OH)2</code> and <code>CuSO4·5H2O</code> keep their counts as subscripts, and an ionic charge such as <code>SO42-</code> is set as SO₄²⁻. Sloppy input is tolerated — <code>co2</code>, <code>h2o</code> and even <code>water</code> resolve to the right formula. Anything that is not a formula (<code>Zeolite 13X</code>, <code>MOF-74</code>, <code>Methane</code>) is left exactly as you typed it.</p>
         <h5>Styling</h5>
-        <p>All IAST charts render through a built-in canvas renderer with a single readable profile: bold padded axis labels, ticks pointing in on all four sides, no grid and no legend frame: Roboto sans, bold padded axis labels, heavy 6&nbsp;pt frame, ticks pointing <b>in</b> on all four sides, no grid, no legend frame. On screen the point sizes are scaled down from the 18&nbsp;in reference figure; on export they are used at full size.</p>
+        <p>Every chart is drawn by the same built-in canvas renderer — no external plotting library and nothing fetched from the network. One profile is used throughout: bold padded axis titles, ticks pointing inward on all four sides, no grid, no legend frame, and a legend that places itself in whichever corner covers the least data. Type, line weights and margins scale with the canvas, so a chart stays legible inside a narrow card and gains presence when popped out.</p>
       </div>
 
       <div class="howto-sec" data-sec="export">
         <h5>Images</h5>
-        <p>The <code>PNG</code> button re-renders that chart off-screen at <b>2400 px</b> with the full presentation typography and a white background, then downloads it. That is the interactive equivalent of matplotlib's <code>savefig.dpi</code> — what you get is a slide- or print-ready raster, not a screenshot of the widget.</p>
+        <p>The <code>PNG</code> button redraws the chart at <b>5× device resolution</b> on a white background with black axes. The layout is identical to what is on screen — nothing reflows, and the current zoom or 3-D orientation is exactly what you get — so the file is simply a sharper version of the figure you were just reading.</p>
         <h5>Data</h5>
-        <p><code>CSV</code> exports exactly the grid that was plotted, so a figure and its data always agree. <b>Export CSV</b> in the panel header dumps every card at once; <b>Export All</b> does PNG and CSV together (downloads are staggered — allow multiple files in your browser).</p>
+        <p><code>CSV</code> exports exactly the grid that was plotted, so a figure and its data always agree. <b>Export CSV</b> in the IAST panel header dumps every card at once and each card has its own <code>CSV</code> button; <b>Export All (PNG + CSV)</b> does all nine charts and every data set together (downloads are staggered — allow multiple files in your browser).</p>
         <h5>Text</h5>
-        <p><b>Export params JSON</b> gives a reproducible parameter block. <b>Generate Report</b> builds a printable document with model equations, parameter tables, fit statistics and a written interpretation of every IAST card, including the caveats that apply to your particular pair.</p>
+        <p><b>Export params JSON</b> gives a reproducible parameter block. The <b>Report</b> button builds a printable document — with its own <b>Print / Save as PDF</b> action — in which every chart is embedded as a high-resolution image alongside the model equations, parameter tables, fit statistics and a written interpretation of each card, including the caveats that apply to your particular pair.</p>
       </div>
 
       <div class="howto-sec" data-sec="limits">
@@ -4121,29 +4123,29 @@ applyTheme = function(t){ _applyThemeBase(t); mpRepaintAll(); };
 /* ═══════════════════════ GUIDED TOUR + HOW-TO ═════════════════════════════ */
 const TOUR_STEPS = [
   { sel: '.masthead', title: 'Welcome',
-    body: 'Two halves: <b>fit pure-component isotherms</b> on the left, then <b>predict competitive adsorption</b> with IAST on the right. About a minute.' },
+    body: 'This tool <b>predicts</b>, it does not fit. You supply pure-component isotherm parameters on the left \u2014 from the library, a JSON file, or by hand \u2014 and it evaluates them and applies IAST to get the binary mixture on the right. About a minute.' },
   { sel: '#panelLibrary', title: '1 \u00b7 Pick a system',
-    body: 'Choose a literature material/gas pair, then press <b>Load</b> — both components arrive with published parameters and a citation. <b>Import JSON</b> brings in your own library; <b>Export template</b> writes out the schema it expects.' },
+    body: 'Choose a literature material/gas pair, then press <b>Load</b> — both components arrive with their published parameters and a citation. Those are published fits; the app takes them as given. <b>Import JSON</b> brings in your own library; <b>Export template</b> writes out the schema it expects.' },
   { sel: '#panelConditions', title: '2 \u00b7 Set the conditions',
-    body: 'Temperature feeds every affinity constant through its \u0394H, so moving the slider changes the whole prediction. <b>Pressure range</b> sets the x-axis of every chart and decides how far IAST has to extrapolate your isotherms. <b>y</b> lists the gas compositions used for the curve family and the point table.' },
+    body: 'Temperature feeds every affinity constant through its \u0394H, so moving the slider changes the whole prediction. <b>Pressure range</b> sets the x-axis of every chart and decides how far IAST has to extrapolate your isotherms. <b>y</b> lists the gas compositions drawn as the curve family on the competitive-loading chart.' },
   { sel: '.comp-grid', title: '3 \u00b7 Choose the two models',
-    body: 'Component A and B each get their own isotherm model and parameter set — they do not have to match. The equation printed under each card is the one actually being evaluated, and the badge tells you whether \u03c8 is analytic or done by quadrature.' },
+    body: 'Component A and B each get their own isotherm model and parameter set — they do not have to match. The equation printed under each card is the one actually being evaluated; \u03c8 is analytic for every model except T\u00f3th and the custom expression, which use Simpson quadrature.' },
   { sel: '#calcBtn', title: '4 \u00b7 Calculate',
-    body: 'Nothing recomputes until you press this. The chip beside it tells you whether what you see is current.' },
+    body: 'Nothing recomputes until you press this \u2014 the line beside it turns amber and reads <b>Changed</b> while an edit is still unapplied.' },
   { sel: '#chartHolderUnary', title: '5 \u00b7 Pure isotherms',
     body: 'The single-component curves \u2014 the only input IAST has. If these are wrong, everything downstream is wrong.' },
   { sel: '#expData', title: '6 \u00b7 Validate',
-    body: 'Paste rows as <code>P, y, q</code>. You get R\u00b2, RMSE and AARD against the current parameters.' },
+    body: 'Paste rows as <code>P, y, q</code>, set the data temperature, then press <b>Plot &amp; compare with data</b>. The points are overlaid on the existing prediction and scored with R\u00b2, RMSE and AARD \u2014 no parameter is adjusted for you. Rows at y = 1 or y = 0 test the pure isotherms; intermediate y tests the IAST prediction itself.' },
   { sel: '#ih_xy', title: '7 \u00b7 IAST cards',
-    body: 'Seven views of the binary prediction. These and the two charts above share one renderer, so every plot in the app looks and behaves the same: <b>scroll</b> to zoom, <b>drag</b> to pan, and the toolbar in the corner adds box-zoom, reset a pop-out full-screen view and a high-resolution save.' },
+    body: 'Seven views of the binary prediction, plus the diagnostic badges above them. These and the two charts above share one renderer, so every plot in the app looks and behaves the same: <b>scroll</b> to zoom, <b>drag</b> to pan, and the toolbar in the corner adds box zoom, zoom in and out, reset, a full-screen pop-out and a high-resolution PNG.' },
   { sel: '#ih_heat', title: '8 \u00b7 Heat map \u2192 slices',
     body: 'Covers the whole P\u2013y plane; the drop-down switches between S, q\u2081*, q\u2082* and x\u2081. <b>Click anywhere on it</b> to pin a point \u2014 the slice cards re-cut through it.' },
   { sel: '#ih_surf', title: '9 \u00b7 Loading surface',
     body: 'A real 3-D surface: <b>drag to rotate</b>, scroll to zoom. Hovering snaps to the nearest vertex and reports its exact <b>P</b>, <b>y</b> and <b>q</b> — the thing a plain rotating projection could never tell you.' },
   { sel: '#exportAllBtn', title: '10 \u00b7 Export',
-    body: 'Charts export at <b>5\u00d7 device resolution</b> \u2014 the same layout you see, just sharp enough for a slide or a paper. CSV holds exactly the plotted grid.' },
+    body: '<b>Export All</b> writes all nine charts as PNG plus every data set as CSV. Images are redrawn at <b>5\u00d7 device resolution</b> in the layout you see, and each CSV holds exactly the grid that was plotted.' },
   { sel: '#reportBtn', title: 'Finally',
-    body: 'Builds a printable report with equations, parameters, fit statistics and an interpretation of each card. Reopen this tour any time from <b>Guide</b>.' }
+    body: 'Builds a printable report \u2014 every chart embedded as a high-resolution image, with the equations, parameters, fit statistics and an interpretation of each card. Reopen this tour any time from <b>Guide</b>.' }
 ];
 
 let _tourIdx = 0, _tourRAF = null, _tourEl = null, _tourAlive = false;
