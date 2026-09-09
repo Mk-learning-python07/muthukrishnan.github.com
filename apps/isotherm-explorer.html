@@ -175,7 +175,7 @@
   }
   input[type=range]{
     -webkit-appearance:none; width:100%; height:2px; border-radius:2px;
-    background:var(--line-lit); outline:none; margin:7px 0 3px; cursor:pointer;
+    background:var(--line-lit); margin:7px 0 3px; cursor:pointer;
   }
   input[type=range]::-webkit-slider-thumb{
     -webkit-appearance:none; width:16px; height:16px; border-radius:50%;
@@ -258,6 +258,7 @@
 
   /* ── Points table ── */
   .pt-table{ width:100%; border-collapse:collapse; margin-top:8px; }
+  .pt-scroll{ overflow-x:auto; }   /* six columns in a 340px sidebar */
   .pt-table th{
     font-family:var(--mono); font-size:9px; letter-spacing:0.8px; text-transform:uppercase;
     color:var(--text-faint); text-align:left; padding:0 4px 8px;
@@ -296,7 +297,7 @@
   }
   .comp-card .row2{ margin-bottom:8px; }
   .lib-pick-row{ margin-bottom:10px; }
-  .lib-pick-row .libSel{ width:100%; font-size:12px; background:var(--surface-2,rgba(255,255,255,0.03)); }
+  .lib-pick-row .libSel{ width:100%; font-size:12px; background:var(--panel-2); }
   .basis-lbl{ display:flex; align-items:center; font-size:11px; color:var(--text-faint); font-family:var(--mono); text-transform:uppercase; letter-spacing:0.5px; }
   .param-row{ display:grid; grid-template-columns:1fr 1.4fr; gap:8px; align-items:center; margin-bottom:6px; }
   .param-row-expr{ grid-template-columns:1fr; }
@@ -355,7 +356,7 @@
     background:var(--panel-2); color:var(--text); white-space:nowrap; }
   .badge.ok{ border-color:color-mix(in srgb,var(--co2) 45%,transparent); color:var(--co2); }
   .badge.warn{ border-color:color-mix(in srgb,var(--amber) 50%,transparent); color:var(--amber); }
-  .badge.bad{ border-color:color-mix(in srgb,#e05050 55%,transparent); color:#ff7a7a; }
+  .badge.bad{ border-color:color-mix(in srgb,var(--red) 55%,transparent); color:var(--red); }
   @media(max-width:900px){ .iast-grid{ grid-template-columns:1fr; } }
   /* the lone last card centers itself in the last row rather than stretching */
   .iast-card-center{ max-width:760px; margin:0 auto; width:100%; }
@@ -626,6 +627,7 @@
             <span class="op-toggle-arrow">▾</span>
           </button>
           <div class="op-body" id="opBody">
+            <div class="pt-scroll">
             <table class="pt-table" id="ptTable" style="margin-top:12px;">
               <thead><tr>
                 <th>Label</th><th>P (bar)</th><th>y<sub>A</sub></th><th>Color</th>
@@ -633,6 +635,7 @@
               </tr></thead>
               <tbody></tbody>
             </table>
+            </div>
           </div>
         </div>
       </div>
@@ -828,9 +831,7 @@
           <div>Licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution 4.0 International License (CC BY 4.0)</a>. You may share and adapt this work with attribution.</div>
         </div>
       </div>
-      <div class="foot-credit">Built with <span class="foot-heart">&#9829;</span> using <b>Claude Code</b> &middot; theory &amp; methods per D. M. Ruthven, <i>Principles of Adsorption and Adsorption Processes</i> (Wiley, 1984)<br>
-      <span style="font-size:10.5px;opacity:0.75;">This app runs entirely in your browser &mdash; no data is collected or shared.</span><br>
-      <span style="font-size:10px;opacity:0.6;display:block;margin-top:5px;"><b>For educational use.</b> These tools are built on established theory and methods, but outputs should always be validated against your own data and reviewed with engineering judgement before use in any design or decision-making context. The author accepts no liability for results applied beyond their intended educational purpose.</span></div>
+      <div class="foot-credit">Built with <span class="foot-heart">♥</span> using <b>Claude Code</b> · theory &amp; methods per D. M. Ruthven, <i>Principles of Adsorption and Adsorption Processes</i> (Wiley, 1984)</div>
     </div>
   </footer>
 
@@ -978,7 +979,7 @@
 
       <div class="howto-sec" data-sec="models">
         <h5>Choosing a model</h5>
-        <p>Twelve models are available per component, and the two components need not use the same one: linear (Henry), single-site and dual-site Langmuir, anti-Langmuir, quadratic, single-site Langmuir–Freundlich, Tóth, Freundlich, BET, type V, heterogeneous Sips, and a free-form custom expression. The panel below each card renders the live equation and the meaning of every parameter, so the model is never a black box.</p>
+        <p>Twelve models are available per component, and the two components need not use the same one: linear (Henry), single-site and dual-site Langmuir, anti-Langmuir, quadratic, single-site Langmuir–Freundlich, Tóth, Freundlich, BET, type V, Sips + Henry, and a free-form custom expression. The panel below each card renders the live equation and the meaning of every parameter, so the model is never a black box.</p>
         <ul>
           <li><b>Langmuir (SSL)</b> — one site type, saturating. The only model for which extended (competitive) Langmuir is thermodynamically consistent with IAST, and only when both q<sub>s</sub> are equal.</li>
           <li><b>Dual-site Langmuir</b> — heterogeneous surfaces, the workhorse for CO<sub>2</sub> on zeolites.</li>
@@ -1187,7 +1188,7 @@ const MODELS={
     ],
     q(P,T,p){const C=p.b0;const x=P/p.Ps;if(x>=1||x<0)return NaN;const den=(1-x)*(1-x+C*x);if(den<=1e-12)return NaN;return p.qs*C*x/den;},
     psi(P,T,p){const C=p.b0;const x=P/p.Ps;if(x>=1||x<0)return NaN;return p.qs*Math.log((1-x+C*x)/(1-x));},
-    henry(T,p){return p.qs*p.b0/p.Ps;}
+    henry(T,p){return (p.Ps>0)?p.qs*p.b0/p.Ps:NaN;}
   },
   TYPEV:{
     label:'Type V (Langmuir + Hill step)',
@@ -1235,6 +1236,19 @@ const MODELS={
     _compile(p){
       if(p._fnSrc===p.expr && p._fn) return p._fn;
       const src=String(p.expr||'0').replace(/\^/g,'**');
+      /* an imported JSON case is untrusted input and this string is compiled:
+         allow only math syntax, the two variables and Math's own names */
+      const ALLOWED=new Set(['P','T','E','LN2','LN10','LOG2E','LOG10E','PI','SQRT1_2','SQRT2',
+        'abs','acos','acosh','asin','asinh','atan','atan2','atanh','cbrt','ceil','cos','cosh',
+        'exp','expm1','floor','hypot','log','log1p','log2','log10','max','min','pow','round',
+        'sign','sin','sinh','sqrt','tan','tanh','trunc']);
+      const noNum=src.replace(/(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?/g,' ');
+      const bad=(noNum.match(/[A-Za-z_$][A-Za-z0-9_$]*/g)||[]).filter(t=>!ALLOWED.has(t));
+      if(/[\[\]{};`'"=]|=>|\/\*|\/\//.test(src) || bad.length){
+        p._fn=()=>NaN; p._fnSrc=p.expr;
+        p._err='Only math expressions in P and T are allowed'+(bad.length?' (rejected: '+bad[0]+')':'');
+        return p._fn;
+      }
       try{
         const fn=new Function('P','T',`with(Math){return (${src});}`);
         fn(1,298);
@@ -1322,6 +1336,9 @@ function solveLinear(A,b){
 
 function iastSolve(comps,y,Ptotal,T){
   const n=comps.length;
+  /* at zero total pressure nothing is adsorbed; the Newton system is singular
+     there, so return the exact answer instead of iterating into the guards */
+  if(!(Ptotal>0)) return {x:comps.map((_,i)=>y[i]),Pstar:comps.map(()=>0),qT:0,qAds:comps.map(()=>0)};
   const qAt=(i,P)=>MODELS[comps[i].model].q(P,T,comps[i].params);
   const psiAt=(i,P)=>MODELS[comps[i].model].psi(P,T,comps[i].params);
   const qP=comps.map((_,i)=>qAt(i,Ptotal));
@@ -1385,6 +1402,32 @@ const expDataEl=document.getElementById('expData');
 const expTempEl=document.getElementById('expTemp');
 const fitStatsEl=document.getElementById('fitStats');
 let expPoints=[];
+
+/* one definition of the pressure window for every chart and every diagnostic:
+   Pmin > 0 and Pmax strictly above it, however the two fields were typed */
+function pRange(){
+  let a=parseFloat(pminEl.value); if(!isFinite(a)||a<1e-4) a=1e-4;
+  let b=parseFloat(pmaxEl.value); if(!isFinite(b)||b<=0) b=1.5;
+  if(b<=a*1.0001) b=a*1.01;
+  return {Pmin:a,Pmax:b};
+}
+
+/* the plots must show the state that was last calculated, not half-typed
+   input; secondary controls (heat quantity, trust limit, ext-L overlay)
+   redraw through this snapshot */
+const CALC_SNAP={};
+function snapCalc(){
+  CALC_SNAP.temp=tempEl.value; CALC_SNAP.pmin=pminEl.value; CALC_SNAP.pmax=pmaxEl.value;
+  CALC_SNAP.qmax=qmaxEl.value; CALC_SNAP.ylist=ylistEl.value;
+}
+function usingCommitted(fn){
+  const els=[[tempEl,'temp'],[pminEl,'pmin'],[pmaxEl,'pmax'],[qmaxEl,'qmax'],[ylistEl,'ylist']];
+  const cur=els.map(([e])=>e.value);
+  try{
+    els.forEach(([e,k])=>{ if(CALC_SNAP[k]!=null) e.value=CALC_SNAP[k]; });
+    return fn(parseFloat(CALC_SNAP.temp!=null?CALC_SNAP.temp:tempEl.value));
+  } finally { els.forEach(([e],i)=>{ e.value=cur[i]; }); }
+}
 
 // toggle knob CSS via JS (since CSS :checked sibling selector has DOM ordering constraints)
 function syncPointsSwitch(){
@@ -1508,9 +1551,18 @@ function buildComponentCard(cardEl,comp,which){
         <input type="number" step="any" data-key="${f.key}" value="${dv}">`;
       rows.appendChild(row);
     });
+    /* parameters that cannot be zero/negative without making the model
+       meaningless — a bad value used to be swallowed and the curve simply
+       vanished, so flag the field instead */
+    const POSITIVE={qs:1,qsb:1,qsd:1,qm:1,b0:1,d0:1,k:1,kH:1,Ps:1,t:1,n:1,nH:1};
     rows.querySelectorAll('input[type=number]').forEach(inp=>inp.addEventListener('change',()=>{
-      const v=parseFloat(inp.value); if(isNaN(v))return;
-      comp.params[inp.dataset.key]=v; // stored raw in native basis
+      const key=inp.dataset.key, v=parseFloat(inp.value);
+      const bad=!isFinite(v) || (POSITIVE[key] && !(v>0));
+      inp.style.borderColor = bad ? 'var(--red)' : '';
+      inp.title = bad ? (isFinite(v) ? key+' must be greater than zero — value not applied'
+                                     : 'not a number — value not applied') : '';
+      if(bad) return;
+      comp.params[key]=v; // stored raw in native basis
       markDirty();
     }));
     // Expression input: store raw string, validate live, show compile errors.
@@ -1523,7 +1575,7 @@ function buildComponentCard(cardEl,comp,which){
         let errEl=cardEl.querySelector('.expr-err'); if(errEl)errEl.remove();
         if(comp.params._err){
           errEl=document.createElement('div'); errEl.className='expr-err preset-hint';
-          errEl.style.color='var(--danger,#e06)'; errEl.textContent='⚠ '+comp.params._err;
+          errEl.style.color='var(--red)'; errEl.textContent='⚠ '+comp.params._err;
           cardEl.appendChild(errEl);
         }
         markDirty();
@@ -1576,17 +1628,26 @@ function buildPointTable(){
   points.forEach((pt,i)=>{
     const tr=document.createElement('tr');
     tr.innerHTML=`
-      <td><input type="text" data-i="${i}" data-f="label" value="${pt.label}"></td>
-      <td><input type="number" data-i="${i}" data-f="P" value="${pt.P}" min="0.0001" step="0.01"></td>
-      <td><input type="number" data-i="${i}" data-f="y" value="${pt.y}" min="0" max="1" step="0.01"></td>
-      <td><input type="color" class="swatch-input" data-i="${i}" data-f="color" value="${pt.color}"></td>
+      <td><input type="text" aria-label="Point ${i+1} label" data-i="${i}" data-f="label" value="${pt.label}"></td>
+      <td><input type="number" aria-label="Point ${i+1} pressure in bar" data-i="${i}" data-f="P" value="${pt.P}" min="0.0001" step="0.01"></td>
+      <td><input type="number" aria-label="Point ${i+1} gas-phase mole fraction of component A" data-i="${i}" data-f="y" value="${pt.y}" min="0" max="1" step="0.01"></td>
+      <td><input type="color" class="swatch-input" aria-label="Point ${i+1} marker colour" data-i="${i}" data-f="color" value="${pt.color}"></td>
       <td class="pt-q" id="ptqA-${i}">\u2013</td>
       <td class="pt-q" id="ptqB-${i}">\u2013</td>`;
     ptTbody.appendChild(tr);
   });
   ptTbody.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',()=>{
     const i=+inp.dataset.i,f=inp.dataset.f;
-    points[i][f]=(f==='label'||f==='color')?inp.value:(parseFloat(inp.value)||0);
+    if(f==='label'||f==='color'){ points[i][f]=inp.value; }
+    else{
+      /* the number fields carry min/max, but typed values bypass them —
+         y outside [0,1] or P<=0 feeds IAST an impossible state */
+      let v=parseFloat(inp.value); if(!isFinite(v)) v=0;
+      if(f==='y') v=Math.min(1,Math.max(0,v));
+      if(f==='P') v=Math.max(1e-4,v);
+      points[i][f]=v;
+      if(String(v)!==inp.value) inp.value=v;
+    }
     markDirty();
   }));
   // If the collapsible is open, its content just changed - resize to fit.
@@ -1720,7 +1781,7 @@ function ttWrap(inner){const isDark=theme==='dark';
   return `<div style="background:${isDark?'rgba(10,20,16,0.96)':'rgba(255,255,255,0.98)'};border:1px solid ${isDark?'#3a5a50':'#b0c8be'};border-radius:5px;padding:6px 9px;font-size:11px;color:${isDark?'#c8d8d2':'#1a1a1a'};white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.3);font-family:var(--mono);">${inner}</div>`;}
 
 function pGrid(nPts){
-  const Pmin=Math.max(1e-4,parseFloat(pminEl.value)), Pmax=Math.max(Pmin*1.01,parseFloat(pmaxEl.value));
+  const {Pmin,Pmax}=pRange();
   const lo=Pmin, hi=Pmax, out=[];
   for(let i=0;i<=nPts;i++)out.push(lo+(hi-lo)*i/nPts);
   return out;}
@@ -1744,13 +1805,18 @@ function componentMeta(comp,T){
   if(comp.model==='SSLF'||comp.model==='SIPSH'){
     const n=p.n!=null?p.n:1; if(n<1)henryClass='inf'; else if(n>1)henryClass='zero';
   }
+  /* the type-V step term is Sips-shaped too, so its exponent decides the
+     low-pressure slope just as it does for SSLF/SIPSH */
+  if(comp.model==='TYPEV'){
+    const n=p.nH!=null?p.nH:1; if(n<1)henryClass='inf';
+  }
   // pole: anti-Langmuir diverges at P=1/b; BET at saturation P=Ps
   let pole=null;
   if(comp.model==='ANTILANG'){const b=affBar(p.b0,p.dH,p._basis||'bar',T,1); if(b>0)pole=1/b;}
   if(comp.model==='BET'&&p.Ps) pole=p.Ps;
   // monotonicity: sample q(P) on a coarse grid, flag any decrease
   let mono=true; let prev=-Infinity;
-  const Pmax=parseFloat(pmaxEl.value)||1.5;
+  const Pmax=pRange().Pmax;
   for(let i=0;i<=40;i++){const P=(i/40)*Pmax*0.999+1e-6; let q; try{q=M.q(P,T,p);}catch(e){q=NaN;}
     if(isFinite(q)){ if(q<prev-1e-9){mono=false;break;} prev=q; }}
   const psiKind=(comp.model==='TOTH'||comp.model==='CUSTOM_EXPR'||comp.model==='CUSTOM')?'table':'analytic';
@@ -1790,19 +1856,24 @@ function findSReversal(cA,cB,T,pLo,pHi){
 // Full IAST analysis for the current pair: reversal, degeneracy, worst-case
 // extrapolation of the hypothetical pressures p_i⁰ vs the user trust limit.
 function analyzeIAST(T){
-  const Pmin=Math.max(1e-4,parseFloat(pminEl.value)),Pmax=parseFloat(pmaxEl.value)||1.5;
+  const {Pmin,Pmax}=pRange();
   const rr=findSReversal(compA,compB,T,Pmin/100,Math.min(1e8,Pmax*1e4));
   // sweep worst extrapolation factor p_i⁰/P over (y,P) grid
-  let extMax=0;
+  let extMax=0, worst=0;
   const NY=9,NP=13;
   for(let jy=1;jy<NY;jy++){const y=jy/NY;
     for(let ip=0;ip<=NP;ip++){const P=Pmin+(Pmax-Pmin)*ip/NP; if(P<=0)continue;
       try{const r=iastSolve([compA,compB],[y,1-y],P,T);
-        r.Pstar.forEach(p0=>{const f=p0/P; if(isFinite(f))extMax=Math.max(extMax,f);});
+        r.Pstar.forEach(p0=>{
+          const f=p0/P; if(isFinite(f))extMax=Math.max(extMax,f);
+          /* the worst hypothetical pressure is the largest p⁰ actually met on
+             the sweep — the largest ratio usually occurs at low P, so
+             extMax*Pmax is not that pressure */
+          if(isFinite(p0))worst=Math.max(worst,p0);
+        });
       }catch(e){}
     }}
   const trust=parseFloat((document.getElementById('ptrustEl')||{}).value)||1000;
-  const worst=extMax*Pmax;
   const mA=componentMeta(compA,T), mB=componentMeta(compB,T);
   return {rev:rr.ps,degenerate:rr.degenerate,extMax,worst,trust,beyondTrust:worst>trust,metaA:mA,metaB:mB};
 }
@@ -1928,7 +1999,7 @@ function paramTableHtml(comp,label){
 // every sentence is computed from the live components + analysis.
 function reportInsights(T){
   const g=v=>(!isFinite(v)?'∞':Math.abs(v)>=1e4||(Math.abs(v)<1e-3&&v!==0)?v.toExponential(2):(+v.toPrecision(4)));
-  const Pmin=Math.max(1e-4,parseFloat(pminEl.value)),Pmax=parseFloat(pmaxEl.value)||1.5;
+  const {Pmin,Pmax}=pRange();
   const A=(function(){try{return analyzeIAST(T);}catch(e){return null;}})();
   const nameA=compA.name,nameB=compB.name;
   const HA=A?A.metaA.henry:NaN, HB=A?A.metaB.henry:NaN;
@@ -1990,7 +2061,7 @@ function modelEqnBlock(comp,label){
 
 function buildReport(){
   const T=parseFloat(tempEl.value);
-  const Pmin=parseFloat(pminEl.value),Pmax=parseFloat(pmaxEl.value);
+  const {Pmin,Pmax}=pRange();
   const caseName=caseNameEl.value||'IAST case';
   const now=new Date().toLocaleString();
   render(); renderIastPlot();
@@ -2096,7 +2167,10 @@ function buildReport(){
     .rc-highlight{background:#eafaf4;border:1px solid #b6e5d5;border-radius:6px;padding:10px 14px;font-size:13px;color:#0f5a45;margin:10px 0;}
     .rc-warn{background:#fdf3e3;border:1px solid #f0d29a;color:#7a5410;}
     .rc-foot{margin-top:30px;padding-top:12px;border-top:1px solid #dbe5e1;color:#8aa89e;font-size:10.5px;}
-    @media print{ body{padding:0 8px;} h2{break-after:avoid;} .rc-chart,.rc-comp,.rc-theory{break-inside:avoid;} .rc-noprint{display:none;} }
+    @media print{ body{padding:0 8px;} h2{break-after:avoid;}
+      .rc-chart,.rc-comp,.rc-theory,.rc-mdls,.rc-highlight,.rc-meta,.rc-concl,.rc-figure,.rc-ptable{break-inside:avoid;}
+      .rc-noprint{display:none;} }
+    @media screen and (max-width:760px){ .rc-comps,.rc-charts{grid-template-columns:1fr;} }
     .rc-btnbar{position:sticky;top:0;background:#fff;padding:10px 0 16px;border-bottom:1px solid #eee;margin-bottom:20px;display:flex;gap:10px;z-index:5;}
     .rc-btn{font-family:inherit;font-size:13px;padding:8px 18px;border-radius:6px;border:1px solid #0f7a5f;background:#0f7a5f;color:#fff;cursor:pointer;}
     .rc-btn.sec{background:#fff;color:#0f7a5f;}
@@ -2202,17 +2276,39 @@ document.getElementById('loadFile').addEventListener('change',e=>{
   fr.onload=ev=>{
     try{
       const d=JSON.parse(ev.target.result);
+      /* a case file is untrusted text: take only known fields, only of the
+         right type, and rebuild the components rather than adopting them */
+      const num=(v,lo,hi,dflt)=>{const x=typeof v==='number'?v:parseFloat(v);
+        return (isFinite(x)&&x>=lo&&x<=hi)?x:dflt;};
+      const takeComp=(c,cur)=>{
+        if(!c||typeof c!=='object'||!MODELS[c.model]) return cur;
+        const src=(c.params&&typeof c.params==='object')?c.params:{};
+        const params={};
+        Object.keys(src).forEach(f=>{
+          if(f==='__proto__'||f==='constructor'||f==='prototype') return;
+          const v=src[f];
+          if(f==='_basis'||f==='expr'){ if(typeof v==='string') params[f]=v; return; }
+          const x=typeof v==='number'?v:(typeof v==='string'?parseFloat(v):NaN);
+          if(isFinite(x)) params[f]=x;
+        });
+        return {name:String(c.name||cur.name).slice(0,40),model:c.model,
+                unit:['bar','kPa','concL','concM3'].includes(c.unit)?c.unit:cur.unit,
+                params};
+      };
       caseNameEl.value=sanName(d.caseName||file.name.replace(/\.json$/i,''));
-      if(d.temp!=null)tempEl.value=d.temp;
-      if(d.pmin!=null)pminEl.value=d.pmin;
-      if(d.pmax!=null)pmaxEl.value=d.pmax;
+      if(d.temp!=null)tempEl.value=num(d.temp,1,5000,tempEl.value);
+      if(d.pmin!=null)pminEl.value=num(d.pmin,0,1e6,pminEl.value);
+      if(d.pmax!=null)pmaxEl.value=num(d.pmax,1e-6,1e6,pmaxEl.value);
       if(d.qmax!=null)qmaxEl.value=d.qmax;
-      if(d.ylist!=null)ylistEl.value=d.ylist;
-      if(d.compA)compA=d.compA; if(d.compB)compB=d.compB;
-      if(d.expDataText!=null){expDataEl.value=d.expDataText;expPoints=parseExpData(d.expDataText);}
-      if(Array.isArray(d.points)&&d.points.length){points.length=0;d.points.forEach(p=>points.push({label:p.label??'pt',P:p.P??0,y:p.y??0,color:p.color??'#f0cb6a'}));}
+      if(d.ylist!=null)ylistEl.value=String(d.ylist).slice(0,200);
+      compA=takeComp(d.compA,compA); compB=takeComp(d.compB,compB);
+      if(d.expDataText!=null){expDataEl.value=String(d.expDataText).slice(0,200000);expPoints=parseExpData(expDataEl.value);reportExpParse();}
+      if(Array.isArray(d.points)&&d.points.length){points.length=0;
+        d.points.slice(0,50).forEach(p=>points.push({label:String(p&&p.label||'pt').slice(0,20),
+          P:num(p&&p.P,1e-4,1e6,1),y:num(p&&p.y,0,1,0.5),
+          color:(typeof (p&&p.color)==='string'&&/^#[0-9a-f]{6}$/i.test(p.color))?p.color:'#f0cb6a'}));}
       buildComponentCard(cardA,compA,'A');buildComponentCard(cardB,compB,'B');
-      buildPointTable();computeFitStats();render();markClean();
+      buildPointTable();computeFitStats();snapCalc();render();markClean();
     }catch(err){alert('Cannot read JSON: '+err.message);}
   };
   fr.readAsText(file); e.target.value='';
@@ -2220,14 +2316,32 @@ document.getElementById('loadFile').addEventListener('change',e=>{
 
 // ── Experimental data ──────────────────────────────────────────────────────
 function parseExpData(txt){
-  const rows=[];
-  txt.split('\n').forEach(ln=>{
+  const rows=[], bad=[];
+  txt.split('\n').forEach((ln,i)=>{
     const c=ln.trim(); if(!c||c.startsWith('#'))return;
     const p=c.split(/[,\s]+/).map(parseFloat).filter(v=>!isNaN(v));
-    if(p.length<3)return;
+    if(p.length<3){ bad.push(i+1); return; }
+    /* a row IAST cannot be evaluated at is a data error, not a silent skip */
+    if(!(p[0]>0) || !(p[1]>=0 && p[1]<=1) || !(p[2]>=0)){ bad.push(i+1); return; }
     rows.push({P:p[0],y:p[1],qA:p[2],qB:p.length>3?p[3]:null});
   });
+  parseExpData.skipped=bad;
   return rows;
+}
+/* one line under the box saying what was ignored and why */
+function reportExpParse(){
+  const bad=parseExpData.skipped||[];
+  let el=document.getElementById('expParseMsg');
+  if(!el){
+    el=document.createElement('div'); el.id='expParseMsg'; el.className='hint';
+    el.style.cssText='margin-top:6px;font-size:11.5px;';
+    expDataEl.parentNode.insertBefore(el,expDataEl.nextSibling);
+  }
+  if(!bad.length && expPoints.length){ el.textContent=expPoints.length+' point'+(expPoints.length===1?'':'s')+' read.'; el.style.color='var(--text-faint)'; return; }
+  if(!bad.length && !expPoints.length){ el.textContent=''; return; }
+  el.style.color='var(--amber)';
+  el.textContent=bad.length+' line'+(bad.length===1?'':'s')+' ignored (need P>0, 0≤y≤1, q≥0 — three or four numbers per line): line '+
+    bad.slice(0,6).join(', ')+(bad.length>6?' …':'')+(expPoints.length?'. '+expPoints.length+' point'+(expPoints.length===1?'':'s')+' used.':'. No usable rows.');
 }
 function computeFitStats(){
   if(!expPoints.length){fitStatsEl.innerHTML='';fitStatsEl.classList.remove('visible');return;}
@@ -2254,10 +2368,11 @@ function computeFitStats(){
 
   const anyB=rows.some(r=>r.hasB);
   const th=(t)=>`<th style="text-align:right;padding:2px 6px;font-size:9px;letter-spacing:0.3px;color:var(--text-faint);text-transform:uppercase;">${t}</th>`;
+  const nm=c=>{try{return chem(c);}catch(e){return c;}};   /* chem() is defined later in the file */
   let tbl=`<table style="width:100%;border-collapse:collapse;margin:6px 0 4px;font-family:var(--mono);font-size:10.5px;">
     <thead><tr>
-      ${th('P (bar)')}${th('y<sub>CO2</sub>')}${th('q<sub>CO2</sub> exp')}${th('q<sub>CO2</sub> IAST')}${th('Δ')}${th('%err')}
-      ${anyB?th('q<sub>N2</sub> exp')+th('q<sub>N2</sub> IAST')+th('Δ'):''}
+      ${th('P (bar)')}${th('y<sub>'+nm(compA.name)+'</sub>')}${th('q<sub>'+nm(compA.name)+'</sub> exp')}${th('q<sub>'+nm(compA.name)+'</sub> IAST')}${th('Δ')}${th('%err')}
+      ${anyB?th('q<sub>'+nm(compB.name)+'</sub> exp')+th('q<sub>'+nm(compB.name)+'</sub> IAST')+th('Δ'):''}
     </tr></thead><tbody>`;
   rows.forEach(r=>{
     const col = Math.abs(r.pctA)<5?'var(--co2)':Math.abs(r.pctA)<15?'var(--amber)':'var(--red)';
@@ -2273,16 +2388,16 @@ function computeFitStats(){
   tbl+=`</tbody></table>`;
 
   const summary=`<div style="margin-top:4px;padding-top:6px;border-top:1px solid var(--line);">
-    <strong style="color:var(--co2);">CO₂ fit @ ${T} K</strong> &nbsp; n=${n} &nbsp;·&nbsp; RMSE=${rmse.toFixed(4)} mol/kg &nbsp;·&nbsp; MAE=${mae.toFixed(4)} &nbsp;·&nbsp; MAPE=${mape.toFixed(1)}% &nbsp;·&nbsp; R²=${r2.toFixed(4)}
+    <strong style="color:var(--co2);">${nm(compA.name)} fit @ ${T} K</strong> &nbsp; n=${n} &nbsp;·&nbsp; RMSE=${rmse.toFixed(4)} mol/kg &nbsp;·&nbsp; MAE=${mae.toFixed(4)} &nbsp;·&nbsp; MAPE=${mape.toFixed(1)}% &nbsp;·&nbsp; R²=${r2.toFixed(4)}
   </div>`;
 
   fitStatsEl.innerHTML=tbl+summary;
   fitStatsEl.classList.add('visible');
 }
-document.getElementById('plotDataBtn').addEventListener('click',()=>{expPoints=parseExpData(expDataEl.value);computeFitStats();render();markClean();});
+document.getElementById('plotDataBtn').addEventListener('click',()=>{expPoints=parseExpData(expDataEl.value);reportExpParse();computeFitStats();render();markClean();});
 // Recompute validation stats live when the validation temperature changes.
 expTempEl.addEventListener('input',()=>{ if(expPoints.length) computeFitStats(); });
-document.getElementById('clearDataBtn').addEventListener('click',()=>{expPoints=[];expDataEl.value='';fitStatsEl.textContent='';fitStatsEl.classList.remove('visible');expPresetEl.value='';render();markClean();});
+document.getElementById('clearDataBtn').addEventListener('click',()=>{expPoints=[];expDataEl.value='';parseExpData.skipped=[];const m=document.getElementById('expParseMsg');if(m)m.textContent='';fitStatsEl.textContent='';fitStatsEl.classList.remove('visible');expPresetEl.value='';render();markClean();});
 // Validation dataset preset: load bundled binary data into the textarea.
 const expPresetEl=document.getElementById('expPreset');
 expPresetEl.addEventListener('change',()=>{
@@ -2292,7 +2407,7 @@ expPresetEl.addEventListener('change',()=>{
   if(!e||!e.expData){ alert('No bundled validation data for that material.'); expPresetEl.value=''; return; }
   expDataEl.value=e.expData;
   if(e.expTemp) expTempEl.value=e.expTemp;
-  expPoints=parseExpData(e.expData);
+  expPoints=parseExpData(e.expData); reportExpParse();
   computeFitStats(); render(); markClean();
 });
 
@@ -2300,24 +2415,25 @@ expPresetEl.addEventListener('change',()=>{
 const calcStatusEl=document.getElementById('calcStatus');
 function markDirty(){calcStatusEl.textContent='● Changed — click Calculate';calcStatusEl.className='calc-status dirty';}
 function markClean(){calcStatusEl.textContent='✓ Up to date';calcStatusEl.className='calc-status ok';}
-function calculate(){buildComponentCard(cardA,compA,'A');buildComponentCard(cardB,compB,'B');computeFitStats();render();if(typeof renderIastPlot==='function')renderIastPlot();markClean();if(typeof saveLS==='function')saveLS();}
+function calculate(){snapCalc();buildComponentCard(cardA,compA,'A');buildComponentCard(cardB,compB,'B');computeFitStats();render();if(typeof renderIastPlot==='function')renderIastPlot();markClean();if(typeof saveLS==='function')saveLS();}
 document.getElementById('calcBtn').addEventListener('click',calculate);
 
 // Heatmap quantity selector: re-render heat + slices only (fast).
 (function(){
   const hq=document.getElementById('heatQty');
   if(hq)hq.addEventListener('change',()=>{
-    const T=parseFloat(tempEl.value);
-    ['heat','sliceP','sliceY'].forEach(k=>{const h=document.getElementById('ih_'+k),n=document.getElementById('note_'+k);
-      if(h){const fn={heat:plotHeat,sliceP:plotSliceP,sliceY:plotSliceY}[k];try{fn(T,h,n);}catch(e){}}});
+    usingCommitted(T=>{
+      ['heat','sliceP','sliceY'].forEach(k=>{const h=document.getElementById('ih_'+k),n=document.getElementById('note_'+k);
+        if(h){const fn={heat:plotHeat,sliceP:plotSliceP,sliceY:plotSliceY}[k];try{fn(T,h,n);}catch(e){}}});
+    });
     saveLS();
   });
   const pt=document.getElementById('ptrustEl');
-  if(pt)pt.addEventListener('input',()=>{try{renderIastSummary(parseFloat(tempEl.value));}catch(e){}saveLS();});
+  if(pt)pt.addEventListener('input',()=>{usingCommitted(T=>{try{renderIastSummary(T);}catch(e){}});saveLS();});
   const elt=document.getElementById('elToggle');
   if(elt)elt.addEventListener('change',()=>{
-    const T=parseFloat(tempEl.value);const h=document.getElementById('ih_xy'),n=document.getElementById('note_xy');
-    if(h){try{plotXY(T,h,n);}catch(e){}}
+    usingCommitted(T=>{const h=document.getElementById('ih_xy'),n=document.getElementById('note_xy');
+      if(h){try{plotXY(T,h,n);}catch(e){}}});
   });
 })();
 
@@ -2485,7 +2601,7 @@ function loadSorbentByKey(k,{silent=false}={}){
   // Params already carry their native _basis from import; no reference T needed.
   compA={name:e.gasA,model:e.modelA,unit:dispUnit,params:JSON.parse(JSON.stringify(e.paramsA))};
   compB={name:e.gasB,model:e.modelB,unit:dispUnit,params:JSON.parse(JSON.stringify(e.paramsB))};
-  expPoints=parseExpData(e.expData||''); expDataEl.value=e.expData||'';
+  expPoints=parseExpData(e.expData||''); expDataEl.value=e.expData||''; reportExpParse();
   if(e.expTemp) expTempEl.value=e.expTemp; // validation T from the dataset
   sorbentSel.value=k; updateSorbentCredit();
   calculate();
@@ -2625,11 +2741,17 @@ function importNativeLibrary(d){
       rows.push([`${eLbl} (${eUnit})`, fmt(cA.dU??cA.dH), fmt(cB.dU??cB.dH)]);
     }
 
+    /* an entry with a missing or non-numeric parameter must not be offered as
+       verified — it loads silently and draws NaN curves */
+    const numsOk = o => o && Object.keys(o).every(f => f.startsWith('_') || typeof o[f]==='number' && isFinite(o[f]));
+    const paramsOk = A.params!=null && B.params!=null && numsOk(A.params) && numsOk(B.params);
+    if(!paramsOk) console.warn('Library entry "'+k+'" has missing or non-numeric parameters — marked unverified.');
+
     SORBENT_LIBRARY[k]={
       label:entry.label, gasA:entry.gasA, gasB:entry.gasB,
       modelA:A.model, paramsA:A.params, modelB:B.model, paramsB:B.params,
       affinityBasis:aff, energyBasis:eBasis,
-      verified: entry.verified!==false && A.params!=null && B.params!=null,
+      verified: entry.verified!==false && paramsOk,
       citation: entry.citation || {short:k,text:k,doi:'',table:'imported'},
       paramTableNative:{
         basis:`${aff}, ${eBasis} (as entered)`,
@@ -2904,6 +3026,9 @@ function viridis(t){
 }
 function mpTicks(lo, hi, want){
   const span = hi - lo; if(!(span > 0)) return [lo];
+  /* a field that is flat to within rounding produces a step so much smaller
+     than the values themselves that the labels repeat */
+  if(span <= Math.abs(hi) * 1e-6) return [(lo + hi) / 2];
   const raw = span / (want || 6), m = Math.pow(10, Math.floor(Math.log10(raw)));
   const n = raw / m, step = (n < 1.5 ? 1 : n < 3 ? 2 : n < 7 ? 5 : 10) * m;
   const out = []; for(let v = Math.ceil(lo / step) * step; v <= hi + step * 1e-9; v += step) out.push(v);
@@ -2912,8 +3037,12 @@ function mpTicks(lo, hi, want){
 function mpFmt(v, span){
   if(v === 0) return '0';
   const a = Math.abs(v);
-  if(a >= 1e5 || a < 1e-3) return v.toExponential(1);
-  const dp = span >= 50 ? 0 : span >= 5 ? 1 : span >= 0.5 ? 2 : 3;
+  /* one axis, one notation: decide from the span so a decade boundary inside
+     the range cannot mix "8.0e-4" and "0.001" on the same axis */
+  let sp = Math.abs(span) || a;
+  if(sp < a * 1e-3) sp = a;          /* a flat range says nothing about notation */
+  if(a >= 1e5 || sp >= 1e5 || sp < 1e-3) return v.toExponential(1);
+  const dp = sp >= 50 ? 0 : sp >= 5 ? 1 : sp >= 0.5 ? 2 : sp >= 0.05 ? 3 : 4;
   return v.toFixed(dp);
 }
 
@@ -3095,10 +3224,14 @@ function mpDraw(ctx, W, H, spec, view, opts){
   if(LG){
     tx = [];
     const e0 = Math.floor(fx0), e1 = Math.ceil(fx1), dec = e1 - e0;
-    const mult = dec <= 2 ? [1, 2, 5] : dec <= 5 ? [1, 3] : [1];
+    /* budget the decade labels by width, or they collide on a narrow card */
+    const perDec = Math.max(1, Math.floor(nTx / Math.max(1, dec)));
+    const mult = (dec <= 2 && perDec >= 3) ? [1, 2, 5]
+               : (dec <= 5 && perDec >= 2) ? [1, 3] : [1];
+    const skip = Math.max(1, Math.ceil((dec + 1) / nTx));
     for(let e = e0; e <= e1; e++) mult.forEach(m => {
       const v = m * Math.pow(10, e);
-      if(v >= x0 * 0.999 && v <= x1 * 1.001) tx.push(v);
+      if(v >= x0 * 0.999 && v <= x1 * 1.001 && (mult.length > 1 || (e - e0) % skip === 0)) tx.push(v);
     });
     tx.sort((a, b) => a - b);
     txLab = tx.map(v => (v >= 0.01 && v < 1e4) ? String(+v.toPrecision(3)) : v.toExponential(0));
@@ -3320,8 +3453,13 @@ function mpDraw(ctx, W, H, spec, view, opts){
   }
 
   /* ── legend (no frame) ────────────────────────────────────────────────── */
+  /* a series with nothing finite in it draws no ink — naming it in the legend
+     just makes the reader hunt for a curve that is not there (BET above its
+     saturation pressure, say) */
+  const drawn = l => !l.y || l.y.some((v, i) => isFinite(v) && isFinite(l.x[i]));
   const leg = (spec.lines || []).filter(l => l.label)
-    .map((l, k) => ({ t: l.label, c: l.color || C.series[k % C.series.length], d: l.dash, m: !!l.noLine }))
+    .map((l, k) => ({ t: l.label, c: l.color || C.series[k % C.series.length], d: l.dash, m: !!l.noLine, on: drawn(l) }))
+    .filter(l => l.on)
     .concat((spec.guides || []).filter(g => g.label).map(g => ({ t: g.label, c: C.guide, d: g.dash || 'dashed' })));
   if(leg.length){
     const fs = ST.legendSize * s, hl = 2.2 * fs, gap = 0.7 * fs, row = fs * 1.55;
@@ -3337,7 +3475,9 @@ function mpDraw(ctx, W, H, spec, view, opts){
       { k: 'bottom_left',  x: ML + m,           y: MT + ph - bh - m }
     ];
     const samples = [];
-    (spec.lines || []).forEach(L => {
+    /* guides (y = x, S = 1 …) are drawn ink as much as the series are, and the
+       legend that names them must not sit on top of them */
+    (spec.lines || []).concat(spec.guides || []).forEach(L => {
       const st = Math.max(1, Math.floor(L.x.length / 90));
       for(let i = 0; i < L.x.length; i += st){
         if(!isFinite(L.x[i]) || !isFinite(L.y[i])) continue;
@@ -3418,7 +3558,10 @@ function mp3D(ctx, W, H, spec, rot, opts){
     const xr = x * ca - y * sa, yr = x * sa + y * ca;
     return [cx + xr * R, cy - z * R * ce + yr * R * se, yr * ce - z * R * 0.0001 + z * se];
   };
-  const depth = (u, v) => ((u - 0.5) * sa + (v - 0.5) * ca);
+  /* painter's-algorithm key: the projected view depth of the quad's centre,
+     height included — a plane-only key mis-sorts a tall foreground cell
+     against a low background one at shallow elevation */
+  const depth = (u, v, w) => proj(u, v, w === undefined ? 0.5 : w)[2];
 
   const P0 = proj(0, 0, 0), P1 = proj(1, 0, 0), P2 = proj(1, 1, 0), P3 = proj(0, 1, 0);
   /* which corner faces the viewer? (larger rotated-y is nearer) */
@@ -3471,7 +3614,7 @@ function mp3D(ctx, W, H, spec, rot, opts){
     const wa = ((z00 + z10 + z11 + z01) / 4 - S.low) / rng;
     const shade = 0.72 + 0.28 / (1 + (Math.abs(z10 - z00) + Math.abs(z01 - z00)) * 6 / rng);
     quads.push({
-      d: depth((u0 + u1) / 2, (v0 + v1) / 2), w: wa, sh: shade,
+      d: depth((u0 + u1) / 2, (v0 + v1) / 2, wa), w: wa, sh: shade,
       p: [proj(u0, v0, (z00 - S.low) / rng), proj(u1, v0, (z10 - S.low) / rng),
           proj(u1, v1, (z11 - S.low) / rng), proj(u0, v1, (z01 - S.low) / rng)]
     });
@@ -3504,7 +3647,8 @@ function mp3D(ctx, W, H, spec, rot, opts){
     ctx.fillText(mpFmt(S.x0 + S.dw * t, S.dw), b1[0], b1[1] + ST.tickLabel * s * 0.95);
     const a2 = proj(frontU, t, 0), b2 = proj(frontU + offU, t, 0);
     ctx.beginPath(); ctx.moveTo(a2[0], a2[1]); ctx.lineTo(b2[0], b2[1]); ctx.stroke();
-    ctx.fillText(mpFmt(S.y0 + S.dh * t, S.dh), b2[0], b2[1] + ST.tickLabel * s * 0.95);
+    /* the two floor axes meet at one corner and both want to label it */
+    if(t !== frontV) ctx.fillText(mpFmt(S.y0 + S.dh * t, S.dh), b2[0], b2[1] + ST.tickLabel * s * 0.95);
   }
 
   const f3 = sz => FONT(ST.labelWeight, sz / s);
@@ -3553,7 +3697,10 @@ function mp3D(ctx, W, H, spec, rot, opts){
   return {
     proj, R, cx, cy,
     pick(px, py){
-      let best = null, bd = 26 * 26;
+      /* a fixed pixel radius makes the enlarged pop-out harder to hover than
+         the small card; scale it with the drawing size instead */
+      const hitR = 26 * Math.max(1, Math.min(2.5, R / 150));
+      let best = null, bd = hitR * hitR;
       const step = Math.max(1, Math.round(nX / 60));
       for(let j = 0; j < nY; j += step) for(let i = 0; i < nX; i += step){
         const q = Z[j][i]; if(!isFinite(q)) continue;
@@ -3573,6 +3720,7 @@ const MP = {};   // holder id -> instance
 function mpMount(holder, spec){
   const id = holder.id;
   const old = MP[id];
+  if(old && old.destroy) try{ old.destroy(); }catch(e){}
   /* a stored zoom is only reused when nothing about the chart's own extent has
      changed; otherwise a new q max, pressure window or data set would be drawn
      inside the previous axes and the card would look frozen */
@@ -3600,13 +3748,13 @@ function mpMount(holder, spec){
   const bar = document.createElement('div');
   bar.className = 'mp-bar';
   bar.innerHTML =
-    '<button type="button" data-a="pan"  title="Pan (drag)">\u271c</button>' +
-    '<button type="button" data-a="box"  title="Box zoom">\u25a3</button>' +
-    '<button type="button" data-a="zin"  title="Zoom in">+</button>' +
-    '<button type="button" data-a="zout" title="Zoom out">\u2212</button>' +
-    '<button type="button" data-a="reset" title="Reset view">\u21ba</button>' +
-    '<button type="button" data-a="max"  title="Pop out full screen">\u2922</button>' +
-    '<button type="button" data-a="save" title="Save high-resolution PNG">\u2b07</button>';
+    '<button type="button" data-a="pan"  aria-label="Pan (drag)" title="Pan (drag)">\u271c</button>' +
+    '<button type="button" data-a="box"  aria-label="Box zoom" title="Box zoom">\u25a3</button>' +
+    '<button type="button" data-a="zin"  aria-label="Zoom in" title="Zoom in">+</button>' +
+    '<button type="button" data-a="zout" aria-label="Zoom out" title="Zoom out">\u2212</button>' +
+    '<button type="button" data-a="reset" aria-label="Reset view" title="Reset view">\u21ba</button>' +
+    '<button type="button" data-a="max"  aria-label="Pop out full screen" title="Pop out full screen">\u2922</button>' +
+    '<button type="button" data-a="save" aria-label="Save high-resolution PNG" title="Save high-resolution PNG">\u2b07</button>';
   holder.appendChild(bar);
 
   const inst = {
@@ -3674,7 +3822,7 @@ function mpMount(holder, spec){
              rot: Object.assign({}, inst.rot), mode: inst.spec.surface3d ? 'rot' : inst.mode };
     if(inst.mode === 'pan') cv.style.cursor = 'grabbing';
   });
-  window.addEventListener('mousemove', ev => {
+  const onMove = ev => {
     if(!drag) return;
     const p = loc(ev), g = inst.geom;
     if(drag.mode === 'rot'){
@@ -3694,17 +3842,31 @@ function mpMount(holder, spec){
     inst.view = { xr: [ifxn(ux0 - du), ifxn(ux1 - du)],
                   yr: [drag.view.yr[0] + dy, drag.view.yr[1] + dy] };
     inst.paint();
-  });
-  window.addEventListener('mouseup', () => {
+  };
+  const onUp = () => {
     if(!drag) return;
     if(drag.mode === 'box' && inst.band && inst.band.w > 6 && inst.band.h > 6){
       const g = inst.geom, b = inst.band;
-      inst.view = { xr: [g.Xi(b.x), g.Xi(b.x + b.w)], yr: [g.Yi(b.y + b.h), g.Yi(b.y)] };
+      const nx = [g.Xi(b.x), g.Xi(b.x + b.w)], ny = [g.Yi(b.y + b.h), g.Yi(b.y)];
+      const H = inst.home;
+      if(nx.concat(ny).every(isFinite) &&
+         (nx[1] - nx[0]) > Math.abs(H.xr[1] - H.xr[0]) * 1e-4 &&
+         (ny[1] - ny[0]) > Math.abs(H.yr[1] - H.yr[0]) * 1e-4){
+        inst.view = { xr: nx, yr: ny };
+      }
     }
     inst.band = null; drag = null;
     cv.style.cursor = inst.mode === 'box' ? 'crosshair' : 'grab';
     inst.paint();
-  });
+  };
+  /* charts are re-mounted on every render; window-level drag handlers must be
+     dropped with the instance they belonged to, or they accumulate forever */
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', onUp);
+  inst.destroy = () => {
+    window.removeEventListener('mousemove', onMove);
+    window.removeEventListener('mouseup', onUp);
+  };
 
   cv.addEventListener('mousemove', ev => {
     if(drag) return;
@@ -3724,6 +3886,8 @@ function mpMount(holder, spec){
       let lx0 = p.cx + 16, ly0 = p.cy - th0 - 10;
       if(lx0 + tw0 > holder.clientWidth) lx0 = p.cx - tw0 - 16;
       if(ly0 < 0) ly0 = p.cy + 16;
+      lx0 = Math.min(lx0, holder.clientWidth - tw0 - 2);
+      ly0 = Math.min(ly0, holder.clientHeight - th0 - 2);
       tip.style.left = Math.max(2, lx0) + 'px'; tip.style.top = Math.max(2, ly0) + 'px';
       return;
     }
@@ -3737,6 +3901,8 @@ function mpMount(holder, spec){
     let lx = p.cx + 16, ly = p.cy - th - 10;
     if(lx + tw > holder.clientWidth) lx = p.cx - tw - 16;
     if(ly < 0) ly = p.cy + 16;
+    lx = Math.min(lx, holder.clientWidth - tw - 2);
+    ly = Math.min(ly, holder.clientHeight - th - 2);
     tip.style.left = Math.max(2, lx) + 'px'; tip.style.top = Math.max(2, ly) + 'px';
     if(inst.spec.onHover) inst.spec.onHover(xv, yv);
   });
@@ -3757,8 +3923,15 @@ function mpZoom(inst, k, at){
   const u0 = fxn(v.xr[0]), u1 = fxn(v.xr[1]);
   const uc = at ? fxn(g.Xi(at.px)) : (u0 + u1) / 2;
   const cy = at ? g.Yi(at.py) : (v.yr[0] + v.yr[1]) / 2;
-  inst.view = { xr: [ifxn(uc + (u0 - uc) * k), ifxn(uc + (u1 - uc) * k)],
-                yr: [cy + (v.yr[0] - cy) * k, cy + (v.yr[1] - cy) * k] };
+  const nx = [ifxn(uc + (u0 - uc) * k), ifxn(uc + (u1 - uc) * k)];
+  const ny = [cy + (v.yr[0] - cy) * k, cy + (v.yr[1] - cy) * k];
+  /* never let a span collapse (or invert): below ~1e-4 of the home span the
+     pixel mapping divides by ~0 and the card draws NaN geometry */
+  const H = inst.home, minx = Math.abs(H.xr[1] - H.xr[0]) * 1e-4, miny = Math.abs(H.yr[1] - H.yr[0]) * 1e-4;
+  const ok = isFinite(nx[0]) && isFinite(nx[1]) && isFinite(ny[0]) && isFinite(ny[1]) &&
+             (nx[1] - nx[0]) > minx && (ny[1] - ny[0]) > miny;
+  if(!ok) return;
+  inst.view = { xr: nx, yr: ny };
   inst.paint();
 }
 
@@ -3802,7 +3975,12 @@ function mpPopout(holderId){
     '<button type="button" class="tour-btn" data-a="close">Close</button></div>' +
     '<div class="mp-pop-body" id="mp_popout"></div></div>';
   document.body.appendChild(ov);
-  const close = () => { delete MP['mp_popout']; document.body.removeChild(ov); document.removeEventListener('keydown', esc); };
+  const close = () => {
+    const pi = MP['mp_popout']; if(pi && pi.destroy) try{ pi.destroy(); }catch(e){}
+    delete MP['mp_popout'];
+    if(ov.parentNode) document.body.removeChild(ov);
+    document.removeEventListener('keydown', esc);
+  };
   const esc = e => { if(e.key === 'Escape') close(); };
   document.addEventListener('keydown', esc);
   ov.addEventListener('click', e => {
@@ -3850,7 +4028,7 @@ function pngFromHolder(holderId, label){
 
 function plotXY(T, holder, noteEl){
   if(!MP_READY) return;
-  const N = 120, Pmax = parseFloat(pmaxEl.value) || 1.5, C = mpPalette(false);
+  const N = 120, Pmax = pRange().Pmax, C = mpPalette(false);
   const ys = [], xs = [], SS = [];
   for(let i = 0; i <= N; i++){
     const y = i / N; let x;
@@ -3898,7 +4076,7 @@ function plotXY(T, holder, noteEl){
 
 function plotPsi(T, holder, noteEl){
   if(!MP_READY) return;
-  const Pmin = Math.max(1e-4, parseFloat(pminEl.value)), Pmax = parseFloat(pmaxEl.value) || 1.5;
+  const {Pmin, Pmax} = pRange();
   const N = 200, C = mpPalette(false), P = [], pa = [], pb = [];
   for(let i = 0; i <= N; i++){
     const p = Pmin + (Pmax - Pmin) * i / N; P.push(p);
@@ -3929,7 +4107,7 @@ function plotPsi(T, holder, noteEl){
 
 function plotSel(T, holder, noteEl){
   if(!MP_READY) return;
-  const Pmin = Math.max(1e-4, parseFloat(pminEl.value)), Pmax = parseFloat(pmaxEl.value) || 1.5;
+  const {Pmin, Pmax} = pRange();
   const Ps = []; for(let i = 0; i < 4; i++) Ps.push(Pmin + (Pmax - Pmin) * i / 3);
   const N = 100, C = mpPalette(false), lines = [], table = [];
   let sMax = 0;
@@ -3958,7 +4136,7 @@ function plotSel(T, holder, noteEl){
 }
 
 function mpField(T, qty, nX, nY){
-  const Pmin = Math.max(1e-4, parseFloat(pminEl.value)), Pmax = parseFloat(pmaxEl.value) || 1.5;
+  const {Pmin, Pmax} = pRange();
   const at = (P, y) => {
     if(qty === 'S'){ try{ return selectivityAt(P, y, T); }catch(e){ return NaN; } }
     if(qty === 'x1'){ try{ return iastSolve([compA, compB], [y, 1 - y], P, T).x[0]; }catch(e){ return NaN; } }
@@ -4042,7 +4220,7 @@ function plotSurf(T, holder, noteEl){
 
 function plotSliceP(T, holder, noteEl){
   if(!MP_READY) return;
-  const Pmin = Math.max(1e-4, parseFloat(pminEl.value)), Pmax = parseFloat(pmaxEl.value) || 1.5;
+  const {Pmin, Pmax} = pRange();
   const y = IAST_PIN ? IAST_PIN.y : 0.5, N = 150, C = mpPalette(false);
   const P = [], A = [], B = [], Tot = [], rows = [['P_bar', 'q1_' + compA.name, 'q2_' + compB.name]];
   let qm = 0;
@@ -4066,7 +4244,7 @@ function plotSliceP(T, holder, noteEl){
 
 function plotSliceY(T, holder, noteEl){
   if(!MP_READY) return;
-  const Pmax = parseFloat(pmaxEl.value) || 1.5;
+  const Pmax = pRange().Pmax;
   const P = IAST_PIN ? IAST_PIN.P : Pmax, N = 150, C = mpPalette(false);
   const Y = [], A = [], B = [], Tot = [], rows = [['y_' + compA.name, 'q1_' + compA.name, 'q2_' + compB.name]];
   let qm = 0;
@@ -4151,6 +4329,58 @@ const TOUR_STEPS = [
 ];
 
 let _tourIdx = 0, _tourRAF = null, _tourEl = null, _tourAlive = false;
+
+/* ── window/panel awareness ──────────────────────────────────────────────
+   Any modal, pop-out or collapsible can be open or closed when the tour
+   runs. Before a step is shown: close everything that would sit on top of
+   the highlight, open every collapsible the target lives inside, and skip
+   steps whose target does not exist or is not rendered. ------------------ */
+function tourCloseBlockers(){
+  document.querySelectorAll('.mp-pop').forEach(ov => {
+    delete MP['mp_popout'];
+    if(ov.parentNode) ov.parentNode.removeChild(ov);
+  });
+  const hm = document.getElementById('howtoModal');
+  if(hm) hm.classList.remove('on');
+}
+function tourReveal(el){
+  if(!el) return;
+  let n = el;
+  while(n && n !== document.body){
+    if(n.nodeType === 1){
+      /* collapsibles used in this app */
+      if((n.classList.contains('op-body') || n.classList.contains('attr-acc-body')) && !n.classList.contains('open')){
+        n.classList.add('open');
+        if(n.classList.contains('op-body')){
+          const t = document.getElementById('opToggleBtn');
+          if(t){ t.classList.add('open'); t.setAttribute('aria-expanded', 'true'); }
+          if(n.scrollHeight) n.style.maxHeight = n.scrollHeight + 'px';
+        } else {
+          n.style.maxHeight = Math.max(n.scrollHeight, 200) + 'px';
+        }
+      }
+      if(n.tagName === 'DETAILS') n.open = true;
+    }
+    n = n.parentElement;
+  }
+}
+function tourVisible(el){
+  if(!el || !el.getBoundingClientRect) return false;
+  if(!el.isConnected) return false;
+  const r = el.getBoundingClientRect();
+  if(r.width < 2 && r.height < 2) return false;
+  const cs = getComputedStyle(el);
+  return cs.visibility !== 'hidden' && cs.display !== 'none' && el.offsetParent !== null;
+}
+/* index list of the steps actually reachable right now */
+function tourLive(){
+  return TOUR_STEPS.map((st, i) => i).filter(i => {
+    const el = document.querySelector(TOUR_STEPS[i].sel);
+    if(!el) return false;
+    tourReveal(el);
+    return tourVisible(el);
+  });
+}
 const TE = () => ({
   ov: document.getElementById('tourOverlay'), hole: document.getElementById('tourHole'),
   pop: document.getElementById('tourPop'), t: document.getElementById('tourTitle'),
@@ -4195,17 +4425,32 @@ function tourTrack(ms){
   };
   _tourRAF = requestAnimationFrame(step);
 }
-function tourShow(i){
+function tourShow(i, dir){
   const E = TE();
   _tourAlive = true;
-  _tourIdx = Math.max(0, Math.min(TOUR_STEPS.length - 1, i));
+  tourCloseBlockers();
+
+  const live = tourLive();
+  if(!live.length){ tourEnd(); return; }
+
+  let want = Math.max(0, Math.min(TOUR_STEPS.length - 1, i));
+  if(live.indexOf(want) < 0){
+    /* target closed/absent \u2014 walk on in the direction of travel */
+    const fwd = live.filter(k => k > want), back = live.filter(k => k < want);
+    const d = (dir === -1) ? -1 : 1;
+    if(d === 1) want = fwd.length ? fwd[0] : back[back.length - 1];
+    else want = back.length ? back[back.length - 1] : fwd[0];
+  }
+  _tourIdx = want;
+  const pos = live.indexOf(_tourIdx);
   const st = TOUR_STEPS[_tourIdx];
   _tourEl = document.querySelector(st.sel);
+  tourReveal(_tourEl);
   E.ov.classList.add('on');
   E.t.innerHTML = st.title; E.b.innerHTML = st.body;
-  E.c.textContent = (_tourIdx + 1) + ' / ' + TOUR_STEPS.length;
-  E.prev.disabled = _tourIdx === 0;
-  E.next.textContent = _tourIdx === TOUR_STEPS.length - 1 ? 'Done' : 'Next \u2192';
+  E.c.textContent = (pos + 1) + ' / ' + live.length;
+  E.prev.disabled = pos === 0;
+  E.next.textContent = pos === live.length - 1 ? 'Done' : 'Next \u2192';
   if(_tourEl){
     const r = _tourEl.getBoundingClientRect();
     const off = r.top < 80 || r.bottom > window.innerHeight - 120;
@@ -4221,18 +4466,27 @@ function tourEnd(){
   TE().ov.classList.remove('on');
   try{ localStorage.setItem('iast_tour_seen', '1'); }catch(e){}
 }
-function tourStart(){ tourShow(0); }
-function tourNext(){ if(_tourIdx === TOUR_STEPS.length - 1) tourEnd(); else tourShow(_tourIdx + 1); }
+function tourStart(){ tourCloseBlockers(); tourShow(0, 1); }
+function tourNext(){
+  const live = tourLive();
+  const nxt = live.filter(k => k > _tourIdx);
+  if(!nxt.length) tourEnd(); else tourShow(nxt[0], 1);
+}
+function tourPrevStep(){
+  const live = tourLive();
+  const prv = live.filter(k => k < _tourIdx);
+  if(prv.length) tourShow(prv[prv.length - 1], -1);
+}
 
 document.getElementById('tourNext').addEventListener('click', tourNext);
-document.getElementById('tourPrev').addEventListener('click', () => tourShow(_tourIdx - 1));
+document.getElementById('tourPrev').addEventListener('click', tourPrevStep);
 document.getElementById('tourSkip').addEventListener('click', tourEnd);
 document.getElementById('tourScrim').addEventListener('click', tourEnd);
 window.addEventListener('keydown', e => {
   if(!_tourAlive) return;
   if(e.key === 'Escape') tourEnd();
   else if(e.key === 'ArrowRight' || e.key === 'Enter') tourNext();
-  else if(e.key === 'ArrowLeft') tourShow(_tourIdx - 1);
+  else if(e.key === 'ArrowLeft') tourPrevStep();
 });
 ['scroll', 'resize'].forEach(ev =>
   window.addEventListener(ev, () => { if(_tourAlive) tourPlace(); }, true));
@@ -4258,6 +4512,7 @@ function mpRepaintAll(){
   try{ renderIastPlot(); }catch(e){}
 }
 MP_READY = true;
+snapCalc();   /* the startup render is the first committed state */
 mpRepaintAll();
 setTimeout(mpRepaintAll, 60);
 
@@ -4466,8 +4721,19 @@ function mpDataURL(holderId, scale){
   return cv.toDataURL('image/png');
 }
 
+function mpResetAll(){
+  Object.keys(MP).forEach(id => {
+    const inst = MP[id]; if(!inst) return;
+    if(inst.spec && inst.spec.surface3d) inst.rot = { az: Math.PI * 0.32, el: 0.52, zoom: 1 };
+    if(inst.home) inst.view = { xr: inst.home.xr.slice(), yr: inst.home.yr.slice() };
+    inst.hover = null; inst.hover3 = null; inst.band = null;
+    try{ inst.paint(); }catch(e){}
+  });
+}
+
 const _buildReportBase = buildReport;
 buildReport = function(){
+  mpResetAll();
   /* the charts are canvases now, so innerHTML alone would copy a blank
      element into the report — swap in a rendered PNG for the duration */
   const ids = Object.keys(MP).filter(id => document.getElementById(id));
@@ -4482,7 +4748,7 @@ buildReport = function(){
       const h = document.getElementById(id);
       stash[id] = h.innerHTML;
       h.innerHTML = urls[id]
-        ? '<img alt="" src="' + urls[id] + '" style="width:100%;height:auto;display:block;border-radius:4px;">'
+        ? '<img alt="' + ((MP[id] && MP[id].spec && MP[id].spec.title) || 'chart') + '" src="' + urls[id] + '" style="width:100%;height:auto;display:block;border-radius:4px;">'
         : '';
     });
     /* formulas in the prose too: CO2 -> CO₂ everywhere the report interpolates */
@@ -4495,11 +4761,7 @@ buildReport = function(){
     setTimeout(mpRepaintAll, 0);
   }
 };
-(function(){ const b = document.getElementById('reportBtn');
-  if(b){ const c = b.cloneNode(true); b.parentNode.replaceChild(c, b);
-    c.addEventListener('click', () => buildReport()); } })();
-
-/* the Report button captured the original buildReport reference before the
+/* the Report button captured the original buildReport reference before this
    override existed, so rebind it to the current binding */
 (function(){
   const b = document.getElementById('reportBtn');
