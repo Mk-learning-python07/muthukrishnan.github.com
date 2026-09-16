@@ -61,6 +61,22 @@ permalink: /apps/
     </a>
   </div>
 
+  <div class="project-card">
+    <div class="project-card-head">
+      <div class="project-icon"><i class="fas fa-wave-square"></i></div>
+      <div class="project-title">Dynamic Column Breakthrough</div>
+    </div>
+    <p class="project-desc">Two-component non-isothermal adsorption breakthrough simulator. Runs locally, no account, no telemetry.</p>
+    <div class="project-tags">
+      <span class="badge">Adsorption</span>
+      <span class="badge">Simulation</span>
+      <span class="badge">Python</span>
+    </div>
+    <a href="https://github.com/Mk-learning-python07/dynamic-column-breakthrough" class="project-link" target="_blank" rel="noopener noreferrer">
+      <i class="fab fa-github" aria-hidden="true"></i> View on GitHub
+    </a>
+  </div>
+
 </div>
 
 <div class="section-divider"><span>More on GitHub</span></div>
